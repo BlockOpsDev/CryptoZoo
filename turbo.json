@@ -1,0 +1,30 @@
+{
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**"]
+    },
+    "start": {
+      "dependsOn": ["build"]
+    },
+    "chain": {
+      "outputs": []
+    },
+    "lint": {
+      "outputs": []
+    },
+    "test": {
+      "outputs": []
+    },
+    "dev": {
+      "cache": false
+    },
+    "clean": {
+      "cache": false
+    },
+    "storybook": {
+      "cache": false
+    }
+  },
+  "globalDependencies": [".env"]
+}

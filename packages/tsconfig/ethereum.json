@@ -1,0 +1,9 @@
+{
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"display": "Ethereum",
+	"extends": "./base.json",
+	"compilerOptions": {
+		"target": "es2020",
+		"module": "commonjs"
+	}
+}

@@ -1,0 +1,26 @@
+{
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "packages/@cryptozoo/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "chain": "turbo run chain",
+    "dev": "turbo run dev --parallel",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "clean": "turbo run clean",
+    "storybook": "turbo run storybook",
+    "component": "yarn run plop --cwd=./packages/@cryptozoo/ui",
+    "format": "prettier --write \"**/*.{ts,tsx,sol,md}\""
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-custom": "*",
+    "prettier": "^2.7.1",
+    "prettier-plugin-tailwindcss": "^0.1.11",
+    "turbo": "latest"
+  }
+}

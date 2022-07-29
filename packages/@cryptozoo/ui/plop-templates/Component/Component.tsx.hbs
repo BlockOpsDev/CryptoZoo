@@ -1,0 +1,16 @@
+import FragC from '../../utils/FragC';
+import { gql } from '@apollo/client';
+
+export interface {{pascalCase name}}Props {
+  sample: any;
+}
+
+export const {{pascalCase name}}: FragC<{{pascalCase name}}Props> = ({sample}: {{pascalCase name}}Props) => {
+  return <div/>
+};
+
+{{pascalCase name}}.fragments = {
+  sample: gql`
+    fragment {{pascalCase name}} on <type> {}
+  `,
+};
