@@ -25,6 +25,5 @@
     "storybook": {
       "cache": false
     }
-  },
-  "globalDependencies": [".env"]
+  }
 }

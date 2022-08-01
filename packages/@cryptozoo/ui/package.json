@@ -14,12 +14,14 @@
     "lint": "eslint '*/**/*.{js,ts,tsx}' --fix",
     "clean": "rm -rf dist",
     "storybook": "start-storybook -p 6006 & tailwindcss -i ./src/styles.css -o ./dist/styles.css --watch",
-    "build-storybook": "build-storybook",
-    "component": "plop"
+    "build-storybook": "build-storybook"
   },
   "devDependencies": {
     "@apollo/client": "^3.6.9",
     "@babel/core": "^7.18.9",
+    "@cryptozoo/graphql": "*",
+    "@graphql-tools/mock": "^8.7.1",
+    "@graphql-tools/schema": "^8.5.1",
     "@storybook/addon-actions": "^6.5.9",
     "@storybook/addon-essentials": "^6.5.9",
     "@storybook/addon-interactions": "^6.5.9",

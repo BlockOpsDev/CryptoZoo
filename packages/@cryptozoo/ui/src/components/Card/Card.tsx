@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { gql, useQuery } from '@apollo/client';
-import { Data } from '../Data/Data';
+import { Data } from '../Data';
 
 export interface CardProps {
   userId: string;
 }
 
-export const GET_USER_QUERY = gql`
-  query GetUser($id: String!) {
+const GET_USER_QUERY = gql`
+  query GetUser($id: ID!) {
     user(id: $id) {
       id
       name
-      ...Wallet
+      ...Data
     }
   }
   ${Data.fragments.user}

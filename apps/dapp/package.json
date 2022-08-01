@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",
+    "@cryptozoo/graphql": "*",
     "@cryptozoo/ui": "*",
     "@types/micro-cors": "^0.1.2",
     "apollo-server-micro": "^3.10.0",

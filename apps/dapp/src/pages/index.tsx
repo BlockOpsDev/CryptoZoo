@@ -1,6 +1,6 @@
 import Head from 'next/head';
-
-import { Card } from '@cryptozoo/ui';
+import { Test } from '@cryptozoo/ui';
+// import { Card } from '@cryptozoo/ui';
 
 export default function Home() {
   return (
@@ -10,7 +10,8 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Card.Card userId="3" />
+      <Test id="1" />
+      {/* <Card.Card userId="1" /> */}
     </div>
   );
 }

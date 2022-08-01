@@ -1,6 +1,6 @@
 module.exports = (plop) => {
-  plop.setGenerator('component', {
-    description: 'Create a reusable component',
+  plop.setGenerator('FragC', {
+    description: 'Create a reusable Fragment Component',
     prompts: [
       {
         type: 'input',
@@ -21,6 +21,11 @@ module.exports = (plop) => {
       },
       {
         type: 'add',
+        path: 'src/components/{{pascalCase name}}/index.ts',
+        templateFile: 'plop-templates/Component/index.ts.hbs',
+      },
+      {
+        type: 'add',
         path: 'src/components/index.tsx',
         templateFile: 'plop-templates/injectable-index.tsx.hbs',
         skipIfExists: true,
@@ -29,7 +34,7 @@ module.exports = (plop) => {
         type: 'append',
         path: 'src/components/index.tsx',
         pattern: `/* PLOP_INJECT_EXPORT */`,
-        template: `export * from './{{pascalCase name}}/{{pascalCase name}}';`,
+        template: `export * from './{{pascalCase name}}';`,
       },
     ],
   });

@@ -18,7 +18,7 @@ export const Data: FragC<DataProps> = ({ user }: DataProps) => {
 
 Data.fragments = {
   user: gql`
-    fragment Wallet on User {
+    fragment Data on User {
       wallet
     }
   `,

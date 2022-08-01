@@ -1,10 +1,10 @@
 type User {
-  id: String
+  id: ID
   name: String
   wallet: String
 }
 
 type Query {
-  user(id: String): User
+  user(id: ID): User
   users: [User]!
 }

@@ -2,8 +2,9 @@ import Cors from 'micro-cors';
 import { PageConfig } from 'next';
 import { ApolloServer } from 'apollo-server-micro';
 
-import typeDefs from '../../apollo/schema.graphql';
-import resolvers from '../../apollo/resolvers';
+// @ts-ignore
+import typeDefs from '@cryptozoo/graphql/schema.graphql';
+import { resolvers } from '@cryptozoo/graphql';
 
 export const config: PageConfig = {
   api: {
