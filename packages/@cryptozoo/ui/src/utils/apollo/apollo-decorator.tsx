@@ -15,6 +15,7 @@ const mockSchema = addMocksToSchema({
 });
 
 const client = new ApolloClient({
+  // @ts-ignore
   link: new SchemaLink({ schema: mockSchema }),
   cache: new InMemoryCache(),
 });

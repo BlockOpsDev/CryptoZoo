@@ -1,25 +1,25 @@
-import * as React from 'react';
+import React from 'react';
 import FragC from '../../utils/FragC';
 import { gql } from '@apollo/client';
+import { Data_User } from './__generated__/Data_User';
 
 export interface DataProps {
-  user: {
-    wallet: string;
-  };
+  user: Data_User | null;
 }
 
 export const Data: FragC<DataProps> = ({ user }: DataProps) => {
   return (
     <div>
-      <p className="text-white">{user.wallet}</p>
+      <p className="text-white">{user && user.wallet + ' ' + user.name}</p>
     </div>
   );
 };
 
 Data.fragments = {
   user: gql`
-    fragment Data on User {
+    fragment Data_User on User {
       wallet
+      name
     }
   `,
 };

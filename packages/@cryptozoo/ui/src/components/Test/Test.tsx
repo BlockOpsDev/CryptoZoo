@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { gql, useQuery } from '@apollo/client';
+import { GetUserType, GetUserTypeVariables } from './__generated__/GetUserType';
 
 export interface TestProps {
   id: string;
@@ -15,10 +17,13 @@ export const GET_USER_QUERY = gql`
 `;
 
 export const Test: React.FC<TestProps> = ({ id }: TestProps) => {
-  const { loading, data } = useQuery(GET_USER_QUERY, {
-    variables: { id },
-  });
+  const { loading, data } = useQuery<GetUserType, GetUserTypeVariables>(
+    GET_USER_QUERY,
+    {
+      variables: { id },
+    }
+  );
 
-  if (loading) return <div className="text-white">Loading...</div>;
-  return <div className="text-white">{data.user.name}</div>;
+  if (loading || !data) return <div className="text-white">Loading...</div>;
+  return <div className="text-white">{data.user && data.user.name}</div>;
 };
