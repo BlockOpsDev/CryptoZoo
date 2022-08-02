@@ -7,7 +7,7 @@ module.exports = {
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
-    'storybook-tailwind-dark-mode',
+    'storybook-dark-mode',
   ],
   framework: '@storybook/react',
 };
