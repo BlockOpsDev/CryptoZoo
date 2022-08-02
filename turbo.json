@@ -22,6 +22,9 @@
     "clean": {
       "cache": false
     },
+    "codegen": {
+      "cache": false
+    },
     "storybook": {
       "cache": false
     }
