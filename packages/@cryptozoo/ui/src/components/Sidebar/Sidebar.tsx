@@ -1,8 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
 
-import { AiFillHome, AiOutlineSwap } from 'react-icons/ai'
-import { IoStorefront } from 'react-icons/io5'
+import { AiFillHome, AiOutlineSwap, AiFillHeart, AiFillTrophy } from 'react-icons/ai'
+import { IoStorefront, IoGameController } from 'react-icons/io5'
+import { FaLink, FaDiscord } from 'react-icons/fa';
 
 
 const ICON_SIZE = "30"
@@ -13,8 +14,16 @@ const iconMap: {
   'home': <AiFillHome size={ICON_SIZE} />,
   'swap': <AiOutlineSwap size={ICON_SIZE} />,
   'store': <IoStorefront size={ICON_SIZE} />,
+  'heart': <AiFillHeart size={ICON_SIZE} />,
+  'trophy': <AiFillTrophy size={ICON_SIZE} />,
+  'game': <IoGameController size={ICON_SIZE} />,
+  'link': <FaLink size={ICON_SIZE} />,
+  'discord': <FaDiscord size={ICON_SIZE} />,
 }
 
+export interface SidebarProps {
+  navItems: NavItem[];
+}
 
 export interface NavItem {
   title: string;
@@ -23,9 +32,6 @@ export interface NavItem {
   locked: boolean;
 }
 
-export interface SidebarProps {
-  navItems: NavItem[];
-}
 
 const generateNavItem = (navItem: NavItem) => {
   return (
@@ -60,11 +66,11 @@ Sidebar.defaultProps = {
     { title: 'Home', to: '#', locked: false, iconKey: 'home' },
     { title: 'ZooSwap', to: '#', locked: false, iconKey: 'swap' },
     { title: 'Marketplace', to: '#', locked: true, iconKey: 'store' },
-    { title: 'Breeding/Hatching', to: '#', locked: true, iconKey: 'home' },
-    { title: 'Rewards', to: '#', locked: true, iconKey: 'home' },
-    { title: 'Games', to: '#', locked: true, iconKey: 'home' },
-    { title: 'Links/Resources', to: '#', locked: true, iconKey: 'home' },
-    { title: 'Discord', to: '#', locked: true, iconKey: 'home' },
+    { title: 'Breeding/Hatching', to: '#', locked: true, iconKey: 'heart' },
+    { title: 'Rewards', to: '#', locked: true, iconKey: 'trophy' },
+    { title: 'Games', to: '#', locked: true, iconKey: 'game' },
+    { title: 'Links/Resources', to: '#', locked: true, iconKey: 'link' },
+    { title: 'Discord', to: '#', locked: true, iconKey: 'discord' },
   ],
 };
 
