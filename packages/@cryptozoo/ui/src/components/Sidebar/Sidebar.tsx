@@ -8,7 +8,7 @@ import {
   AiFillTrophy,
 } from 'react-icons/ai';
 import { IoStorefront, IoGameController } from 'react-icons/io5';
-import { FaLink, FaDiscord, FaLock } from 'react-icons/fa';
+import { FaLink, FaDiscord, FaLock, FaChevronCircleRight } from 'react-icons/fa';
 
 const ICON_SIZE = '30';
 
@@ -26,6 +26,7 @@ const iconMap: {
 };
 
 export interface SidebarProps {
+  expanded: boolean,
   navItems: NavItem[];
 }
 
@@ -57,7 +58,10 @@ const generateNavItem = (navItem: NavItem) => {
 export const Sidebar: React.FC<SidebarProps> = ({ navItems }: SidebarProps) => {
   return (
     <div className="text-primary-text max-w-screen divide-layer--3 fixed top-0 left-0 flex h-screen flex-col  border-r-2 border-r-layer--2">
-      <div className="p-4 border-b-2 border-b-layer--2">ZOO</div>
+      <div className="p-4 border-b-2 border-b-layer--2 relative">
+        <span>ZOO</span>
+        <FaChevronCircleRight className="absolute -bottom-2 -right-2 text-layer--4" />
+      </div>
       <ul className="flex flex-col gap-4 mt-4">
         {navItems.map((navItem: NavItem, index: number) => {
           return (
@@ -79,7 +83,7 @@ Sidebar.defaultProps = {
     { title: 'Breeding/Hatching', to: '#', locked: true, iconKey: 'heart' },
     { title: 'Rewards', to: '#', locked: true, iconKey: 'trophy' },
     { title: 'Games', to: '#', locked: true, iconKey: 'game' },
-    { title: 'Links/Resources', to: '#', locked: true, iconKey: 'link' },
-    { title: 'Discord', to: '#', locked: true, iconKey: 'discord' },
+    { title: 'Links/Resources', to: '#', locked: false, iconKey: 'link' },
+    { title: 'Discord', to: '#', locked: false, iconKey: 'discord' },
   ],
 };
