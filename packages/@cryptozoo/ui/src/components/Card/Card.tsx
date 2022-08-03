@@ -29,8 +29,8 @@ export const Card: React.FC<CardProps> = ({ userId }: CardProps) => {
 
   return (
     <div
-      className="flex w-1/2 max-w-sm items-center justify-center overflow-hidden rounded 
-    bg-slate-600 text-white shadow-lg 
+      className="text-primary-text flex w-1/2 max-w-sm items-center justify-center overflow-hidden 
+    rounded bg-slate-600 shadow-lg 
     shadow-slate-500/50"
     >
       {loading || !data ? (

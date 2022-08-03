@@ -24,6 +24,9 @@ export const Test: React.FC<TestProps> = ({ id }: TestProps) => {
     }
   );
 
-  if (loading || !data) return <div className="text-white">Loading...</div>;
-  return <div className="text-white">{data.user && data.user.name}</div>;
+  if (loading || !data)
+    return <div className="text-warn--light">Loading...</div>;
+  return (
+    <div className="text-success--light">{data.user && data.user.name}</div>
+  );
 };

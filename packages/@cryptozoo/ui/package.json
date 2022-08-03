@@ -9,7 +9,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "dev": "concurrently \"yarn tailwind --watch\" \"yarn storybook\"",
+    "dev": "concurrently \"yarn build --watch\" \"yarn tailwind --watch\" \"yarn storybook\"",
     "lint": "eslint '*/**/*.{js,ts,tsx}' --fix",
     "prebuild": "yarn tailwind",
     "build": "tsup src/index.tsx --format esm,cjs --dts --external react",

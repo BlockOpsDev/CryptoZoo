@@ -1,17 +1,8 @@
-import QueryFragmentComponent from '../../utils/QueryFragmentComponent';
-import { gql } from '@apollo/client';
+import React from 'react';
 
 export interface {{pascalCase name}}Props {
-  sample: any;
-  //sample: {{pascalCase name}}_<gql_type>;
 }
 
-export const {{pascalCase name}}: QueryFragmentComponent<{{pascalCase name}}Props> = ({sample}: {{pascalCase name}}Props) => {
-  return <div/>
-};
-
-{{pascalCase name}}.fragments = {
-  sample: gql`
-    fragment {{pascalCase name}}_<gql_type> on <gql_type> {}
-  `,
+export const {{pascalCase name}}: React.FC<{{pascalCase name}}Props> = ({}: {{pascalCase name}}Props) => {
+  return <div className="text-white"></div>;
 };
