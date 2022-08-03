@@ -8,6 +8,10 @@ module.exports = {
     // "../../packages/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    screen: {
+      tablet: '960px',
+      desktop: '1248px',
+    },
     colors: {
       'layer--1': '#0e1324',
       'layer--2': '#161e31',
