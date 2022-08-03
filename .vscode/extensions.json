@@ -6,6 +6,7 @@
 		"apollographql.vscode-apollo",
 		"graphql.vscode-graphql",
 		"esbenp.prettier-vscode",
-        "bradlc.vscode-tailwindcss"
+        "bradlc.vscode-tailwindcss",
+		"naumovs.color-highlight"
 	]
 }

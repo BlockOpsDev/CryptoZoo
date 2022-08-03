@@ -1,46 +1,57 @@
 # CryptoZoo Monorepo
 
-This is an official repo of [CryptoZoo](https://cryptozoo.co/)
+This is the official monorepo of [CryptoZoo](https://cryptozoo.co/) composed with [Turborepo](https://turborepo.org/).
 
-### Apps and Packages
-
-- `ui`: a stub React component library with [Tailwind CSS](https://tailwindcss.com/) connected to [Storybook](https://storybook.js.org/)
+## Apps
 - `dapp`: a [Next.js](https://nextjs.org) app with [Tailwind CSS](https://tailwindcss.com/)
 - `ethereum`: a [Hardhat](https://hardhat.org/) project
 
-- `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `tsconfig`: `tsconfig.json`s used throughout the monorepo
+## Packages
+- `@cryptozoo` contains CryptoZoo specific packages
+  - `ui` is a stub React component library with [Tailwind CSS](https://tailwindcss.com/) connected to [Storybook](https://storybook.js.org/)
+- `tailwind-config` contains `tailwind` configurations.
+- `eslint-config-custom` contains `eslint` configurations (including `eslint-config-next` and `eslint-config-prettier`)
+- `tsconfig` contains `tsconfig.json` configurations used throughout the monorepo
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+All Apps and Packages are 100% [TypeScript](https://www.typescriptlang.org/).
 
-### Getting Started
+# Getting Started
 
-Lint all Apps and Packages run
-
-```shell
-yarn lint
-```
-
-Build component library and launch Next.js at http://localhost:3000 with hot reaload
-
-```shell
+```bash
+# Launch Hardhat node @ http://localhost:8545
+# Launch Storybook component library @ http://localhost:6006
+# Launch Next.js app @ http://localhost:3000 with hot reaload
 yarn dev
 ```
 
-Launch UI component library Storybook
-
-```shell
-yarn storyboard
+```bash
+# Lint all Apps and Packages
+yarn lint
 ```
 
-Create New Components
+```bash
+# Build all Apps and Packages
+yarn build
+```
 
-```shell
+```bash
+# Purge build/dist files from all Apps and Packages
+yarn clean
+```
+
+```bash
+# Create New Components
 yarn component <name>
 ```
 
-### Utilities
+```bash
+# To run workspace-specific scripts:
+# Launch UI component library Storybook
+yarn workspace @cryptozoo/ui storyboook
+```
 
+# Utilities
+Various frameworks/libraries/utilities used throughout the monorepo.
 - [Tailwind CSS](https://tailwindcss.com/) for styles
 - [Storybook](https://storybook.js.org/) for UI
 - [TypeScript](https://www.typescriptlang.org/) for static type checking
