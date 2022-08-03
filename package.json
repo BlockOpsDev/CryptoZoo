@@ -11,7 +11,6 @@
     "test": "turbo run test",
     "build": "turbo run build",
     "clean": "turbo run clean",
-
     "component": "yarn run plop --cwd=./packages/@cryptozoo/ui",
     "format": "prettier --write \"**/*.{ts,tsx,sol,md}\""
   },
