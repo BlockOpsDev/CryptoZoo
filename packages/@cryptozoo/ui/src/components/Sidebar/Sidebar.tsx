@@ -1,25 +1,29 @@
 import React from 'react';
 import Link from 'next/link';
 
-import { AiFillHome, AiOutlineSwap, AiFillHeart, AiFillTrophy } from 'react-icons/ai'
-import { IoStorefront, IoGameController } from 'react-icons/io5'
-import { FaLink, FaDiscord } from 'react-icons/fa';
+import {
+  AiFillHome,
+  AiOutlineSwap,
+  AiFillHeart,
+  AiFillTrophy,
+} from 'react-icons/ai';
+import { IoStorefront, IoGameController } from 'react-icons/io5';
+import { FaLink, FaDiscord, FaLock } from 'react-icons/fa';
 
-
-const ICON_SIZE = "30"
+const ICON_SIZE = '30';
 
 const iconMap: {
-  [key: string]: Element
+  [key: string]: Element;
 } = {
-  'home': <AiFillHome size={ICON_SIZE} />,
-  'swap': <AiOutlineSwap size={ICON_SIZE} />,
-  'store': <IoStorefront size={ICON_SIZE} />,
-  'heart': <AiFillHeart size={ICON_SIZE} />,
-  'trophy': <AiFillTrophy size={ICON_SIZE} />,
-  'game': <IoGameController size={ICON_SIZE} />,
-  'link': <FaLink size={ICON_SIZE} />,
-  'discord': <FaDiscord size={ICON_SIZE} />,
-}
+  home: <AiFillHome size={ICON_SIZE} />,
+  swap: <AiOutlineSwap size={ICON_SIZE} />,
+  store: <IoStorefront size={ICON_SIZE} />,
+  heart: <AiFillHeart size={ICON_SIZE} />,
+  trophy: <AiFillTrophy size={ICON_SIZE} />,
+  game: <IoGameController size={ICON_SIZE} />,
+  link: <FaLink size={ICON_SIZE} />,
+  discord: <FaDiscord size={ICON_SIZE} />,
+};
 
 export interface SidebarProps {
   navItems: NavItem[];
@@ -32,16 +36,23 @@ export interface NavItem {
   locked: boolean;
 }
 
-
 const generateNavItem = (navItem: NavItem) => {
+  let className =
+    'h-12 w-12 bg-layer--3 rounded-lg flex justify-center items-center relative';
+  className += navItem.locked ? ' text-layer--4' : ' text-primary-text';
   return (
     <Link href={navItem.to}>
-      <div className="h-12 w-12 bg-layer--3 text-primary-text rounded-lg flex justify-center items-center">
-        { iconMap[navItem.iconKey] }
+      <div className={className}>
+        {iconMap[navItem.iconKey]}
+        {navItem.locked ? (
+          <FaLock className="absolute -top-1 -right-1 -rotate-6 text-primary-text" />
+        ) : (
+          ''
+        )}
       </div>
     </Link>
   );
-}
+};
 
 export const Sidebar: React.FC<SidebarProps> = ({ navItems }: SidebarProps) => {
   return (
@@ -60,7 +71,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ navItems }: SidebarProps) => {
   );
 };
 
-
 Sidebar.defaultProps = {
   navItems: [
     { title: 'Home', to: '#', locked: false, iconKey: 'home' },
@@ -73,4 +83,3 @@ Sidebar.defaultProps = {
     { title: 'Discord', to: '#', locked: true, iconKey: 'discord' },
   ],
 };
-
