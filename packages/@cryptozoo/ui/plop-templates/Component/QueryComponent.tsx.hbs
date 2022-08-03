@@ -1,0 +1,28 @@
+import React from 'react';
+
+import { gql, useQuery } from '@apollo/client';
+import { Get{{pascalCase name}}, Get{{pascalCase name}}Variables } from './__generated__/Get{{pascalCase name}};
+
+export interface {{pascalCase name}}Props {
+}
+
+export const {{upperCase name}}_GQL = gql`
+  query Get{{pascalCase name}}($id: ID!) {
+    sample(id: $id) {
+      id
+    }
+  }
+`;
+
+export const {{pascalCase name}}: React.FC<{{pascalCase name}}Props> = ({}: {{pascalCase name}}Props) => {
+  const { loading, data } = useQuery<Get{{pascalCase name}}, Get{{pascalCase name}}Variables>(
+    {{upperCase name}}_GQL,
+    {
+      variables: {},
+    }
+  );
+
+  if (loading) return <div className="text-white">Loading...</div>;
+  if (!data) return <div className="text-white">Empty</div>;
+  return <div className="text-white"></div>;
+};
