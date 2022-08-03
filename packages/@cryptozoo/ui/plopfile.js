@@ -1,5 +1,5 @@
 module.exports = (plop) => {
-  plop.setGenerator('FragC', {
+  plop.setGenerator('QueryFragmentComponent', {
     description: 'Create a reusable Fragment Component',
     prompts: [
       {

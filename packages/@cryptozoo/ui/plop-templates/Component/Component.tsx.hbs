@@ -1,4 +1,4 @@
-import FragC from '../../utils/FragC';
+import QueryFragmentComponent from '../../utils/QueryFragmentComponent';
 import { gql } from '@apollo/client';
 
 export interface {{pascalCase name}}Props {
@@ -6,7 +6,7 @@ export interface {{pascalCase name}}Props {
   //sample: {{pascalCase name}}_<gql_type>;
 }
 
-export const {{pascalCase name}}: FragC<{{pascalCase name}}Props> = ({sample}: {{pascalCase name}}Props) => {
+export const {{pascalCase name}}: QueryFragmentComponent<{{pascalCase name}}Props> = ({sample}: {{pascalCase name}}Props) => {
   return <div/>
 };
 

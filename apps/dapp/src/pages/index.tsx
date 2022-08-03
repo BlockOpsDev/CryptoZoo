@@ -1,6 +1,5 @@
 import Head from 'next/head';
-// import { Test } from '@cryptozoo/ui';
-import { Card } from '@cryptozoo/ui';
+import { HeaderBar } from '@cryptozoo/ui'
 
 export default function Home() {
   return (
@@ -9,9 +8,6 @@ export default function Home() {
         <title>CryptoZoo</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      {/* <Test id="1" /> */}
-      <Card userId="1" />
     </div>
   );
 }
