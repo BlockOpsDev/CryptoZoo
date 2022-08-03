@@ -9,13 +9,16 @@
   },
   "license": "MIT",
   "scripts": {
-    "build": "tsup src/index.tsx --format esm,cjs --dts --external react && tailwindcss -i ./src/styles.css -o ./dist/styles.css",
-    "dev": "tsup src/index.tsx --format esm,cjs --dts --external react --watch & tailwindcss -i ./src/styles.css -o ./dist/styles.css --watch",
+    "dev": "concurrently \"yarn tailwind --watch\" \"yarn storybook\"",
     "lint": "eslint '*/**/*.{js,ts,tsx}' --fix",
+    "prebuild": "yarn tailwind",
+    "build": "tsup src/index.tsx --format esm,cjs --dts --external react",
     "clean": "rm -rf dist",
-    "storybook": "start-storybook -p 6006 & tailwindcss -i ./src/styles.css -o ./dist/styles.css --watch",
     "codegen": "apollo codegen:generate --target=typescript --suppressDeprecationWarning",
-    "build-storybook": "build-storybook"
+    "tailwind": "tailwindcss -i ./src/styles.css -o ./dist/styles.css",
+    "storybook": "start-storybook -p 6006 --quiet",
+    "build-storybook": "build-storybook",
+    "test": "echo \"No tests specified\""
   },
   "devDependencies": {
     "@apollo/client": "^3.6.9",

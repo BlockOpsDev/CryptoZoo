@@ -6,9 +6,9 @@
     "!contracts/test/*"
   ],
   "scripts": {
+    "dev": "npx hardhat node",
     "build": "yarn compile",
     "compile": "npx hardhat compile && rm -rf artifacts/build-info",
-    "chain": "npx hardhat node",
     "test": "npx hardhat test",
     "lint": "solhint -f table contracts/**/*.sol"
   },
