@@ -6,7 +6,7 @@ module.exports = {
     // "../../packages/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    screen: {
+    screens: {
       tablet: '960px',
       desktop: '1248px',
     },
