@@ -18,6 +18,13 @@ All Apps and Packages are 100% [TypeScript](https://www.typescriptlang.org/).
 # Getting Started
 
 ```bash
+# Launch Hardhat node @ http://localhost:8545
+# Launch Storybook component library @ http://localhost:6006
+# Launch Next.js app @ http://localhost:3000 with hot reaload
+yarn dev
+```
+
+```bash
 # Lint all Apps and Packages
 yarn lint
 ```
@@ -30,12 +37,6 @@ yarn build
 ```bash
 # Purge build/dist files from all Apps and Packages
 yarn clean
-```
-
-```bash
-# Launch Storybook component library @ http://localhost:6006 and
-# Launch Next.js app @ http://localhost:3000 with hot reaload
-yarn dev
 ```
 
 ```bash
