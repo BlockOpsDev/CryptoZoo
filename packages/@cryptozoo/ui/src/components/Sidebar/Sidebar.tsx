@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import cx from 'classnames';
 
 import {
   AiFillHome,
@@ -8,7 +9,7 @@ import {
   AiFillTrophy,
 } from 'react-icons/ai';
 import { IoStorefront, IoGameController } from 'react-icons/io5';
-import { FaLink, FaDiscord, FaLock, FaChevronCircleRight } from 'react-icons/fa';
+import { FaLink, FaDiscord, FaLock } from 'react-icons/fa';
 
 const ICON_SIZE = '30';
 
@@ -38,29 +39,37 @@ export interface NavItem {
 }
 
 const generateNavItem = (navItem: NavItem) => {
-  let className =
-    'h-12 w-12 bg-layer--3 rounded-lg flex justify-center items-center relative';
-  className += navItem.locked ? ' text-layer--4' : ' text-primary-text';
   return (
     <Link href={navItem.to}>
-      <div className={className}>
+      <div className={cx(
+        'py-2 px-4 w-full bg-layer--3 rounded-lg flex justify-center items-center relative cursor-pointer gap-x-2',
+        navItem.locked ? 'text-secondary-text' : 'text-primary-text',
+      )}>
+
         {iconMap[navItem.iconKey]}
-        {navItem.locked ? (
-          <FaLock className="absolute -top-1 -right-1 -rotate-6 text-primary-text" />
-        ) : (
-          ''
-        )}
+
+        <span>{navItem.title}</span>
+
+        <FaLock className={cx(
+          'absolute -top-1 -right-1 -rotate-6 text-primary-text',
+          { ['hidden']: !navItem.locked, },
+        )} />
       </div>
     </Link>
   );
 };
 
-export const Sidebar: React.FC<SidebarProps> = ({ navItems }: SidebarProps) => {
+
+export const Sidebar: React.FC<SidebarProps> = ({ navItems, expanded }: SidebarProps) => {
+
   return (
-    <div className="text-primary-text max-w-screen divide-layer--3 fixed top-0 left-0 flex h-screen flex-col  border-r-2 border-r-layer--2">
-      <div className="p-4 border-b-2 border-b-layer--2 relative">
+    <div className={cx(
+      "text-primary-text flex h-screen flex-col fixed bg-layer--2",
+      expanded ? "w-full" : "w-1"
+    )}>
+      <div className="p-4 relative">
         <span>ZOO</span>
-        <FaChevronCircleRight className="absolute -bottom-2 -right-2 text-layer--4" />
+        {/* <FaChevronCircleRight className="absolute -bottom-2 -right-2 text-layer--4" /> */}
       </div>
       <ul className="flex flex-col gap-4 mt-4">
         {navItems.map((navItem: NavItem, index: number) => {
