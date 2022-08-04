@@ -19,37 +19,44 @@ All Apps and Packages are 100% [TypeScript](https://www.typescriptlang.org/).
 
 # Getting Started
 
-```bash
-# Launch Hardhat node @ http://localhost:8545
-# Launch Storybook component library @ http://localhost:6006
-# Launch Next.js app @ http://localhost:3000 with hot reaload
+Run all Apps/Packages locally
+
+- Hardhat node @ http://localhost:8545
+- Storybook component library @ http://localhost:6006
+- Next.js app @ http://localhost:3000 with hot reaload
+
+```shell
 yarn dev
 ```
 
-```bash
-# Lint all Apps and Packages
+Lint all Apps and Packages
+
+```shell
 yarn lint
 ```
 
-```bash
-# Build all Apps and Packages
+Build all Apps and Packages
+
+```shell
 yarn build
 ```
 
-```bash
-# Purge build/dist files from all Apps and Packages
+Purge build files from all Apps and Packages
+
+```shell
 yarn clean
 ```
 
-```bash
-# Create New Components
+Create New Components
+
+```shell
 yarn component <name>
 ```
 
-```bash
-# To run workspace-specific scripts:
-# Launch UI component library Storybook
-yarn workspace @cryptozoo/ui storyboook
+Workspace Scripts
+
+```shell
+yarn workspace @cryptozoo/ui storybook
 ```
 
 # Utilities
