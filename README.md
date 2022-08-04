@@ -56,7 +56,7 @@ yarn component <name>
 Workspace Scripts
 
 ```shell
-yarn workspace @cryptozoo/ui storyboook
+yarn workspace @cryptozoo/ui storybook
 ```
 
 # Utilities
