@@ -7,7 +7,7 @@
     "lint": "solhint -f table contracts/**/*.sol"
   },
   "dependencies": {
-    "@cryptozoo/continoustoken": "*"
+    "@cryptozoo/ethereum": "*"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.6.4",

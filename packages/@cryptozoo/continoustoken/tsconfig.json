@@ -1,5 +1,0 @@
-{
-	"extends": "tsconfig/ethereum.json",
-	"include": ["**/*.ts", "**/*.tsx"],
-	"exclude": ["node_modules"]
-}
