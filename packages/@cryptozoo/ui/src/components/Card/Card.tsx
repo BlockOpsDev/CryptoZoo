@@ -6,11 +6,9 @@ export interface CardProps {
   children: ReactChildren;
 }
 
-export const Card: React.FC<CardProps> = ({
-  children,
-}: CardProps) => {
+export const Card: React.FC<CardProps> = ({ children }: CardProps) => {
   return (
-    <div className="text-primary-text flex flex-col p-2 gap-2 rounded-lg border-solid border-2 border-layer--4 bg-layer--2 relative drop-shadow-md">
+    <div className="text-primary-text border-layer--4 bg-layer--2 relative flex flex-col gap-2 rounded-lg border-2 border-solid p-2 drop-shadow-md">
       <div className="">{children}</div>
     </div>
   );

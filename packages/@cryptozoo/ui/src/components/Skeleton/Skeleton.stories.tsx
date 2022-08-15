@@ -16,6 +16,6 @@ const Template: ComponentStory<typeof Skeleton> = (args) => (
 export const Primary = Template.bind({});
 
 Primary.args = {
-  shapeClasses: "w-24 h-3",
+  shapeClasses: 'w-24 h-3',
   loading: true,
 };
