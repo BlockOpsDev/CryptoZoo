@@ -4,7 +4,7 @@ import { apolloContext } from '../../utils/apollo/apollo-decorator';
 import { Layout } from './Layout';
 
 export default {
-  title: 'Layout',
+  title: 'Layouts/Main',
   component: Layout,
   argTypes: {
     onClick: { action: 'clicked' },
@@ -17,7 +17,7 @@ const Template: ComponentStory<typeof Layout> = (args) => <Layout {...args} />;
 export const Primary = Template.bind({});
 
 Primary.args = {
-  navItems: [
+  navLinkProps: [
     { title: 'Home', to: '#', locked: false, iconKey: 'home' },
     { title: 'ZooSwap', to: '#', locked: false, iconKey: 'swap' },
     { title: 'Marketplace', to: '#', locked: true, iconKey: 'store' },

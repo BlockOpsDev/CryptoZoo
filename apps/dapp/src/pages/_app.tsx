@@ -20,7 +20,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
       <Layout
-        navItems={[
+        navLinkProps={[
           { title: 'Home', to: '/', locked: false, iconKey: 'home' },
           { title: 'ZooSwap', to: '/swap', locked: false, iconKey: 'swap' },
           { title: 'Marketplace', to: '#', locked: true, iconKey: 'store' },
@@ -36,7 +36,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           { title: 'Discord', to: '#', locked: false, iconKey: 'discord' },
         ]}
       >
-        <Component {...pageProps} />;
+        <Component {...pageProps} />
       </Layout>
     </ApolloProvider>
   );
