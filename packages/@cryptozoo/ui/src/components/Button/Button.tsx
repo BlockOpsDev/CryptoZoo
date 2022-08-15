@@ -4,13 +4,6 @@ import cx from 'classnames';
 import { Skeleton } from '../Skeleton';
 import Variants from 'tailwind-config/variants';
 
-// export enum Variants {
-//   Primary = "primary",
-//   Success = "success",
-//   Error = "error",
-//   Warn = "warn",
-// }
-
 export interface ButtonProps {
   title: string;
   loading: boolean;
@@ -18,7 +11,7 @@ export interface ButtonProps {
   onClick: () => void;
 }
 
-export const variants = {
+export const variantClasses = {
   [Variants.Primary]: ['bg-primary', 'active:bg-primary--dark'],
   [Variants.Success]: ['bg-success', 'active:bg-success--dark'],
   [Variants.Error]: ['bg-error', 'active:bg-error--dark'],
@@ -35,14 +28,8 @@ export const Button: React.FC<ButtonProps> = ({
     <button
       onClick={onClick}
       className={cx(
-        ...[
-          'text-primary-text',
-          'py-2',
-          'px-4',
-          'rounded-lg',
-          'drop-shadow',
-          ...variants[variant],
-        ]
+        'text-primary-text py-2 px-4 rounded-lg drop-shadow',
+        ...variantClasses[variant],
       )}
     >
       <Skeleton shapeClasses="w-14 h-3" loading={loading}>
