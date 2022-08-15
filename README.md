@@ -3,10 +3,12 @@
 This is the official monorepo of [CryptoZoo](https://cryptozoo.co/) composed with [Turborepo](https://turborepo.org/).
 
 ## Apps
+
 - `dapp`: a [Next.js](https://nextjs.org) app with [Tailwind CSS](https://tailwindcss.com/)
 - `ethereum`: a [Hardhat](https://hardhat.org/) project
 
 ## Packages
+
 - `@cryptozoo` contains CryptoZoo specific packages
   - `ui` is a stub React component library with [Tailwind CSS](https://tailwindcss.com/) connected to [Storybook](https://storybook.js.org/)
 - `tailwind-config` contains `tailwind` configurations.
@@ -51,7 +53,9 @@ yarn workspace @cryptozoo/ui storyboook
 ```
 
 # Utilities
+
 Various frameworks/libraries/utilities used throughout the monorepo.
+
 - [Tailwind CSS](https://tailwindcss.com/) for styles
 - [Storybook](https://storybook.js.org/) for UI
 - [TypeScript](https://www.typescriptlang.org/) for static type checking
