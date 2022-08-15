@@ -2,16 +2,7 @@ import { HardhatUserConfig } from 'hardhat/config';
 import '@nomicfoundation/hardhat-toolbox';
 
 const config: HardhatUserConfig = {
-  solidity: {
-    compilers: [
-      {
-        version: '0.8.9',
-      },
-      {
-        version: '0.7.1',
-      },
-    ],
-  },
+  solidity: '0.7.1',
 };
 
 export default config;
