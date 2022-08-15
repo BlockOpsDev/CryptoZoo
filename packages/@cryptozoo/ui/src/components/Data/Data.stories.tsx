@@ -4,7 +4,7 @@ import { apolloContext } from '../../utils/apollo/apollo-decorator';
 import { Data } from './Data';
 
 export default {
-  title: 'Data',
+  title: 'Components/Data',
   component: Data,
   decorators: [apolloContext],
 } as ComponentMeta<typeof Data>;
