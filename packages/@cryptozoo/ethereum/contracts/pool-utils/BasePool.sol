@@ -199,7 +199,9 @@ abstract contract BasePool is IBasePool, BasePoolAuthorization, BalancerPoolToke
   }
 
   function _isOwnerOnlyAction(bytes32 actionId) internal view virtual override returns (bool) {
-    return (actionId == getActionId(this.setSwapFeePercentage.selector)) || (actionId == getActionId(this.setAssetManagerPoolConfig.selector));
+    return
+      (actionId == getActionId(this.setSwapFeePercentage.selector)) ||
+      (actionId == getActionId(this.setAssetManagerPoolConfig.selector));
   }
 
   function _getMiscData() internal view returns (bytes32) {
@@ -312,7 +314,16 @@ abstract contract BasePool is IBasePool, BasePoolAuthorization, BalancerPoolToke
   ) external override returns (uint256 bptOut, uint256[] memory amountsIn) {
     InputHelpers.ensureInputLengthMatch(balances.length, _getTotalTokens());
 
-    _queryAction(poolId, sender, recipient, balances, lastChangeBlock, protocolSwapFeePercentage, userData, _onJoinPool);
+    _queryAction(
+      poolId,
+      sender,
+      recipient,
+      balances,
+      lastChangeBlock,
+      protocolSwapFeePercentage,
+      userData,
+      _onJoinPool
+    );
 
     // The `return` opcode is executed directly inside `_queryAction`, so execution never reaches this statement,
     // and we don't need to return anything here - it just silences compiler warnings.
@@ -340,7 +351,16 @@ abstract contract BasePool is IBasePool, BasePoolAuthorization, BalancerPoolToke
   ) external override returns (uint256 bptIn, uint256[] memory amountsOut) {
     InputHelpers.ensureInputLengthMatch(balances.length, _getTotalTokens());
 
-    _queryAction(poolId, sender, recipient, balances, lastChangeBlock, protocolSwapFeePercentage, userData, _onExitPool);
+    _queryAction(
+      poolId,
+      sender,
+      recipient,
+      balances,
+      lastChangeBlock,
+      protocolSwapFeePercentage,
+      userData,
+      _onExitPool
+    );
 
     // The `return` opcode is executed directly inside `_queryAction`, so execution never reaches this statement,
     // and we don't need to return anything here - it just silences compiler warnings.
@@ -483,7 +503,9 @@ abstract contract BasePool is IBasePool, BasePoolAuthorization, BalancerPoolToke
     uint256 lastChangeBlock,
     uint256 protocolSwapFeePercentage,
     bytes memory userData,
-    function(bytes32, address, address, uint256[] memory, uint256, uint256, bytes memory) internal returns (uint256, uint256[] memory) _action
+    function(bytes32, address, address, uint256[] memory, uint256, uint256, bytes memory)
+      internal
+      returns (uint256, uint256[] memory) _action
   ) private {
     // This uses the same technique used by the Vault in queryBatchSwap. Refer to that function for a detailed
     // explanation.

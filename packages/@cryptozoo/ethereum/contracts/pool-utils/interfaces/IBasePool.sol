@@ -98,12 +98,6 @@ interface IBasePool is IPoolSwapStructs {
    */
   function getSwapFeePercentage() external view returns (uint256);
 
-  /**
-   * @dev Returns the scaling factors of each of the Pool's tokens. This is an implementation detail that is typically
-   * not relevant for outside parties, but which might be useful for some types of Pools.
-   */
-  function getScalingFactors() external view returns (uint256[] memory);
-
   function queryJoin(
     bytes32 poolId,
     address sender,
