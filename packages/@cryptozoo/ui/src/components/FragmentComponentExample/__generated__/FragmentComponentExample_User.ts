@@ -4,19 +4,11 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: GetUserType
+// GraphQL fragment: FragmentComponentExample_User
 // ====================================================
 
-export interface GetUserType_user {
+export interface FragmentComponentExample_User {
   __typename: "User";
-  id: string | null;
+  wallet: string | null;
   name: string | null;
-}
-
-export interface GetUserType {
-  user: GetUserType_user | null;
-}
-
-export interface GetUserTypeVariables {
-  id: string;
 }

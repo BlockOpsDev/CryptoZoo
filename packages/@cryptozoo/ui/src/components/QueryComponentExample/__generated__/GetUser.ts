@@ -4,11 +4,20 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: Data_User
+// GraphQL query operation: GetUser
 // ====================================================
 
-export interface Data_User {
-  __typename: 'User';
-  wallet: string | null;
+export interface GetUser_user {
+  __typename: "User";
+  id: string | null;
   name: string | null;
+  wallet: string | null;
+}
+
+export interface GetUser {
+  user: GetUser_user | null;
+}
+
+export interface GetUserVariables {
+  id: string;
 }
