@@ -28,8 +28,8 @@ export const Button: React.FC<ButtonProps> = ({
     <button
       onClick={onClick}
       className={cx(
-        'text-primary-text py-2 px-4 rounded-lg drop-shadow',
-        ...variantClasses[variant],
+        'text-primary-text rounded-lg py-2 px-4 drop-shadow',
+        ...variantClasses[variant]
       )}
     >
       <Skeleton shapeClasses="w-14 h-3" loading={loading}>

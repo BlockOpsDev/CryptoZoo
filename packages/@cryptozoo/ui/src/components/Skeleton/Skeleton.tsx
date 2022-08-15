@@ -15,11 +15,9 @@ export const Skeleton: React.FC<SkeletonProps> = ({
   return (
     <>
       <div
-        className={cx(
-          'bg-secondary-text animate-pulse rounded-full',
-          classes,
-          { hidden: !loading }
-        )}
+        className={cx('bg-secondary-text animate-pulse rounded-full', classes, {
+          hidden: !loading,
+        })}
       ></div>
 
       <div className={cx({ hidden: loading })}>{children}</div>
