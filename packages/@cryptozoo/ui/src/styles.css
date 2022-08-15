@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .layout {
+    transform: translateX(-100vw);
+  }
+  .layout.nav-open {
+    transform: translateX(0);
+  }
+}

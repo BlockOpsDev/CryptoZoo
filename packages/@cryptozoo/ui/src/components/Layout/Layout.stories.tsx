@@ -1,17 +1,18 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { apolloContext } from '../../utils/apollo/apollo-decorator';
 
-import { Sidebar } from './Sidebar';
+import { Layout } from './Layout';
 
 export default {
-  title: 'Sidebar',
-  component: Sidebar,
+  title: 'Layout',
+  component: Layout,
+  argTypes: {
+    onClick: { action: 'clicked' },
+  },
   decorators: [apolloContext],
-} as ComponentMeta<typeof Sidebar>;
+} as ComponentMeta<typeof Layout>;
 
-const Template: ComponentStory<typeof Sidebar> = (args) => (
-  <Sidebar {...args} />
-);
+const Template: ComponentStory<typeof Layout> = (args) => <Layout {...args} />;
 
 export const Primary = Template.bind({});
 
