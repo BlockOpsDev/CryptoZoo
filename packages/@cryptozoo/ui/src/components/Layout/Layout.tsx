@@ -33,12 +33,14 @@ export const Layout: React.FC<LayoutProps> = ({
         {/* Navigation */}
         <div className="h-screen w-screen flex-none p-4">
           <div className="text-primary-text bg-layer--2 relative flex h-full w-full flex-col rounded-lg">
+
             <div className="p-4">
               <span className="text-4xl">ZOO</span>
               {/* <Image src="https://via.placeholder.com/100x100" alt="ZOO Logo" layout="fill" /> */}
               {/* <FaChevronCircleRight className="absolute -bottom-2 -right-2 text-layer--4" /> */}
             </div>
-            <ul className="flex flex-col gap-4 overflow-scroll p-4">
+
+            <ul className="flex-grow flex flex-col gap-4 overflow-scroll p-4">
               {navLinkProps.map((navLinkProps: NavLinkProps, index: number) => (
                 <li key={index} className="w-full" onClick={toggleNav}>
                   <NavLink {...navLinkProps} />
@@ -70,7 +72,7 @@ export const Layout: React.FC<LayoutProps> = ({
           </div>
 
           {/* Page Content */}
-          <div className="w-100 h-100 text-primary-text flex flex-col gap-4 overflow-y-scroll">
+          <div className="flex-grow w-100 h-100 text-primary-text flex flex-col gap-4 overflow-y-scroll">
             <h1 className="text-4xl">Page Content</h1>
             {children}
           </div>
