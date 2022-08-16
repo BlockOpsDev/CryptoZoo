@@ -4,10 +4,10 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: Data_User
+// GraphQL fragment: FragmentComponentExample_User
 // ====================================================
 
-export interface Data_User {
+export interface FragmentComponentExample_User {
   __typename: "User";
   wallet: string | null;
   name: string | null;
