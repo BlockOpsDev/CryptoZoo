@@ -1,46 +1,15 @@
-import * as React from 'react';
-import { gql, useQuery } from '@apollo/client';
-import { Data } from '../Data';
-import { GetUser } from './__generated__/GetUser';
-import { GetUserTypeVariables } from '../Test/__generated__/GetUserType';
+import React, { ReactChildren } from 'react';
 
 export interface CardProps {
-  userId: string;
+  title?: string;
+  layer: number;
+  children: ReactChildren;
 }
 
-const GET_USER_QUERY = gql`
-  query GetUser($id: ID!) {
-    user(id: $id) {
-      id
-      name
-      ...Data_User
-    }
-  }
-  ${Data.fragments.user}
-`;
-
-export const Card: React.FC<CardProps> = ({ userId }: CardProps) => {
-  const { loading, data } = useQuery<GetUser, GetUserTypeVariables>(
-    GET_USER_QUERY,
-    {
-      variables: { id: userId },
-    }
-  );
-
+export const Card: React.FC<CardProps> = ({ children }: CardProps) => {
   return (
-    <div
-      className="text-primary-text flex w-1/2 max-w-sm items-center justify-center overflow-hidden 
-    rounded bg-slate-600 shadow-lg 
-    shadow-slate-500/50"
-    >
-      {loading || !data ? (
-        'Loading...'
-      ) : (
-        <div className="flex flex-col items-center">
-          <div>{data.user && data.user.name}</div>
-          <Data user={data.user} />
-        </div>
-      )}
+    <div className="text-primary-text border-layer--4 bg-layer--2 relative flex flex-col gap-2 rounded-lg border-2 border-solid p-2 drop-shadow-md">
+      <div className="">{children}</div>
     </div>
   );
 };

@@ -13,6 +13,4 @@ const Template: ComponentStory<typeof Card> = (args) => <Card {...args} />;
 
 export const Primary = Template.bind({});
 
-Primary.args = {
-  userId: '1',
-};
+Primary.args = {};
