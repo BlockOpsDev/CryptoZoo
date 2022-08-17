@@ -21,6 +21,11 @@ export const Layout: React.FC<LayoutProps> = ({
 }: LayoutProps) => {
   const [navOpen, setNavOpen] = useState(false);
   const toggleNav = () => setNavOpen(!navOpen);
+  const onNav = () => {
+    if (window.innerWidth < 960) {
+      toggleNav();
+    }
+  }
 
   return (
     <div>
@@ -40,8 +45,6 @@ export const Layout: React.FC<LayoutProps> = ({
           )}>
             <div className="p-4 border-b-2 border-layer--3 text-center relative">
               <span className="text-4xl">ZOO</span>
-              {/* <Image src="https://via.placeholder.com/100x100" alt="ZOO Logo" layout="fill" /> */}
-              {/* <FaChevronCircleRight className="absolute -bottom-2 -right-2 text-layer--4" /> */}
 
               {/* Show Labels Button */}
               <button className={cx(
@@ -57,9 +60,9 @@ export const Layout: React.FC<LayoutProps> = ({
             </div>
 
             {/* Navigation Links */}
-            <ul className="flex-grow flex flex-col gap-4 overflow-scroll p-4">
+            <ul className="flex-grow flex flex-col gap-4 overflow-auto p-4">
               {navLinkProps.map((navLinkProps: NavLinkProps, index: number) => (
-                <li key={index} className="w-full" onClick={toggleNav}>
+                <li key={index} className="w-full" onClick={onNav}>
                   <NavLink {...navLinkProps} showLabel={navOpen} />
                 </li>
               ))}
@@ -90,7 +93,7 @@ export const Layout: React.FC<LayoutProps> = ({
           </div>
 
           {/* Page Content */}
-          <div className="flex-grow w-100 h-100 text-primary-text flex flex-col gap-4 overflow-y-scroll">
+          <div className="flex-grow w-100 h-100 text-primary-text flex flex-col gap-4 overflow-auto">
             <h1 className="text-4xl">Page Content</h1>
             {children}
           </div>
