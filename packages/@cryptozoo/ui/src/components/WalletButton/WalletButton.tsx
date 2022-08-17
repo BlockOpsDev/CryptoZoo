@@ -14,7 +14,7 @@ export interface WalletButtonProps {
 
 export const WalletButton: React.FC<WalletButtonProps> = ({ keeperBalance, zooBalance, walletAddress, connected }: WalletButtonProps) => {
   return (
-    <>
+    <div className='drop-shadow'>
       <div className={cx({ 'hidden': connected })}>
         <Button loading={false} onClick={() => { console.log("connect wallet") }} title="Connect" variant={Variants.Primary} />
       </div>
@@ -35,7 +35,7 @@ export const WalletButton: React.FC<WalletButtonProps> = ({ keeperBalance, zooBa
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -77,7 +77,7 @@ export const Layout: React.FC<LayoutProps> = ({
         </div>
 
         {/* Page Container */}
-        <div className="flex h-screen w-screen flex-none flex-col gap-4 p-4 tablet:p-6 tablet:w-100 tablet:flex-initial">
+        <div className="flex h-screen w-screen flex-none flex-col gap-4 p-4 tablet:w-100 tablet:flex-initial">
 
           {/* Header Bar */}
           <div className="w-100 text-primary-text flex items-center gap-4 rounded-lg">
@@ -93,8 +93,7 @@ export const Layout: React.FC<LayoutProps> = ({
           </div>
 
           {/* Page Content */}
-          <div className="flex-grow w-100 h-100 text-primary-text flex flex-col gap-4 overflow-auto">
-            <h1 className="text-4xl">Page Content</h1>
+          <div className="flex-grow w-100 h-100 text-primary-text flex flex-col gap-4 p-4 overflow-auto">
             {children}
           </div>
         </div>
