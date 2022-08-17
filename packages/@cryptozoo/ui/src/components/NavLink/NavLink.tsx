@@ -18,6 +18,7 @@ export interface NavLinkProps {
   to: string;
   iconKey: string;
   locked: boolean;
+  showLabel?: boolean;
 }
 
 export const iconMap: {
@@ -38,10 +39,14 @@ export const NavLink: React.FC<NavLinkProps> = ({
   to,
   iconKey,
   locked,
+  showLabel,
 }: NavLinkProps) => {
   return (
     <Link href={to}>
-      <div className="flex cursor-pointer items-center gap-2">
+      <div className={cx(
+        "flex cursor-pointer items-center gap-2",
+        { 'justify-center': !showLabel },
+      )}>
         <div
           className={cx(
             'bg-layer--3 relative flex grow-0 items-center justify-center gap-x-2 rounded-md p-2',
@@ -57,7 +62,10 @@ export const NavLink: React.FC<NavLinkProps> = ({
           />
         </div>
         <span
-          className={cx(locked ? 'text-secondary-text' : 'text-primary-text')}
+          className={cx(
+            locked ? 'text-secondary-text' : 'text-primary-text',
+            { 'hidden': !showLabel },
+          )}
         >
           {title}
         </span>
@@ -65,3 +73,7 @@ export const NavLink: React.FC<NavLinkProps> = ({
     </Link>
   );
 };
+
+NavLink.defaultProps = {
+  showLabel: true
+}
