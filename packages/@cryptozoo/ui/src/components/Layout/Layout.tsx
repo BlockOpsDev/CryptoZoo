@@ -1,16 +1,16 @@
 import React, { ReactChildren, useState } from 'react';
 import cx from 'classnames';
-import type { NavLinkProps } from '../NavLink';
-
+import { FaBars, FaChevronRight } from 'react-icons/fa';
 import { NavLink } from '../NavLink';
-
-import { AiOutlineMenu, AiOutlineRight } from 'react-icons/ai';
-const ICON_SIZE = '30';
+import type { NavLinkProps } from '../NavLink';
+import { WalletButton } from '../WalletButton';
 
 export interface LayoutProps {
   children: ReactChildren;
   navLinkProps: NavLinkProps[];
 }
+
+const ICON_SIZE = '30';
 
 /**
  * @returns Layout Element
@@ -51,7 +51,7 @@ export const Layout: React.FC<LayoutProps> = ({
                 )}
                 onClick={toggleNav}
               >
-                <AiOutlineRight size="15" />
+                <FaChevronRight size="15" className='ml-1' />
               </button>
 
             </div>
@@ -67,7 +67,7 @@ export const Layout: React.FC<LayoutProps> = ({
 
             {/* Close Menu Button */}
             <button className="absolute top-4 right-4 tablet:hidden" onClick={toggleNav}>
-              <AiOutlineRight size={ICON_SIZE} />
+              <FaChevronRight size={ICON_SIZE} />
             </button>
 
           </div>
@@ -80,14 +80,12 @@ export const Layout: React.FC<LayoutProps> = ({
           <div className="w-100 text-primary-text flex items-center gap-4 rounded-lg">
             <div className="flex-none tablet:hidden">
               <button onClick={toggleNav}>
-                <AiOutlineMenu size={ICON_SIZE} />
+                <FaBars size={ICON_SIZE} />
               </button>
             </div>
             <div className="flex-grow"></div>
             <div className="flex-none">
-              <button className="bg-primary text-primary-text rounded-lg px-4 py-2">
-                Wallet
-              </button>
+              <WalletButton connected={true} />
             </div>
           </div>
 
