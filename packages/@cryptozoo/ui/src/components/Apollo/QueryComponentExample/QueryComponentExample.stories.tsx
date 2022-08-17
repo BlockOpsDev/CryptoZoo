@@ -4,7 +4,7 @@ import { apolloContext } from '../../../utils/apollo/apollo-decorator';
 import { QueryComponentExample } from './QueryComponentExample';
 
 export default {
-  title: 'Components/QueryComponentExample',
+  title: 'Apollo/QueryComponentExample',
   component: QueryComponentExample,
   decorators: [apolloContext],
 } as ComponentMeta<typeof QueryComponentExample>;

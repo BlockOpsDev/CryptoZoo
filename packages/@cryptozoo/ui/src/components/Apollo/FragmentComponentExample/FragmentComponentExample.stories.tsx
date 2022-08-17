@@ -4,7 +4,7 @@ import { apolloContext } from '../../../utils/apollo/apollo-decorator';
 import { FragmentComponentExample } from './FragmentComponentExample';
 
 export default {
-  title: 'Components/FragmentComponentExample',
+  title: 'Apollo/FragmentComponentExample',
   component: FragmentComponentExample,
   decorators: [apolloContext],
 } as ComponentMeta<typeof FragmentComponentExample>;
