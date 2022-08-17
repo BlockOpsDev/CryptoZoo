@@ -11,7 +11,7 @@ import {
 } from 'react-icons/ai';
 import { IoStorefront, IoGameController } from 'react-icons/io5';
 import { FaLink, FaDiscord, FaLock } from 'react-icons/fa';
-const ICON_SIZE = '30';
+import type { IconType } from 'react-icons'
 
 export interface NavLinkProps {
   title: string;
@@ -22,16 +22,16 @@ export interface NavLinkProps {
 }
 
 export const iconMap: {
-  [key: string]: Element;
+  [key: string]: (IconType);
 } = {
-  home: <AiFillHome size={ICON_SIZE} />,
-  swap: <AiOutlineSwap size={ICON_SIZE} />,
-  store: <IoStorefront size={ICON_SIZE} />,
-  heart: <AiFillHeart size={ICON_SIZE} />,
-  trophy: <AiFillTrophy size={ICON_SIZE} />,
-  game: <IoGameController size={ICON_SIZE} />,
-  link: <FaLink size={ICON_SIZE} />,
-  discord: <FaDiscord size={ICON_SIZE} />,
+  home: AiFillHome,
+  swap: AiOutlineSwap,
+  store: IoStorefront,
+  heart: AiFillHeart,
+  trophy: AiFillTrophy,
+  game: IoGameController,
+  link: FaLink,
+  discord: FaDiscord,
 };
 
 export const NavLink: React.FC<NavLinkProps> = ({
@@ -53,7 +53,7 @@ export const NavLink: React.FC<NavLinkProps> = ({
             locked ? 'text-secondary-text' : 'text-primary-text'
           )}
         >
-          {iconMap[iconKey]}
+          {iconMap[iconKey]({ size: '30' })}
           <FaLock
             className={cx(
               'text-secondary-text absolute -top-1 -right-1 -rotate-6',
