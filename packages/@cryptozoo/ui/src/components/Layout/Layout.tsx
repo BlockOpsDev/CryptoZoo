@@ -26,14 +26,14 @@ export const Layout: React.FC<LayoutProps> = ({
     <div>
       <div
         className={cx(
-          'layout bg-layer--1 fixed top-0 left-0 flex overflow-clip transition-transform',
-          { 'nav-open': navOpen }
+          'bg-layer--1 fixed top-0 left-0 flex overflow-clip transition-transform',
+          navOpen ? 'translate-x-0' : '-translate-x-screen',
+          'tablet:w-screen tablet:translate-x-0'
         )}
       >
         {/* Navigation */}
-        <div className="h-screen w-screen flex-none p-4">
-          <div className="text-primary-text bg-layer--2 relative flex h-full w-full flex-col rounded-lg">
-
+        <div className="h-screen w-screen flex-none p-4 tablet:w-fit">
+          <div className="text-primary-text bg-layer--2 border-2 border-solid border-layer--3 relative flex h-full w-full flex-col rounded-lg">
             <div className="p-4">
               <span className="text-4xl">ZOO</span>
               {/* <Image src="https://via.placeholder.com/100x100" alt="ZOO Logo" layout="fill" /> */}
@@ -48,17 +48,17 @@ export const Layout: React.FC<LayoutProps> = ({
               ))}
             </ul>
             {/* Close Menu Button */}
-            <button className="absolute top-4 right-4" onClick={toggleNav}>
+            <button className="absolute top-4 right-4 tablet:hidden" onClick={toggleNav}>
               <AiOutlineRight size={ICON_SIZE} />
             </button>
           </div>
         </div>
 
         {/* Page Container */}
-        <div className="flex h-screen w-screen flex-none flex-col gap-4 p-4">
+        <div className="flex h-screen w-screen flex-none flex-col gap-4 p-4 tablet:w-100 tablet:flex-initial">
           {/* Header Bar */}
-          <div className="w-100 text-primary-text bg-layer--2 flex items-center gap-4 rounded-lg p-4">
-            <div className="flex-none">
+          <div className="w-100 text-primary-text flex items-center gap-4 rounded-lg">
+            <div className="flex-none tablet:hidden">
               <button onClick={toggleNav}>
                 <AiOutlineMenu size={ICON_SIZE} />
               </button>

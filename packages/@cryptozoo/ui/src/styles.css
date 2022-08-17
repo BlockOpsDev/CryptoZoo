@@ -3,10 +3,7 @@
 @tailwind utilities;
 
 @layer utilities {
-  .layout {
+  .-translate-x-screen {
     transform: translateX(-100vw);
-  }
-  .layout.nav-open {
-    transform: translateX(0);
   }
 }
