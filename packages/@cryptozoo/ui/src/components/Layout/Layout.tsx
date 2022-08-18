@@ -21,7 +21,7 @@ export const Layout: React.FC<LayoutProps> = ({
   children,
 }: LayoutProps) => {
   const [navOpen, setNavOpen] = useState(false);
-  const toggleNav = () => setNavOpen(!navOpen);
+  const toggleNav = () => setNavOpen(prevNavOpen => !prevNavOpen);
   const onNav = () => {
     console.log(window.innerWidth)
     if (window.innerWidth < 960) {
