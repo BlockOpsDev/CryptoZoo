@@ -34,8 +34,11 @@ module.exports = {
       'warn--light': '#c09d43',
       'warn': '#9b5e00',
       'warn--dark': '#512900',
+    },
+    fontFamily: {
+      'chakra': ['Chakra Petch', 'sans-serif']
     }
   },
   darkMode: 'class',
-  plugins: [],
+  plugins: ["postcss-import"],
 };
