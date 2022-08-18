@@ -10,7 +10,6 @@ export interface LayoutProps {
   navLinkProps: NavLinkProps[];
 }
 
-const ICON_SIZE = '30';
 
 /**
  * @returns Layout Element
@@ -22,23 +21,30 @@ export const Layout: React.FC<LayoutProps> = ({
   const [navOpen, setNavOpen] = useState(false);
   const toggleNav = () => setNavOpen(!navOpen);
   const onNav = () => {
+    console.log(window.innerWidth)
     if (window.innerWidth < 960) {
       toggleNav();
     }
   }
 
+  const ICON_SIZE = '30';
+
   return (
     <div>
       <div
         className={cx(
-          'bg-layer--1 fixed top-0 left-0 flex overflow-clip transition-transform',
+          'fixed top-0 left-0',
+          'flex overflow-clip transition-transform bg-layer--1',
           'tablet:w-screen tablet:translate-x-0',
-          ( navOpen ? 'translate-x-0' : '-translate-x-screen' ),
+          ( navOpen ? 'translate-x-0' : 'translate-x-[-85vw]' ),
         )}
       >
 
         {/* Navigation */}
-        <div className="h-screen w-screen flex-none p-4 tablet:p-0 tablet:w-fit">
+        <div className={cx(
+          'h-screen w-[85vw] flex-none p-4',
+          'tablet:p-0 tablet:w-fit',
+        )}>
           <div className={cx(
             "text-primary-text bg-layer--2 border-2 border-solid border-layer--3 relative flex h-full w-full flex-col rounded-lg",
             "tablet:rounded-none tablet:border-0 tablet:border-r-2 transition-all",
@@ -93,7 +99,7 @@ export const Layout: React.FC<LayoutProps> = ({
           </div>
 
           {/* Page Content */}
-          <div className="flex-grow w-100 h-100 text-primary-text flex flex-col gap-4 p-4 overflow-auto">
+          <div className="flex-grow w-100 h-100 text-primary-text flex flex-col gap-4 p-2 tablet:p-4 overflow-auto">
             {children}
           </div>
         </div>
