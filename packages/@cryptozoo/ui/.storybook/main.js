@@ -9,6 +9,5 @@ module.exports = {
     '@storybook/addon-interactions',
     'storybook-dark-mode',
   ],
-  staticDirs: ['../src/static/images'],
   framework: '@storybook/react',
 };

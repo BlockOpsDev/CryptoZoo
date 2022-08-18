@@ -13,7 +13,7 @@ export default function Home() {
 
       <div className="grid grid-cols-6 gap-4">
         <div className="col-span-full tablet:col-span-2">
-          <Card layer={2} className="h-full">
+          <Card layer={1} className="h-full">
             <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Deleniti animi facere minus iure quo, officiis porro velit aut expedita nostrum illum dicta quos ipsa laudantium quod amet? Deleniti rerum, enim eos unde laboriosam ipsa, distinctio expedita vitae, repudiandae itaque dicta veniam ipsum fuga qui et nemo accusamus vel voluptatem assumenda.</p>
           </Card>
         </div>
@@ -36,9 +36,6 @@ export default function Home() {
         </div>
 
       </div>
-
-      {/* <Test id="1" /> */}
-      {/* <Card userId="1" /> */}
     </>
   );
 }
