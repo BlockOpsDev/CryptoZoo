@@ -1,11 +1,16 @@
-import React from 'react';
+import React from "react";
+import { Card } from "../Card";
 
 export interface SwapProps {
-  props: object;
+  props?: object;
 }
 
 export const Swap: React.FC<SwapProps> = (_: SwapProps) => {
   return (
-    <div className="text-white"></div>
+    <Card layer={2} className="w-full h-full">
+      <div className="relative flex flex-col gap-2">
+        <h1 className="text-4xl font-['Chakra Petch']">Token Swap</h1>
+      </div>
+    </Card>
   );
 };
