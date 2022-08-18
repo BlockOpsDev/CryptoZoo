@@ -8,7 +8,7 @@
 // ====================================================
 
 export interface GetUserType_user {
-  __typename: "User";
+  __typename: 'User';
   id: string | null;
   name: string | null;
 }

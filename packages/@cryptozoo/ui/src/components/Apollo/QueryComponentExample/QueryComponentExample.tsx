@@ -2,7 +2,7 @@ import * as React from 'react';
 import { gql, useQuery } from '@apollo/client';
 import { FragmentComponentExample } from '../FragmentComponentExample';
 import { GetUser } from './__generated__/GetUser';
-import { GetUserTypeVariables } from '../Test/__generated__/GetUserType';
+import { GetUserTypeVariables } from '../../Test/__generated__/GetUserType';
 
 export interface QueryComponentExampleProps {
   userId: string;

@@ -1,4 +1,4 @@
-import FragC from '../../utils/FragC';
+import FragC from '../../../utils/FragC';
 import { gql } from '@apollo/client';
 import { FragmentComponentExample_User } from './__generated__/FragmentComponentExample_User';
 
