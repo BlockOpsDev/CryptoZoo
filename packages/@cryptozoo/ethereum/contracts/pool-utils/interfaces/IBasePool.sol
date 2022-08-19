@@ -12,11 +12,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-pragma solidity ^0.7.0;
+pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
-import "@balancer-labs/v2-vault/contracts/interfaces/IVault.sol";
-import "@balancer-labs/v2-vault/contracts/interfaces/IPoolSwapStructs.sol";
+import "@balancer-labs/ethereum/contracts/interfaces/vault/IVault.sol";
+import "@balancer-labs/ethereum/contracts/interfaces/vault/IPoolSwapStructs.sol";
 
 /**
  * @dev Interface for adding and removing liquidity that all Pool contracts should implement. Note that this is not

@@ -1320,40 +1320,6 @@
   resolved "https://registry.yarnpkg.com/@balancer-labs/typechain/-/typechain-1.0.0.tgz#823eb13b9e166f7b50334c9d70d9ade81344f5c9"
   integrity sha512-/fWxh4UgmHxtRt5e1anVeF8COo6FBNF28X8bd0/55SIdRDyaW7TMC7K4Jbuy58IcaERmEqi089lABlEgoeiWTQ==
 
-"@balancer-labs/v2-asset-manager-utils@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@balancer-labs/v2-asset-manager-utils/-/v2-asset-manager-utils-0.2.0.tgz#e7570fdc1b621047017a4653d8f06362477a24d2"
-  integrity sha512-6ti1pzbpgB5aT1WzbGwo69ILTNAJdAnaJcw3L9QB2aBsAhQ41H+MF3tjPvuv6P84RgJ9z42EhtwLYZqklRF0rg==
-  dependencies:
-    "@balancer-labs/v2-solidity-utils" "2.0.0"
-    "@balancer-labs/v2-vault" "2.0.0"
-
-"@balancer-labs/v2-deployments@^2.3.0":
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/@balancer-labs/v2-deployments/-/v2-deployments-2.3.0.tgz#d3810944e7b3efa890e8a207a2d0be53e9055b51"
-  integrity sha512-ShVgce/X8lhb6y9GvLmIXbYM1gONmh3rOM1BW9nfa0qW4hN1SThAbJlNWrEUUkE0VK8UT/fqGwEoyRB5In9QYA==
-
-"@balancer-labs/v2-pool-utils@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@balancer-labs/v2-pool-utils/-/v2-pool-utils-2.0.1.tgz#a98b7b10a8f7d6cbb8890394427334943eda81e8"
-  integrity sha512-Xt3d8LqJnqq5JkuSgvf0sZuWqaywg9JxrCT1myVsG6zgbtfvcraJgSCLERUdqxP47aUPHwKvm5/+mdT9xayCXA==
-  dependencies:
-    "@balancer-labs/v2-asset-manager-utils" "0.2.0"
-    "@balancer-labs/v2-solidity-utils" "2.0.0"
-    "@balancer-labs/v2-vault" "2.0.0"
-
-"@balancer-labs/v2-solidity-utils@2.0.0", "@balancer-labs/v2-solidity-utils@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@balancer-labs/v2-solidity-utils/-/v2-solidity-utils-2.0.0.tgz#a3d8942873b4adc216c8276d150743ede5c459ca"
-  integrity sha512-OB+05vJqrs35B1d40y7tnSm6oYWnsmfRa/wpI2owJXhwx/8qr2buE+RDmT0x6Upr/c7wBdUh8v4UVk9l0+CNiA==
-
-"@balancer-labs/v2-vault@2.0.0", "@balancer-labs/v2-vault@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@balancer-labs/v2-vault/-/v2-vault-2.0.0.tgz#def6f8d4b777f421224118e473b5115f09819768"
-  integrity sha512-GwPY84j6g7OY1z13wRYYGQeupb6DI3U+s22Ebg2v32djS9CnPzM04GJapURRbKZkpraUOYIcqhEF3Cm1AafAKg==
-  dependencies:
-    "@balancer-labs/v2-solidity-utils" "2.0.0"
-
 "@base2/pretty-print-object@1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@base2/pretty-print-object/-/pretty-print-object-1.0.1.tgz#371ba8be66d556812dc7fb169ebc3c08378f69d4"
@@ -2819,10 +2785,10 @@
   resolved "https://registry.yarnpkg.com/@oclif/screen/-/screen-3.0.2.tgz#969054308fe98d130c02844a45cc792199b75670"
   integrity sha512-S/SF/XYJeevwIgHFmVDAFRUvM3m+OjhvCAYMk78ZJQCYCQ5wS7j+LTt1ZEv2jpEEGg2tx/F6TYYWxddNAYHrFQ==
 
-"@openzeppelin/contracts@^4.7.1":
-  version "4.7.1"
-  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.7.1.tgz#33d0a857b76b18d313e6bb6ed28cdaf367e90cfe"
-  integrity sha512-UXmAjKARsXORHlHZu5GCD7ZbRKm6nU8UHnbuT/QJJa2JEOEcbvV/X8w/sUk62Sl9VZuuljM1akrZLyAtzUgsxw==
+"@openzeppelin/contracts@^4.7.3":
+  version "4.7.3"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.7.3.tgz#939534757a81f8d69cc854c7692805684ff3111e"
+  integrity sha512-dGRS0agJzu8ybo44pCIf3xBaPQN/65AIXNgK8+4gzKd5kbvlqyxryUYVLJv7fK98Seyd2hDZzVEHSWAh0Bt1Yw==
 
 "@pmmmwh/react-refresh-webpack-plugin@^0.5.3":
   version "0.5.7"

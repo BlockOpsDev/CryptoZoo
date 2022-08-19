@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: Unlicenced
 
-pragma solidity ^0.7.0;
+pragma solidity ^0.8.0;
 
-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/IERC20.sol";
+// import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/IERC20.sol";
 
 library ContinuousPoolUserData {
   enum JoinKind {

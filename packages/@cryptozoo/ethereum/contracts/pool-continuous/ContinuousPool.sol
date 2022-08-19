@@ -1,17 +1,16 @@
 // SPDX-License-Identifier: Unlicenced
 
-pragma solidity ^0.7.0;
+pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
-import "@balancer-labs/v2-solidity-utils/contracts/math/FixedPoint.sol";
-import "@balancer-labs/v2-solidity-utils/contracts/helpers/InputHelpers.sol";
+// import "@balancer-labs/v2-solidity-utils/contracts/math/FixedPoint.sol";
+import "@balancer-labs/ethereum/contracts/solidity-utils/helpers/InputHelpers.sol";
 
 import "../pool-utils/BaseMinimalSwapInfoPool.sol";
-
 import "./interfaces/ContinuousPoolUserData.sol";
 
 abstract contract ContinuousPool is BaseMinimalSwapInfoPool {
-  using FixedPoint for uint256;
+  // using FixedPoint for uint256;
   using ContinuousPoolUserData for bytes;
 
   constructor(

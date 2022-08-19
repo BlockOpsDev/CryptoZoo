@@ -12,11 +12,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-pragma solidity ^0.7.0;
+pragma solidity ^0.8.0;
 
-import "@balancer-labs/v2-vault/contracts/interfaces/IAuthorizer.sol";
-
-import "@balancer-labs/v2-solidity-utils/contracts/helpers/Authentication.sol";
+import "@balancer-labs/ethereum/contracts/interfaces/vault/IAuthorizer.sol";
+import "@balancer-labs/ethereum/contracts/solidity-utils/helpers/Authentication.sol";
 
 /**
  * @dev Base authorization layer implementation for Pools.

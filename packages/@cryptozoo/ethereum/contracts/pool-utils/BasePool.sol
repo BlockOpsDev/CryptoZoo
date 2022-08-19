@@ -12,22 +12,21 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-pragma solidity ^0.7.0;
+pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
-import "@balancer-labs/v2-solidity-utils/contracts/math/Math.sol";
-import "@balancer-labs/v2-solidity-utils/contracts/math/FixedPoint.sol";
-import "@balancer-labs/v2-solidity-utils/contracts/helpers/InputHelpers.sol";
-import "@balancer-labs/v2-solidity-utils/contracts/helpers/TemporarilyPausable.sol";
-import "@balancer-labs/v2-solidity-utils/contracts/helpers/WordCodec.sol";
-import "@balancer-labs/v2-solidity-utils/contracts/openzeppelin/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import "@balancer-labs/v2-vault/contracts/interfaces/IVault.sol";
-import "@balancer-labs/v2-asset-manager-utils/contracts/IAssetManager.sol";
+// import "@balancer-labs/ethereum/contracts/solidity-utils/math/Math.sol";
+import "@balancer-labs/ethereum/contracts/solidity-utils/math/FixedPoint.sol";
+import "@balancer-labs/ethereum/contracts/solidity-utils/helpers/InputHelpers.sol";
+import "@balancer-labs/ethereum/contracts/solidity-utils/helpers/TemporarilyPausable.sol";
+import "@balancer-labs/ethereum/contracts/solidity-utils/helpers/WordCodec.sol";
 
-import "@balancer-labs/v2-pool-utils/contracts/BalancerPoolToken.sol";
-// import "@balancer-labs/v2-pool-utils/contracts/BasePoolAuthorization.sol";
+import "@balancer-labs/ethereum/contracts/interfaces/vault/IVault.sol";
+// import "@balancer-labs/v2-asset-manager-utils/contracts/IAssetManager.sol";
 
+import "./BalancerPoolToken.sol";
 import "./BasePoolAuthorization.sol";
 import "./interfaces/IBasePool.sol";
 
@@ -65,6 +64,7 @@ abstract contract BasePool is IBasePool, BasePoolAuthorization, BalancerPoolToke
   // used to store any other piece of information.
   bytes32 private _miscData;
   uint256 private constant _SWAP_FEE_PERCENTAGE_OFFSET = 192;
+  uint256 private constant _SWAP_FEE_PERCENTAGE_BIT_LENGTH = 64;
 
   IVault private immutable _vault;
   bytes32 private immutable _poolId;
@@ -86,7 +86,7 @@ abstract contract BasePool is IBasePool, BasePoolAuthorization, BalancerPoolToke
     uint256 bufferPeriodDuration,
     address owner
   )
-    Authentication(bytes32(uint256(msg.sender)))
+    Authentication(bytes32(uint256(uint160(msg.sender))))
     BalancerPoolToken(name, symbol)
     BasePoolAuthorization(owner)
     TemporarilyPausable(pauseWindowDuration, bufferPeriodDuration)
@@ -115,7 +115,7 @@ abstract contract BasePool is IBasePool, BasePoolAuthorization, BalancerPoolToke
 
   // Getters / Setters
 
-  function getVault() public view returns (IVault) {
+  function getVault() public view override returns (IVault) {
     return _vault;
   }
 
@@ -140,7 +140,7 @@ abstract contract BasePool is IBasePool, BasePoolAuthorization, BalancerPoolToke
    * @dev This is stored in `_miscData`.
    */
   function getSwapFeePercentage() public view virtual override returns (uint256) {
-    return _miscData.decodeUint64(_SWAP_FEE_PERCENTAGE_OFFSET);
+    return _miscData.decodeUint(_SWAP_FEE_PERCENTAGE_OFFSET, _SWAP_FEE_PERCENTAGE_BIT_LENGTH);
   }
 
   /**
@@ -164,20 +164,20 @@ abstract contract BasePool is IBasePool, BasePoolAuthorization, BalancerPoolToke
     _require(swapFeePercentage >= _MIN_SWAP_FEE_PERCENTAGE, Errors.MIN_SWAP_FEE_PERCENTAGE);
     _require(swapFeePercentage <= _MAX_SWAP_FEE_PERCENTAGE, Errors.MAX_SWAP_FEE_PERCENTAGE);
 
-    _miscData = _miscData.insertUint64(swapFeePercentage, _SWAP_FEE_PERCENTAGE_OFFSET);
+    _miscData = _miscData.insertUint(swapFeePercentage, _SWAP_FEE_PERCENTAGE_OFFSET, _SWAP_FEE_PERCENTAGE_BIT_LENGTH);
     emit SwapFeePercentageChanged(swapFeePercentage);
   }
 
-  function setAssetManagerPoolConfig(IERC20 token, bytes memory poolConfig) public virtual authenticate whenNotPaused {
-    _setAssetManagerPoolConfig(token, poolConfig);
-  }
+  // function setAssetManagerPoolConfig(IERC20 token, bytes memory poolConfig) public virtual authenticate whenNotPaused {
+  //   _setAssetManagerPoolConfig(token, poolConfig);
+  // }
 
-  function _setAssetManagerPoolConfig(IERC20 token, bytes memory poolConfig) private {
-    bytes32 poolId = getPoolId();
-    (, , , address assetManager) = getVault().getPoolTokenInfo(poolId, token);
+  // function _setAssetManagerPoolConfig(IERC20 token, bytes memory poolConfig) private {
+  //   bytes32 poolId = getPoolId();
+  //   (, , , address assetManager) = getVault().getPoolTokenInfo(poolId, token);
 
-    IAssetManager(assetManager).setConfig(poolId, poolConfig);
-  }
+  //   IAssetManager(assetManager).setConfig(poolId, poolConfig);
+  // }
 
   /**
    * @notice Pause the pool: an emergency action which disables all pool functions.
@@ -199,9 +199,9 @@ abstract contract BasePool is IBasePool, BasePoolAuthorization, BalancerPoolToke
   }
 
   function _isOwnerOnlyAction(bytes32 actionId) internal view virtual override returns (bool) {
-    return
-      (actionId == getActionId(this.setSwapFeePercentage.selector)) ||
-      (actionId == getActionId(this.setAssetManagerPoolConfig.selector));
+    return (actionId == getActionId(this.setSwapFeePercentage.selector));
+    // ||
+    // (actionId == getActionId(this.setAssetManagerPoolConfig.selector));
   }
 
   function _getMiscData() internal view returns (bytes32) {
@@ -311,7 +311,7 @@ abstract contract BasePool is IBasePool, BasePoolAuthorization, BalancerPoolToke
     uint256 lastChangeBlock,
     uint256 protocolSwapFeePercentage,
     bytes memory userData
-  ) external override returns (uint256 bptOut, uint256[] memory amountsIn) {
+  ) external override returns (uint256, uint256[] memory) {
     InputHelpers.ensureInputLengthMatch(balances.length, _getTotalTokens());
 
     _queryAction(
@@ -327,7 +327,6 @@ abstract contract BasePool is IBasePool, BasePoolAuthorization, BalancerPoolToke
 
     // The `return` opcode is executed directly inside `_queryAction`, so execution never reaches this statement,
     // and we don't need to return anything here - it just silences compiler warnings.
-    return (bptOut, amountsIn);
   }
 
   /**
@@ -348,7 +347,7 @@ abstract contract BasePool is IBasePool, BasePoolAuthorization, BalancerPoolToke
     uint256 lastChangeBlock,
     uint256 protocolSwapFeePercentage,
     bytes memory userData
-  ) external override returns (uint256 bptIn, uint256[] memory amountsOut) {
+  ) external override returns (uint256, uint256[] memory) {
     InputHelpers.ensureInputLengthMatch(balances.length, _getTotalTokens());
 
     _queryAction(
@@ -364,7 +363,6 @@ abstract contract BasePool is IBasePool, BasePoolAuthorization, BalancerPoolToke
 
     // The `return` opcode is executed directly inside `_queryAction`, so execution never reaches this statement,
     // and we don't need to return anything here - it just silences compiler warnings.
-    return (bptIn, amountsOut);
   }
 
   // Internal hooks to be overridden by derived contracts - all token amounts (except BPT) in these interfaces are
