@@ -24,7 +24,11 @@ export const Card: React.FC<CardProps> = ({ children, layer, className: _classNa
       _className,
       layerClasses[layer],
     )}>
-      {children}
+      {children || <span>Card Content</span>}
     </div>
   );
 };
+
+Card.defaultProps = {
+  layer: 2
+}

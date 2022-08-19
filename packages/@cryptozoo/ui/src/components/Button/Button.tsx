@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { ReactChild } from 'react';
 import cx from 'classnames';
 
 import { Skeleton } from '../Skeleton';
 import Variants from 'tailwind-config/variants';
 
 export interface ButtonProps {
-  title: string;
   loading: boolean;
   variant: Variants;
+  children: ReactChild;
   onClick: () => void;
 }
 
@@ -19,9 +19,9 @@ export const variantClasses = {
 };
 
 export const Button: React.FC<ButtonProps> = ({
-  title,
   loading,
   variant,
+  children,
   onClick,
 }: ButtonProps) => {
   return (
@@ -33,7 +33,7 @@ export const Button: React.FC<ButtonProps> = ({
       )}
     >
       <Skeleton shapeClasses="w-14 h-3" loading={loading}>
-        <span>{title}</span>
+        {children || <span>Button</span>}
       </Skeleton>
     </button>
   );

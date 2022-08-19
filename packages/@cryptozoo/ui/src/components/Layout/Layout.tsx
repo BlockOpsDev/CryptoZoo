@@ -98,7 +98,7 @@ export const Layout: React.FC<LayoutProps> = ({
             </div>
             <div className="flex-grow"></div>
             <div className="flex-none">
-              <WalletButton connected={true} />
+              <WalletButton connected={true} walletAddress="" keeperBalance='0' zooBalance='0' />
             </div>
           </div>
 
