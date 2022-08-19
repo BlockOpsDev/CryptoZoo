@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactChild, useState } from 'react';
 import cx from 'classnames';
 
 export type Option = {
@@ -7,35 +7,30 @@ export type Option = {
 }
 
 export interface DropdownProps {
-  options: Option[];
-  className?: string;
   layer: 1 | 2 | 3 | 4;
+  children: {
+    buttonContent?: ReactChild,
+    listContent?: ReactChild,
+  }
 }
 
-export const Dropdown: React.FC<DropdownProps> = ({ layer, options, className: _className }: DropdownProps) => {
-  const bgClass = {
-    1: 'bg-layer--1',
-    2: 'bg-layer--2',
-    3: 'bg-layer--3',
-    4: 'bg-layer--4',
-  }[layer]
-
-  const dropdownRef = React.useRef<null|HTMLSelectElement>(null);
-
-  const openDropdown = () => {
-    console.log(dropdownRef.current)
-    if (dropdownRef.current !== null)
-      dropdownRef.current.click();
-  }
+export const Dropdown: React.FC<DropdownProps> = ({ children }: DropdownProps) => {
+  const [open, setOpen] = useState(false);
+  const toggleOpen = () => setOpen(prevOpen => !prevOpen);
 
   return (
-    <div className="relative">
-      <label htmlFor="dropdown" onClick={openDropdown}>label</label>
-      <select ref={dropdownRef} id='dropdown' className={cx('rounded-md p-2 appearance-none', bgClass, _className)}>
-        {options.map((option, index) => (
-          <option value={option.value} key={index}>{option.title}</option>
-        ))}
-      </select>
+    <div className="relative text-primary-text">
+      <button onClick={toggleOpen}>
+        {children.buttonContent || 'Button'}
+      </button>
+      <div className={cx({'hidden': !open})}>
+        {children.listContent || 'List Content'}
+      </div>
     </div>
   );
 };
+
+Dropdown.defaultProps = {
+  layer: 4,
+  children: {}
+}

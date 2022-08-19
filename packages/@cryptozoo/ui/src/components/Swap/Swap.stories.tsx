@@ -4,7 +4,7 @@ import { apolloContext } from '../../utils/apollo/apollo-decorator';
 import { Swap } from './Swap';
 
 export default {
-  title: 'Swap',
+  title: 'Cards/Swap',
   component: Swap,
   decorators: [apolloContext],
 } as ComponentMeta<typeof Swap>;
