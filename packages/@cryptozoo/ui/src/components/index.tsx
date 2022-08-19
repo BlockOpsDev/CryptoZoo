@@ -1,4 +1,5 @@
 /* PLOP_INJECT_EXPORT */
+export * from './Dropdown';
 export * from './Swap';
 export * from './WalletButton';
 export * from './NavLink';
