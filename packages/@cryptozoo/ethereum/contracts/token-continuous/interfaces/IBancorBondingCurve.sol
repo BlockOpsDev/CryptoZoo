@@ -14,23 +14,13 @@
 
 pragma solidity 0.8.14;
 
-import "../math-utils/BancorFormula.sol";
-import "./interfaces/IBancorBondingCurve.sol";
-
-abstract contract BancorBondingCurve is IBancorBondingCurve, BancorFormula {
-  function getContinuousSwap(bondSwapKind kind, uint256 amount) public view returns (uint256) {
-    if (kind == bondSwapKind.MINT_GIVIN_IN) {
-      return calculatePurchaseReturn(continuousSupply(), virtualReserveBalance(), reserveRatio(), amount);
-    } else if (kind == bondSwapKind.MINT_GIVIN_OUT) {
-      return calculatePurchasePrice(continuousSupply(), virtualReserveBalance(), reserveRatio(), amount);
-    } else if (kind == bondSwapKind.BURN_GIVIN_IN) {
-      return calculateSaleReturn(continuousSupply(), virtualReserveBalance(), reserveRatio(), amount);
-    } else {
-      return calculateSaleReturn(continuousSupply(), virtualReserveBalance(), reserveRatio(), amount);
-    }
+interface IBancorBondingCurve {
+  enum bondSwapKind {
+    MINT_GIVIN_IN,
+    MINT_GIVIN_OUT,
+    BURN_GIVIN_IN,
+    BURN_GIVIN_OUT
   }
-
-  //Functions Requiring Implementation
 
   /**
    * @dev Abstract method that returns reserveRatio
@@ -40,20 +30,20 @@ abstract contract BancorBondingCurve is IBancorBondingCurve, BancorFormula {
    * 1/2 corresponds to y= multiple * x
    * 2/3 corresponds to y= multiple * x^1/2
    */
-  function reserveRatio() public view virtual returns (uint256);
+  function reserveRatio() external view returns (uint256);
 
   /**
    * @dev Abstract method that returns continuous token supply
    */
-  function continuousSupply() public view virtual returns (uint256);
+  function continuousSupply() external view returns (uint256);
 
   /**
    * @dev Abstract method that returns reserve token balance
    */
-  function reserveBalance() public view virtual returns (uint256);
+  function reserveBalance() external view returns (uint256);
 
   /**
    * @dev Abstract method that returns virtual reserve token balance used for bancor formula
    */
-  function virtualReserveBalance() public view virtual returns (uint256);
+  function virtualReserveBalance() external view returns (uint256);
 }

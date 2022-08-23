@@ -88,6 +88,11 @@ interface IBasePool is IPoolSwapStructs {
   ) external returns (uint256[] memory amountsOut, uint256[] memory dueProtocolFeeAmounts);
 
   /**
+   * @dev Returns this Pool's Vault
+   */
+  function getVault() external view returns (IVault);
+
+  /**
    * @dev Returns this Pool's ID, used when interacting with the Vault (to e.g. join the Pool or swap with it).
    */
   function getPoolId() external view returns (bytes32);
@@ -97,24 +102,4 @@ interface IBasePool is IPoolSwapStructs {
    * 10% swap fee.
    */
   function getSwapFeePercentage() external view returns (uint256);
-
-  function queryJoin(
-    bytes32 poolId,
-    address sender,
-    address recipient,
-    uint256[] memory balances,
-    uint256 lastChangeBlock,
-    uint256 protocolSwapFeePercentage,
-    bytes memory userData
-  ) external returns (uint256 bptOut, uint256[] memory amountsIn);
-
-  function queryExit(
-    bytes32 poolId,
-    address sender,
-    address recipient,
-    uint256[] memory balances,
-    uint256 lastChangeBlock,
-    uint256 protocolSwapFeePercentage,
-    bytes memory userData
-  ) external returns (uint256 bptIn, uint256[] memory amountsOut);
 }

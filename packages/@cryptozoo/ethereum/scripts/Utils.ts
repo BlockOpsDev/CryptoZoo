@@ -3,6 +3,7 @@ import { ContractReceipt, ContractTransaction } from '@ethersproject/contracts';
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/dist/src/signer-with-address';
 
 export enum wallets {
+  wethDeployer,
   czDeployer,
   czAdmin,
   trader,

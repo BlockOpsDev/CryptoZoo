@@ -1,35 +1,59 @@
-// SPDX-License-Identifier: Unlicenced
+// SPDX-License-Identifier: GPL-3.0-or-later
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
-// import "@balancer-labs/v2-solidity-utils/contracts/math/FixedPoint.sol";
 import "@balancer-labs/ethereum/contracts/solidity-utils/helpers/InputHelpers.sol";
 
+import "./interfaces/IContinuousPool.sol";
 import "../pool-utils/BaseMinimalSwapInfoPool.sol";
-import "./interfaces/ContinuousPoolUserData.sol";
 
-abstract contract ContinuousPool is BaseMinimalSwapInfoPool {
-  // using FixedPoint for uint256;
+import "./helpers/ContinuousPoolUserData.sol";
+import "./helpers/ERC20Helpers.sol";
+
+import "../token-continuous/ContinuousToken.sol";
+
+abstract contract ContinuousPool is IContinuousPool, BaseMinimalSwapInfoPool, ContinuousToken {
   using ContinuousPoolUserData for bytes;
 
+  IERC20 private immutable _reserveToken;
+
+  uint256 private immutable _continuousIndex;
+  uint256 private immutable _reserveIndex;
+
   constructor(
-    IVault vault,
+    //Continuous Token Params
+    IERC20 reserveToken,
     string memory name,
     string memory symbol,
-    IERC20[] memory tokens,
+    uint256 minReserve,
+    uint256 supply,
+    uint32 reserveRatio,
+    //Pool Params
+    IVault vault,
     address[] memory assetManagers,
     uint256 swapFeePercentage,
     uint256 pauseWindowDuration,
     uint256 bufferPeriodDuration,
     address owner
   )
+    ContinuousToken(name, symbol, minReserve, supply, reserveRatio)
     BasePool(
       vault,
       IVault.PoolSpecialization.TWO_TOKEN,
-      name,
-      symbol,
-      tokens,
+      _sortTokens(reserveToken, this),
       assetManagers,
       swapFeePercentage,
       pauseWindowDuration,
@@ -37,7 +61,42 @@ abstract contract ContinuousPool is BaseMinimalSwapInfoPool {
       owner
     )
   {
-    // solhint-disable-previous-line no-empty-blocks
+    _reserveToken = reserveToken;
+
+    (uint256 reserveIndex, uint256 continuousIndex) = _getSortedTokenIndexes(reserveToken, this);
+    _reserveIndex = reserveIndex;
+    _continuousIndex = continuousIndex;
+  }
+
+  /**
+   * @notice Return the reserve token address as an IERC20.
+   */
+  function getReserveToken() public view override returns (IERC20) {
+    return _reserveToken;
+  }
+
+  /**
+   * @notice Return the index of the reserve token.
+   * @dev Note that this is an index into the registered token list (with 2 tokens).
+   */
+  function getReserveIndex() external view override returns (uint256) {
+    return _reserveIndex;
+  }
+
+  /**
+   * @notice Return the index of the continuous token.
+   * @dev Note that this is an index into the registered token list (with 2 tokens).
+   */
+  function getContinuousIndex() public view override returns (uint256) {
+    return _continuousIndex;
+  }
+
+  function _getTotalTokens() internal pure override returns (uint256) {
+    return 2;
+  }
+
+  function _getMaxTokens() internal pure override returns (uint256) {
+    return 2;
   }
 
   //Implement Base Pool Handlers
@@ -45,38 +104,95 @@ abstract contract ContinuousPool is BaseMinimalSwapInfoPool {
   // Swap Handlers
   function _onSwapGivenIn(
     SwapRequest memory swapRequest,
-    uint256 currentBalanceTokenIn,
-    uint256 currentBalanceTokenOut
-  ) internal view virtual override returns (uint256) {
+    uint256,
+    uint256
+  ) internal virtual override returns (uint256) {
     // Swaps are disabled while the contract is paused.
+    bool isMint = swapRequest.tokenIn == _reserveToken;
+    uint256[] memory balanceDeltas = new uint256[](2);
 
-    return 1e18;
-    // WeightedMath._calcOutGivenIn(
-    //     currentBalanceTokenIn,
-    //     _getNormalizedWeight(swapRequest.tokenIn),
-    //     currentBalanceTokenOut,
-    //     _getNormalizedWeight(swapRequest.tokenOut),
-    //     swapRequest.amount
-    // );
+    uint256 amount;
+
+    if (isMint) {
+      amount = getContinuousSwap(bondSwapKind.MINT_GIVIN_IN, swapRequest.amount);
+
+      balanceDeltas[_reserveIndex] = swapRequest.amount;
+      balanceDeltas[_continuousIndex] = amount;
+    } else {
+      amount = getContinuousSwap(bondSwapKind.BURN_GIVIN_IN, swapRequest.amount);
+
+      balanceDeltas[_reserveIndex] = amount;
+      balanceDeltas[_continuousIndex] = swapRequest.amount;
+    }
+
+    _afterSwap(isMint, swapRequest.to, balanceDeltas);
+
+    return amount;
   }
 
   function _onSwapGivenOut(
     SwapRequest memory swapRequest,
-    uint256 currentBalanceTokenIn,
-    uint256 currentBalanceTokenOut
-  ) internal view virtual override returns (uint256) {
+    uint256,
+    uint256
+  ) internal virtual override returns (uint256) {
     // Swaps are disabled while the contract is paused.
 
-    return 1e18;
-    // WeightedMath._calcInGivenOut(
-    //     currentBalanceTokenIn,
-    //     _getNormalizedWeight(swapRequest.tokenIn),
-    //     currentBalanceTokenOut,
-    //     _getNormalizedWeight(swapRequest.tokenOut),
-    //     swapRequest.amount
-    // );
+    bool isMint = swapRequest.tokenIn == _reserveToken;
+    uint256[] memory balanceDeltas = new uint256[](2);
+
+    uint256 amount;
+
+    if (isMint) {
+      amount = getContinuousSwap(bondSwapKind.MINT_GIVIN_OUT, swapRequest.amount);
+
+      balanceDeltas[_reserveIndex] = swapRequest.amount;
+      balanceDeltas[_continuousIndex] = amount;
+    } else {
+      amount = getContinuousSwap(bondSwapKind.BURN_GIVIN_OUT, swapRequest.amount);
+
+      balanceDeltas[_reserveIndex] = amount;
+      balanceDeltas[_continuousIndex] = swapRequest.amount;
+    }
+
+    _afterSwap(isMint, swapRequest.to, balanceDeltas);
+
+    return amount;
   }
 
+  function _onJoinPool(
+    bytes32,
+    address,
+    address,
+    uint256[] memory,
+    uint256,
+    uint256,
+    bytes memory
+  ) internal pure override returns (uint256[] memory) {
+    _revert(Errors.UNHANDLED_JOIN_KIND);
+  }
+
+  function _onExitPool(
+    bytes32,
+    address sender,
+    address,
+    uint256[] memory balances,
+    uint256,
+    uint256 protocolSwapFeePercentage,
+    bytes memory userData
+  ) internal virtual override returns (uint256[] memory) {
+    _require(sender == getOwner(), Errors.UNHANDLED_EXIT_KIND);
+
+    _beforeJoinExit(balances, protocolSwapFeePercentage);
+
+    uint256[] memory amountsOut = new uint256[](balances.length);
+    amountsOut[_reserveIndex] = 1e18;
+
+    _afterJoinExit(false, balances, amountsOut);
+
+    return (amountsOut);
+  }
+
+  //Hooks
   /**
    * @dev Called before any join or exit operation. Empty by default, but derived contracts may choose to add custom
    * behavior at these steps. This often has to do with protocol fee processing.
@@ -101,61 +217,21 @@ abstract contract ContinuousPool is BaseMinimalSwapInfoPool {
     // solhint-disable-previous-line no-empty-blocks
   }
 
-  // Initialize
-
-  function _onInitializePool(
-    bytes32,
-    address,
-    address,
-    bytes memory userData
-  ) internal virtual override whenNotPaused returns (uint256, uint256[] memory) {
-    // It would be strange for the Pool to be paused before it is initialized, but for consistency we prevent
-    // initialization in this case.
-
-    ContinuousPoolUserData.JoinKind kind = userData.joinKind();
-    _require(kind == ContinuousPoolUserData.JoinKind.INIT, Errors.UNINITIALIZED);
-
-    uint256[] memory amountsIn = userData.initialAmountsIn();
-    InputHelpers.ensureInputLengthMatch(_getTotalTokens(), amountsIn.length);
-
-    uint256 bptAmountOut = 10e18;
-
-    return (bptAmountOut, amountsIn);
-  }
-
-  function _onJoinPool(
-    bytes32,
-    address,
-    address,
-    uint256[] memory,
-    uint256,
-    uint256,
-    bytes memory
-  ) internal pure override returns (uint256, uint256[] memory) {
-    _revert(Errors.UNHANDLED_JOIN_KIND);
-  }
-
-  function _onExitPool(
-    bytes32,
-    address sender,
-    address,
-    uint256[] memory balances,
-    uint256,
-    uint256 protocolSwapFeePercentage,
-    bytes memory userData
-  ) internal virtual override returns (uint256, uint256[] memory) {
-    require(sender == getOwner(), "Not Fee Reciever");
-
-    _beforeJoinExit(balances, protocolSwapFeePercentage);
-
-    //Fee Collector Contract functions
-    uint256[] memory amountsOut = new uint256[](balances.length);
-    amountsOut[0] = 1e18;
-    amountsOut[1] = 1e18;
-
-    _afterJoinExit(false, balances, amountsOut);
-
-    uint256 bptAmountIn = 1e18;
-    return (bptAmountIn, amountsOut);
+  /**
+   * @dev Called after any swap (including initialization).
+   *
+   * If isMint is true, balanceDeltas are the amounts increase of reserve token and continuous token. (amount decrease otherwise)
+   *
+   */
+  function _afterSwap(
+    bool isMint,
+    address account,
+    uint256[] memory balanceDeltas
+  ) internal virtual {
+    if (isMint) {
+      _continuousMinted(account, balanceDeltas[_continuousIndex], balanceDeltas[_reserveIndex]);
+    } else {
+      _continuousBurned(account, balanceDeltas[_continuousIndex], balanceDeltas[_reserveIndex]);
+    }
   }
 }

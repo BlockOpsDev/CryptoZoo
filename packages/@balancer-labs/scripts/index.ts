@@ -99,7 +99,7 @@ export async function deploySortedTokens(
   const [defaultDeployer] = await ethers.getSigners();
   const deployer = from || defaultDeployer;
   return fromPairs(
-    (await Promise.all(symbols.map((_, i) => deployToken(`T${i}`, decimals[i], deployer))))
+    (await Promise.all(symbols.map((_, i) => deployToken(`T${i}`, deployer))))
       .sort((tokenA, tokenB) => (tokenA.address.toLowerCase() > tokenB.address.toLowerCase() ? 1 : -1))
       .map((token, index) => [symbols[index], token])
   );
@@ -113,11 +113,11 @@ export async function deployWETH(from?: SignerWithAddress): Promise<Contract> {
   return instance;
 }
 
-export async function deployToken(symbol: string, decimals?: number, from?: SignerWithAddress): Promise<Contract> {
+export async function deployToken(symbol: string, from?: SignerWithAddress): Promise<Contract> {
   const [defaultDeployer] = await ethers.getSigners();
   const deployer = from || defaultDeployer;
   const factory = new ethers.ContractFactory(MockTokenArtifact.abi, MockTokenArtifact.bytecode, deployer);
-  const instance = await factory.deploy(deployer.address, symbol, symbol, decimals);
+  const instance = await factory.deploy(deployer.address, symbol, symbol);
   return instance;
 }
 

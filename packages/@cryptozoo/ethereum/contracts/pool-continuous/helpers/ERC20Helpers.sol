@@ -12,14 +12,23 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-pragma solidity 0.8.14;
+pragma solidity ^0.8.0;
 
-interface IContinuousToken {
-  enum mintKind {
-    GIVIN_IN,
-    GIVIN_OUT
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
+// solhint-disable
+
+function _sortTokens(IERC20 tokenA, IERC20 tokenB) pure returns (IERC20[] memory tokens) {
+  (uint256 indexTokenA, uint256 indexTokenB) = _getSortedTokenIndexes(tokenA, tokenB);
+  tokens = new IERC20[](2);
+  tokens[indexTokenA] = tokenA;
+  tokens[indexTokenB] = tokenB;
+}
+
+function _getSortedTokenIndexes(IERC20 tokenA, IERC20 tokenB) pure returns (uint256 indexTokenA, uint256 indexTokenB) {
+  if (tokenA < tokenB) {
+    return (0, 1);
+  } else {
+    return (1, 0);
   }
-
-  event Minted(address sender, uint256 amount, uint256 deposit);
-  event Burned(address sender, uint256 amount, uint256 refund);
 }

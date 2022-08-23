@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "@balancer-labs/ethereum": "*",
-    "@openzeppelin/contracts": "^4.7.3"
+    "@openzeppelin/contracts": "^4.7.3",
+    "decimal.js": "^10.4.0"
   }
 }

@@ -2,31 +2,37 @@ import { expect } from 'chai';
 import { ethers } from 'hardhat';
 
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/dist/src/signer-with-address';
-import { init_ContinuousToken } from '../scripts/ContinousToken';
+import { init_ContinuousToken } from '../scripts/ContinuousToken';
 import { getSigner, wallets } from '../scripts/Utils';
 import { ContinuousToken } from '../typechain-types';
+import { MockToken } from '@balancer-labs/ethereum/typechain-types';
 
 describe('Continuous Token', function () {
   //Account Addresses
   let deployer: SignerWithAddress;
 
   let continuousToken: ContinuousToken;
+  let reserveToken: MockToken;
 
   beforeEach('deploy tokens', async () => {
     deployer = await getSigner(wallets.czDeployer);
 
-    continuousToken = await init_ContinuousToken(deployer);
+    ({ continuousToken, reserveToken } = await init_ContinuousToken(deployer, 0.1, '160000', '32000000'));
   });
 
   describe('Deployment', function () {
     // console.log(tokenAddresses);
     it('Should Check Token Deployment', async function () {
-      console.log(
-        ethers.utils.formatEther((await continuousToken.mintGivenIn(ethers.utils.parseUnits('84000', 18))).toString())
-      );
-      // const { reserveToken, continousToken } = await loadFixture(deployContinuousTokenAndReserve);
+      console.log(await reserveToken.balanceOf(continuousToken.address));
+      console.log(await continuousToken.balanceOf(continuousToken.address));
+      console.log(await continuousToken.balanceOf(deployer.address));
+      console.log(await continuousToken.totalSupply());
 
-      // expect(await reserveToken.balanceOf(continousToken.address)).to.equal(ethers.utils.parseEther('160000'));
+      console.log(
+        ethers.utils.formatEther(
+          (await continuousToken.mintGivenIn(ethers.utils.parseUnits('21341.1341333', 18))).toString()
+        )
+      );
 
       expect(1).to.equal(1);
     });
