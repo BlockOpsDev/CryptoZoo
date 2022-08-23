@@ -4,7 +4,7 @@ import Variants from 'tailwind-config/variants';
 import { Button } from './Button';
 
 export default {
-  title: 'Components/Button',
+  title: 'Inputs/Button',
   component: Button,
   argTypes: {
     variant: {
@@ -20,7 +20,6 @@ const Template: ComponentStory<typeof Button> = (args) => <Button {...args} />;
 
 export const Primary = Template.bind({});
 Primary.args = {
-  title: 'Button',
   variant: Variants.Primary,
   loading: false,
 };

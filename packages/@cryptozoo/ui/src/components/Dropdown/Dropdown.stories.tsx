@@ -4,7 +4,7 @@ import { apolloContext } from '../../utils/apollo/apollo-decorator';
 import { Dropdown } from './Dropdown';
 
 export default {
-  title: 'Components/Dropdown',
+  title: 'Inputs/Dropdown',
   component: Dropdown,
   decorators: [apolloContext],
 } as ComponentMeta<typeof Dropdown>;

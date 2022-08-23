@@ -20,14 +20,7 @@ export const Swap: React.FC<SwapProps> = (_: SwapProps) => {
 
         <div className="flex flex-col gap-1 relative w-full items-center">
           <Card layer={3} className="w-full">
-            <Dropdown layer={4} options={[{
-              title: "DAI",
-              value: "DAI",
-            }, {
-              title: "ETH",
-              value: "ETH",
-            }]} />
-
+            content
           </Card>
           
           <div className="relative">
