@@ -47,10 +47,18 @@ export const Layout: React.FC<LayoutProps> = ({
           'h-screen w-[85vw] flex-none p-4',
           'tablet:p-0 tablet:w-fit',
         )}>
+
           <div className={cx(
             "text-primary-text bg-layer--2 border-2 border-solid border-layer--3 relative flex h-full w-full flex-col rounded-lg",
             "tablet:rounded-none tablet:border-0 tablet:border-r-2 transition-all",
           )}>
+
+            {/* Close Menu Button */}
+            <button className="absolute top-4 right-4 tablet:hidden" onClick={toggleNav}>
+              <FaChevronRight size={ICON_SIZE} />
+            </button>
+
+            {/* Navigation Container */}
             <div className="p-3 border-b-2 border-layer--3 text-center relative">
               <div className="h-16 w-20 mx-auto block relative">
                 <Image src="https://cdn.discordapp.com/attachments/948678454176514108/1004786166148636853/Asset_10.4xe.png" layout='fill' alt='Zoo Logo' objectFit='contain' />
@@ -66,7 +74,6 @@ export const Layout: React.FC<LayoutProps> = ({
               >
                 <FaChevronRight size="15" className='ml-1' />
               </button>
-
             </div>
 
             {/* Navigation Links */}
@@ -77,11 +84,6 @@ export const Layout: React.FC<LayoutProps> = ({
                 </li>
               ))}
             </ul>
-
-            {/* Close Menu Button */}
-            <button className="absolute top-4 right-4 tablet:hidden" onClick={toggleNav}>
-              <FaChevronRight size={ICON_SIZE} />
-            </button>
 
           </div>
         </div>

@@ -11,7 +11,7 @@ export const Dropdown: React.FC<DropdownProps> = ({ listContent }: DropdownProps
   const toggleOpen = () => setOpen(prevOpen => !prevOpen);
 
   return (
-    <div className="relative text-primary-text">
+    <div className="text-primary-text">
       <button onClick={toggleOpen} className="">
         <div className="flex gap-2 items-center">
           <span>Dropdown</span>

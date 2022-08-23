@@ -20,7 +20,7 @@ export const Card: React.FC<CardProps> = ({ children, layer, className: _classNa
 
   return (
     <div className={cx(
-      "text-primary-text relative gap-2 rounded-lg border-2 border-solid p-2 tablet:p-4 drop-shadow",
+      "text-primary-text gap-2 rounded-lg border-2 border-solid p-2 tablet:p-4 drop-shadow",
       _className,
       layerClasses[layer],
     )}>

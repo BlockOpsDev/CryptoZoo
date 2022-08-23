@@ -10,15 +10,15 @@ export interface SwapProps {
 
 export const Swap: React.FC<SwapProps> = (_: SwapProps) => {
   return (
-    <Card layer={2} className="w-full h-full relative font-chakra text-primary-text">
-      <div className="relative flex flex-col gap-2 justify-center items-center">
+    <Card layer={2} className="w-full h-full font-chakra text-primary-text">
+      <div className="flex flex-col gap-2 justify-center items-center">
         <h1 className="text-4xl">
           <strong>Token Swap</strong>
         </h1>
 
         <p className="text-secondary-text">Trade tokens in an instant</p>
 
-        <div className="flex flex-col gap-1 relative w-full items-center">
+        <div className="flex flex-col gap-1 w-full items-center">
           <Card layer={3} className="w-full">
             <Dropdown
               listContent={<span>test</span>}
