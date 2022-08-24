@@ -1,11 +1,11 @@
 /* PLOP_INJECT_EXPORT */
-export * from './Dropdown';
-export * from './Swap';
-export * from './WalletButton';
-export * from './NavLink';
+export * from './inputs/Dropdown';
+export * from './cards/Swap';
+export * from './cards/WalletButton';
+export * from './cards/NavLink';
 export * from './Layout';
-export * from './Button';
-export * from './Card';
+export * from './inputs/Button';
+export * from './components/Card';
 
-export * from './Apollo/QueryComponentExample';
-export * from './Apollo/FragmentComponentExample';
+export * from './apollo/QueryComponentExample';
+export * from './apollo/FragmentComponentExample';

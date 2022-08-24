@@ -1,5 +1,5 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import { apolloContext } from '../../utils/apollo/apollo-decorator';
+import { apolloContext } from '../../../utils/apollo/apollo-decorator';
 
 import { Card } from './Card';
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import { FaWallet } from 'react-icons/fa';
 import cx from 'classnames';
-import { Button } from '../Button';
-import { shortAddress } from '../../lib';
+import { Button } from '../../inputs/Button';
+import { shortAddress } from '../../../lib';
 
 import Variants from 'tailwind-config/variants';
 

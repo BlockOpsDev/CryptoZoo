@@ -1,9 +1,9 @@
 import React, { ReactChildren, useState } from 'react';
 import cx from 'classnames';
 import { FaBars, FaChevronRight } from 'react-icons/fa';
-import { NavLink } from '../NavLink';
-import type { NavLinkProps } from '../NavLink';
-import { WalletButton } from '../WalletButton';
+import { NavLink } from '../cards/NavLink';
+import type { NavLinkProps } from '../cards/NavLink';
+import { WalletButton } from '../cards/WalletButton';
 import Image from 'next/image'
 
 
