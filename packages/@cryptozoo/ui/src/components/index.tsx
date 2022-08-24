@@ -1,5 +1,6 @@
 /* PLOP_INJECT_EXPORT */
 
+export * from './components/TokenSelector';
 export * from './components/Card';
 export * from './components/WalletButton';
 export * from './components/NavLink';

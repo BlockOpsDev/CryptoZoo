@@ -15,7 +15,7 @@ export const Card: React.FC<CardProps> = ({ children, layer, className: _classNa
     1: 'bg-layer--1 border-layer--2',
     2: 'bg-layer--2 border-layer--3',
     3: 'bg-layer--3 border-layer--4',
-    4: 'bg-layer--4',
+    4: 'bg-layer--4 border-layer--5',
   }
 
   return (
