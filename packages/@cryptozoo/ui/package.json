@@ -12,13 +12,17 @@
     "dev": "concurrently \"yarn build --watch\" \"yarn tailwind --watch\" \"yarn storybook\"",
     "lint": "eslint '*/**/*.{js,ts,tsx}' --fix",
     "prebuild": "yarn tailwind",
-    "build": "tsup src/index.tsx --format esm,cjs --dts --external react,next,reactjs-popup",
+    "build": "tsup src/index.tsx --format esm,cjs --dts --external next",
     "clean": "rm -rf dist",
     "codegen": "apollo codegen:generate --target=typescript --suppressDeprecationWarning",
     "tailwind": "tailwindcss -i ./src/styles.css -o ./dist/styles.css",
     "storybook": "start-storybook -p 6006 --quiet",
     "build-storybook": "build-storybook",
     "test": "echo \"No tests specified\""
+  },
+  "dependencies": {
+    "react": "^17.0.2",
+    "reactjs-popup": "^2.0.5"
   },
   "devDependencies": {
     "@apollo/client": "^3.6.9",
@@ -46,9 +50,7 @@
     "eslint-config-custom": "*",
     "graphql": "^15.8.0",
     "plop": "^3.1.1",
-    "react": "^17.0.2",
     "react-icons": "^4.4.0",
-    "reactjs-popup": "^2.0.5",
     "storybook-dark-mode": "^1.1.0",
     "tailwind-config": "*",
     "tailwindcss": "^3.1.5",
