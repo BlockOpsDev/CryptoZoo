@@ -3,6 +3,8 @@ import cx from 'classnames';
 import { FaChevronRight } from 'react-icons/fa';
 import Popup from 'reactjs-popup';
 
+// For popup behavior see https://react-popup.elazizi.com/component-api
+
 export interface DropdownProps {
   dropdownContent: ReactChild,
 }

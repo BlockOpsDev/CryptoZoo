@@ -4,7 +4,11 @@ module.exports = {
     ignoreBuildErrors: true,
   },
   images: {
-    domains: ["cdn.discordapp.com"]
+    domains: [
+      "cdn.discordapp.com",
+      "via.placeholder.com",
+      "assets.coingecko.com",
+    ],
   },
   webpack: (config) => {
     config.module.rules.push({
