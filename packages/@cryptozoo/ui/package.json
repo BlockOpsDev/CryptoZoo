@@ -12,7 +12,7 @@
     "dev": "concurrently \"yarn build --watch\" \"yarn tailwind --watch\" \"yarn storybook\"",
     "lint": "eslint '*/**/*.{js,ts,tsx}' --fix",
     "prebuild": "yarn tailwind",
-    "build": "tsup src/index.tsx --format esm,cjs --dts --external react,next",
+    "build": "tsup src/index.tsx --format esm,cjs --dts --external react,next,reactjs-popup",
     "clean": "rm -rf dist",
     "codegen": "apollo codegen:generate --target=typescript --suppressDeprecationWarning",
     "tailwind": "tailwindcss -i ./src/styles.css -o ./dist/styles.css",
