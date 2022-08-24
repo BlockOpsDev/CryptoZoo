@@ -53,13 +53,15 @@ export const Layout: React.FC<LayoutProps> = ({
             "tablet:rounded-none tablet:border-0 tablet:border-r-2 transition-all",
           )}>
 
-            {/* Close Menu Button */}
-            <button className="absolute top-4 right-4 tablet:hidden" onClick={toggleNav}>
-              <FaChevronRight size={ICON_SIZE} />
-            </button>
-
             {/* Navigation Container */}
             <div className="p-3 border-b-2 border-layer--3 text-center relative">
+
+              {/* Close Menu Button */}
+              <button className="absolute top-4 right-4 tablet:hidden" onClick={toggleNav}>
+                <FaChevronRight size={ICON_SIZE} />
+              </button>
+
+              {/* ZOO Logo */}
               <div className="h-16 w-20 mx-auto block relative">
                 <Image src="https://cdn.discordapp.com/attachments/948678454176514108/1004786166148636853/Asset_10.4xe.png" layout='fill' alt='Zoo Logo' objectFit='contain' />
               </div>

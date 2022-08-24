@@ -18,15 +18,15 @@ export const Swap: React.FC<SwapProps> = (_: SwapProps) => {
 
         <p className="text-secondary-text">Trade tokens in an instant</p>
 
-        <div className="flex flex-col gap-1 w-full items-center">
+        <div className="w-full items-center">
           <Card layer={3} className="w-full">
             <Dropdown
-              listContent={<span>test</span>}
+              dropdownContent={<span>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi dicta beatae natus ab quod nobis, illo ipsa repellat earum consequatur perspiciatis harum officiis, aspernatur, reprehenderit voluptatibus quam cupiditate. Maiores autem ipsa itaque quis. Facilis ullam quo natus adipisci sit, unde doloremque aspernatur est rerum, sequi tenetur quae corrupti magnam veniam?</span>}
             ></Dropdown>
           </Card>
           
           <div className="relative">
-            <div className="w-8 h-8 bg-layer--4 flex items-center justify-center rounded-full drop-shadow-sm z-10 absolute -translate-x-1/2 -translate-y-1/2">
+            <div className="w-10 h-10 bg-layer--4 flex items-center justify-center rounded-full drop-shadow-sm z-10 absolute -translate-x-1/2 -translate-y-1/2">
               <AiOutlineSwap size={24} />
             </div>
           </div>
