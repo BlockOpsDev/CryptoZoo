@@ -18,7 +18,7 @@ export const Swap: React.FC<SwapProps> = (_: SwapProps) => {
 
         <p className="text-secondary-text">Trade tokens in an instant</p>
 
-        <div className="w-full items-center">
+        <div className="flex flex-col gap-1 w-full items-center">
           <Card layer={3} className="w-full">
             <Dropdown
               dropdownContent={<span>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi dicta beatae natus ab quod nobis, illo ipsa repellat earum consequatur perspiciatis harum officiis, aspernatur, reprehenderit voluptatibus quam cupiditate. Maiores autem ipsa itaque quis. Facilis ullam quo natus adipisci sit, unde doloremque aspernatur est rerum, sequi tenetur quae corrupti magnam veniam?</span>}
