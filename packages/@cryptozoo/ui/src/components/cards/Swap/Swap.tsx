@@ -12,7 +12,9 @@ export const Swap: React.FC<SwapProps> = (_: SwapProps) => {
     <Card layer={2} className="w-full font-chakra text-primary-text p-4 relative">
       <div className="flex flex-col gap-4 justify-center items-center">
 
-        <FaCogs className="absolute top-2 right-2 text-secondary-text" size={24} />
+        <button className="absolute top-2 right-2 text-secondary-text">
+          <FaCogs size={24} />
+        </button>
 
         <h1 className="text-4xl">
           <strong className="flex gap-2 items-center">
@@ -68,7 +70,7 @@ export const Swap: React.FC<SwapProps> = (_: SwapProps) => {
             <span className="text-secondary-text">Y T2 ($1.00)</span>
           </div>
           <div className="flex justify-between">
-            <span>Token 1/Token 2</span>
+            <span>T1/T2</span>
             <span className="text-secondary-text">($1.00)</span>
           </div>
           <div className="flex justify-between">
@@ -82,7 +84,6 @@ export const Swap: React.FC<SwapProps> = (_: SwapProps) => {
         </button>
 
       </div>
-
     </Card>
   );
 };
