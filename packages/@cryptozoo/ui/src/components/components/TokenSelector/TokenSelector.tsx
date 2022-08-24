@@ -11,9 +11,10 @@ export type Token = {
 
 export interface TokenSelectorProps {
   tokens: Token[];
+  onTokenSelected: (token: Token) => void;
 }
 
-export const TokenSelector: React.FC<TokenSelectorProps> = ({ tokens }: TokenSelectorProps) => {
+export const TokenSelector: React.FC<TokenSelectorProps> = ({ tokens, onTokenSelected }: TokenSelectorProps) => {
   return (
     <Card layer={3} className="p-2 text-primary-text h-full">
       <div className="flex flex-col gap-2 h-full">
@@ -25,7 +26,11 @@ export const TokenSelector: React.FC<TokenSelectorProps> = ({ tokens }: TokenSel
           <div className="flex flex-col">
 
             {tokens.map((token, index) => (
-              <div className="flex items-center gap-4 py-2 px-4 cursor-pointer hover:bg-layer--5" key={index}>
+              <div
+                className="flex items-center gap-4 py-2 px-4 cursor-pointer hover:bg-layer--5"
+                key={index}
+                onClick={() => onTokenSelected(token)}
+              >
                 <div className="w-8 h-8 relative rounded-full overflow-clip">
                   <Image src={token.imageSrc} layout='fill' alt={token.name + ' Logo'} objectFit='contain' />
                 </div>
@@ -46,84 +51,3 @@ export const TokenSelector: React.FC<TokenSelectorProps> = ({ tokens }: TokenSel
     </Card>
   );
 };
-
-TokenSelector.defaultProps = {
-  tokens: [
-  {
-    name: "Ether",
-    symbol: "ETH",
-    address: "none",
-    imageSrc: "https://via.placeholder.com/50x50"
-  }, {
-    name: "Ether",
-    symbol: "ETH",
-    address: "none",
-    imageSrc: "https://via.placeholder.com/50x50"
-  }, {
-    name: "Ether",
-    symbol: "ETH",
-    address: "none",
-    imageSrc: "https://via.placeholder.com/50x50"
-  }, {
-    name: "Ether",
-    symbol: "ETH",
-    address: "none",
-    imageSrc: "https://via.placeholder.com/50x50"
-  }, {
-    name: "Ether",
-    symbol: "ETH",
-    address: "none",
-    imageSrc: "https://via.placeholder.com/50x50"
-  }, {
-    name: "Ether",
-    symbol: "ETH",
-    address: "none",
-    imageSrc: "https://via.placeholder.com/50x50"
-  }, {
-    name: "Ether",
-    symbol: "ETH",
-    address: "none",
-    imageSrc: "https://via.placeholder.com/50x50"
-  }, {
-    name: "Ether",
-    symbol: "ETH",
-    address: "none",
-    imageSrc: "https://via.placeholder.com/50x50"
-  }, {
-    name: "Ether",
-    symbol: "ETH",
-    address: "none",
-    imageSrc: "https://via.placeholder.com/50x50"
-  }, {
-    name: "Ether",
-    symbol: "ETH",
-    address: "none",
-    imageSrc: "https://via.placeholder.com/50x50"
-  }, {
-    name: "Ether",
-    symbol: "ETH",
-    address: "none",
-    imageSrc: "https://via.placeholder.com/50x50"
-  }, {
-    name: "Ether",
-    symbol: "ETH",
-    address: "none",
-    imageSrc: "https://via.placeholder.com/50x50"
-  }, {
-    name: "Ether",
-    symbol: "ETH",
-    address: "none",
-    imageSrc: "https://via.placeholder.com/50x50"
-  }, {
-    name: "Ether",
-    symbol: "ETH",
-    address: "none",
-    imageSrc: "https://via.placeholder.com/50x50"
-  }, {
-    name: "Ether",
-    symbol: "ETH",
-    address: "none",
-    imageSrc: "https://via.placeholder.com/50x50"
-  }
-]
-}
