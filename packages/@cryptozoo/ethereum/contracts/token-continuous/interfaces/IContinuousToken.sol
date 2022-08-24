@@ -15,11 +15,6 @@
 pragma solidity 0.8.14;
 
 interface IContinuousToken {
-  enum mintKind {
-    GIVIN_IN,
-    GIVIN_OUT
-  }
-
   event Minted(address sender, uint256 amount, uint256 deposit);
   event Burned(address sender, uint256 amount, uint256 refund);
 }

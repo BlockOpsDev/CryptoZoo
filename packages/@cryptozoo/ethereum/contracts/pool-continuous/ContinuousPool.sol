@@ -234,4 +234,24 @@ abstract contract ContinuousPool is IContinuousPool, BaseMinimalSwapInfoPool, Co
       _continuousBurned(account, balanceDeltas[_continuousIndex], balanceDeltas[_reserveIndex]);
     }
   }
+
+  function transfer(address to, uint256 amount) public virtual override returns (bool) {
+    if (msg.sender == address(getVault())) {
+      _mint(to, amount);
+      return true;
+    }
+    return super.transfer(to, amount);
+  }
+
+  function transferFrom(
+    address from,
+    address to,
+    uint256 amount
+  ) public virtual override returns (bool) {
+    if (msg.sender == address(getVault()) && msg.sender == to) {
+      _burn(from, amount);
+      return true;
+    }
+    return super.transferFrom(from, to, amount);
+  }
 }

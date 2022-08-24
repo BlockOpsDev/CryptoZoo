@@ -14,8 +14,6 @@
 
 pragma solidity 0.8.14;
 
-import "hardhat/console.sol";
-
 import "./BancorBondingCurve.sol";
 import "./interfaces/IContinuousToken.sol";
 
