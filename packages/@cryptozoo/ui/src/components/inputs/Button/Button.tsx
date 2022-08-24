@@ -1,7 +1,7 @@
 import React, { ReactChild } from 'react';
 import cx from 'classnames';
 
-import { Skeleton } from '../../cards/Skeleton';
+import { Skeleton } from '../../components/Skeleton';
 import Variants from 'tailwind-config/variants';
 
 export interface ButtonProps {
