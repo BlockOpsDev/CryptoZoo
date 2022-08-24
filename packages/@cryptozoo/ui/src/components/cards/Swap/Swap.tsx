@@ -9,7 +9,7 @@ export interface SwapProps {
 
 export const Swap: React.FC<SwapProps> = (_: SwapProps) => {
   return (
-    <Card layer={2} className="w-full h-full font-chakra text-primary-text p-4 relative">
+    <Card layer={2} className="w-full font-chakra text-primary-text p-4 relative">
       <div className="flex flex-col gap-4 justify-center items-center">
 
         <FaCogs className="absolute top-2 right-2 text-secondary-text" size={24} />

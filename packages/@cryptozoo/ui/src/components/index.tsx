@@ -9,7 +9,7 @@ export * from './inputs/Dropdown';
 
 export * from './cards/Swap';
 
-export * from './Layout';
+export * from './layouts/Layout';
 
 export * from './apollo/QueryComponentExample';
 export * from './apollo/FragmentComponentExample';

@@ -1,9 +1,9 @@
 import React, { ReactChildren, useState } from 'react';
 import cx from 'classnames';
 import { FaBars, FaChevronRight } from 'react-icons/fa';
-import { NavLink } from '../components/NavLink';
-import type { NavLinkProps } from '../components/NavLink';
-import { WalletButton } from '../components/WalletButton';
+import { NavLink } from '../../components/NavLink';
+import type { NavLinkProps } from '../../components/NavLink';
+import { WalletButton } from '../../components/WalletButton';
 import Image from 'next/image'
 
 
@@ -43,7 +43,7 @@ export const Layout: React.FC<LayoutProps> = ({
 
         {/* Navigation */}
         <div className={cx(
-          'h-screen w-[85vw] flex-none p-4',
+          'h-screen w-[85vw] flex-none p-4 pr-0',
           'tablet:p-0 tablet:w-fit',
         )}>
 
