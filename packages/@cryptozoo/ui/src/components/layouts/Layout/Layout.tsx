@@ -1,10 +1,11 @@
 import React, { ReactChildren, useState } from 'react';
 import cx from 'classnames';
+import Image from 'next/image'
 import { FaBars, FaChevronRight } from 'react-icons/fa';
+
 import { NavLink } from '../../components/NavLink';
 import type { NavLinkProps } from '../../components/NavLink';
 import { WalletButton } from '../../components/WalletButton';
-import Image from 'next/image'
 
 
 export interface LayoutProps {
@@ -30,8 +31,9 @@ export const Layout: React.FC<LayoutProps> = ({
 
   const ICON_SIZE = '30';
 
+
   return (
-    <div>
+    <>
       <div
         className={cx(
           'fixed top-0 left-0',
@@ -101,7 +103,7 @@ export const Layout: React.FC<LayoutProps> = ({
             </div>
             <div className="flex-grow"></div>
             <div className="flex-none">
-              <WalletButton connected={true} walletAddress="" keeperBalance='0' zooBalance='0' />
+              <WalletButton connected={false} walletAddress="" keeperBalance='0' zooBalance='0' />
             </div>
           </div>
 
@@ -111,6 +113,6 @@ export const Layout: React.FC<LayoutProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };

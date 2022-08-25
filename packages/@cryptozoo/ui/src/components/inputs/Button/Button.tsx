@@ -12,10 +12,10 @@ export interface ButtonProps {
 }
 
 export const variantClasses = {
-  [Variants.Primary]: ['bg-primary', 'active:bg-primary--dark'],
-  [Variants.Success]: ['bg-success', 'active:bg-success--dark'],
-  [Variants.Error]: ['bg-error', 'active:bg-error--dark'],
-  [Variants.Warn]: ['bg-warn', 'active:bg-warn--dark'],
+  [Variants.Primary]: 'bg-primary active:bg-primary--dark',
+  [Variants.Success]: 'bg-success active:bg-success--dark',
+  [Variants.Error]: 'bg-error active:bg-error--dark',
+  [Variants.Warn]: 'bg-warn active:bg-warn--dark',
 };
 
 export const Button: React.FC<ButtonProps> = ({
@@ -28,8 +28,8 @@ export const Button: React.FC<ButtonProps> = ({
     <button
       onClick={onClick}
       className={cx(
-        'text-primary-text rounded-lg py-2 px-4 drop-shadow',
-        ...variantClasses[variant]
+        'button',
+        variantClasses[variant]
       )}
     >
       <Skeleton shapeClasses="w-14 h-3" loading={loading}>
