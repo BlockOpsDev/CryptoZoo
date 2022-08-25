@@ -14,8 +14,10 @@ export interface SwapProps {
 
 export const Swap: React.FC<SwapProps> = (_: SwapProps) => {
   const [tokenSelectOpen, setTokenSelectOpen] = useState(false);
+  const [txnSettingsOpen, setTxnSettingsOpen] = useState(false);
 
   const closeTokenSelection = () => setTokenSelectOpen(false);
+  const closeTxnSettings = () => setTxnSettingsOpen(false);
 
   const tokenSelected = (token: Token) => {
     console.log("token selected:", token);
@@ -26,11 +28,13 @@ export const Swap: React.FC<SwapProps> = (_: SwapProps) => {
     <Popup
       open={tokenSelectOpen}
       modal
-      closeOnDocumentClick
-      closeOnEscape
+      closeOnDocumentClick={false}
       onClose={closeTokenSelection}
+      overlayStyle={{
+        backgroundColor: "rgba(0,0,0,0.8)"
+      }}
     >
-      <div className="max-w-[95vw] h-[95vh] w-[500px] relative">
+      <div className="max-w-[95vw] h-[95vh] w-[400px] relative">
         <button className="absolute top-2 right-2 z-10 text-secondary-text" onClick={closeTokenSelection}>
           <FaTimes size={20} />
         </button>
@@ -48,35 +52,40 @@ export const Swap: React.FC<SwapProps> = (_: SwapProps) => {
     </Popup>
   );
 
-  const settingsPopup = (
+  const txnSettingsPopup = (
     <Popup
-      // open={settingsOpen}
-      // trigger={settingsButton}
-      trigger={
-        <button className="absolute top-2 right-2 text-secondary-text">
-          <FaCogs size={24} />
-        </button>
-      }
-      position="bottom right"
-      arrow={false}
-      closeOnDocumentClick
-      closeOnEscape
-      offsetY={5}
+      open={txnSettingsOpen}
+      modal
+      closeOnDocumentClick={false}
+      onClose={closeTxnSettings}
+      position="top center"
+      overlayStyle={{
+        backgroundColor: "rgba(0,0,0,0.8)"
+      }}
     >
-      <Card layer={4} className="p-2 max-w-[80vw]">
-        <SwapSettings props={{}} />
-      </Card>
+      <div className="max-w-[95vw] w-[400px] relative">
+        <button className="absolute top-2 right-2 z-10 text-secondary-text" onClick={closeTxnSettings}>
+          <FaTimes size={20} />
+        </button>
+
+        <Card layer={4} className="p-4 w-full">
+          <SwapSettings props={{}} />
+        </Card>
+      </div>
     </Popup>
   );
 
   return (
     <>
       {tokenSelectPopup}
+      {txnSettingsPopup}
 
       <Card layer={2} className="w-full font-chakra text-primary-text p-4 relative">
         <div className="flex flex-col gap-4 justify-center items-center">
 
-          {settingsPopup}
+         <button className="absolute top-2 right-2 text-secondary-text" onClick={() => setTxnSettingsOpen(true)}>
+           <FaCogs size={24} />
+         </button>
 
           <h1 className="text-4xl">
             <strong className="flex gap-2 items-center">
@@ -90,7 +99,7 @@ export const Swap: React.FC<SwapProps> = (_: SwapProps) => {
             <Card layer={3} className="w-full p-4 pb-6">
               <div className="flex flex-col gap-2">
                 <div className="flex gap-2 items-center justify-center flex-wrap">
-                  <button className="rounded-full bg-secondary px-4 py-1 w-full tablet:w-fit" onClick={() => setTokenSelectOpen(true)}>Select Token</button>
+                  <button className="rounded-full bg-secondary px-4 py-1 w-full" onClick={() => setTokenSelectOpen(true)}>Select Token</button>
                   <span className="hover:underline cursor-pointer text-secondary-text">Max</span>
                   <input type="text" className="flex-grow tablet rounded-md bg-secondary border-2 border-[transparent] focus:border-secondary-text text-right px-4 py-1 outline-none appearance-none" placeholder="0.00" />
                 </div>
@@ -110,7 +119,7 @@ export const Swap: React.FC<SwapProps> = (_: SwapProps) => {
             <Card layer={3} className="w-full p-4 pt-6">
               <div className="flex flex-col gap-2">
                 <div className="flex gap-2 items-center justify-center flex-wrap">
-                  <button className="rounded-full bg-secondary px-4 py-1 w-full tablet:w-fit" onClick={() => setTokenSelectOpen(true)}>Select Token</button>
+                  <button className="rounded-full bg-secondary px-4 py-1 w-full" onClick={() => setTokenSelectOpen(true)}>Select Token</button>
                   <span className="hover:underline cursor-pointer text-secondary-text">Max</span>
                   <input type="text" className="flex-grow rounded-md bg-secondary border-2 border-[transparent] focus:border-secondary-text text-right px-4 py-1 outline-none appearance-none" placeholder="0.00" />
                 </div>
@@ -137,7 +146,7 @@ export const Swap: React.FC<SwapProps> = (_: SwapProps) => {
             </div>
             <div className="flex justify-between">
               <span>Fees</span>
-              <span className="text-secondary-text">Lorem, ipsum. ($1.00)</span>
+              <span className="text-secondary-text">Lorem ($1.00)</span>
             </div>
           </div>
 

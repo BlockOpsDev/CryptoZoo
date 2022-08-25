@@ -90,10 +90,10 @@ export const Layout: React.FC<LayoutProps> = ({
         </div>
 
         {/* Page Container */}
-        <div className="flex h-screen w-screen flex-none flex-col gap-4 p-4 tablet:w-100 tablet:flex-initial">
+        <div className="flex h-screen w-screen flex-none flex-col py-4 gap-4 tablet:w-100 tablet:flex-initial">
 
           {/* Header Bar */}
-          <div className="w-100 text-primary-text flex items-center gap-4 rounded-lg">
+          <div className="w-100 text-primary-text flex items-center gap-4 px-4 rounded-lg">
             <div className="flex-none tablet:hidden">
               <button onClick={toggleNav}>
                 <FaBars size={ICON_SIZE} />
@@ -106,7 +106,7 @@ export const Layout: React.FC<LayoutProps> = ({
           </div>
 
           {/* Page Content */}
-          <div className="flex-grow w-100 h-100 text-primary-text flex flex-col gap-4 p-2 tablet:p-4 overflow-auto">
+          <div className="flex-grow w-100 h-100 text-primary-text flex flex-col px-4 gap-4 overflow-auto">
             {children}
           </div>
         </div>
