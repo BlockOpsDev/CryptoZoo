@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import { FaWallet, FaTimes } from 'react-icons/fa';
 import cx from 'classnames';
 import Popup from 'reactjs-popup';
 import { ethers } from 'ethers';
+import Variants from 'tailwind-config/variants';
+import { FaWallet, FaTimes } from 'react-icons/fa';
 
 import { shortAddress } from '../../../lib';
 import { Button } from '../../inputs/Button';
 import { Card } from '../../components/Card';
-
-import Variants from 'tailwind-config/variants';
 
 export interface WalletButtonProps {
   keeperBalance: string;
