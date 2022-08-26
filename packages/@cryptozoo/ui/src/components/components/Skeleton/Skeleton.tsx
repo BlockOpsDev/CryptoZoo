@@ -1,10 +1,10 @@
-import React, { ReactChild } from 'react';
+import React from 'react';
 import cx from 'classnames';
 
 export interface SkeletonProps {
   shapeClasses: string;
   loading: boolean;
-  children: ReactChild;
+  children?: React.ReactNode;
 }
 
 export const Skeleton: React.FC<SkeletonProps> = ({

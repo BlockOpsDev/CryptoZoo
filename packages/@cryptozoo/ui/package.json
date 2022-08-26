@@ -28,6 +28,7 @@
     "@apollo/client": "^3.6.9",
     "@babel/core": "^7.18.9",
     "@cryptozoo/graphql": "*",
+    "@cryptozoo/ethers-context": "*",
     "@graphql-tools/mock": "^8.7.1",
     "@graphql-tools/schema": "^8.5.1",
     "@storybook/addon-actions": "^6.5.9",
