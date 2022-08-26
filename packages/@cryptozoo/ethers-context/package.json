@@ -1,0 +1,25 @@
+{
+  "name": "@cryptozoo/ethers-context",
+  "version": "1.0.0",
+  "description": "CryptoZoo Ethers (React) Context Provider",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist"
+  },
+  "scripts": {
+    "dev": "yarn build --watch",
+    "build": "tsup src/index.tsx --format esm,cjs --dts --external next"
+  },
+  "dependencies": {
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.17",
+    "ethers": "^5.7.0",
+    "tsup": "^6.2.3",
+    "tsconfig": "*",
+    "typescript": "^4.8.2"
+  }
+}

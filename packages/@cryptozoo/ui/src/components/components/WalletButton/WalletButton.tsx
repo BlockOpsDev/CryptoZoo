@@ -8,14 +8,14 @@ import { FaWallet, FaTimes } from 'react-icons/fa';
 import { shortAddress } from '../../../lib';
 import { Button } from '../../inputs/Button';
 import { Card } from '../../components/Card';
+import { useEthersContext } from '@cryptozoo/ethers-context';
 
 export interface WalletButtonProps {
-  keeperBalance: string;
-  zooBalance: string;
-  walletAddress: string;
   connected: boolean;
+  keeperBalance?: string;
+  zooBalance?: string;
+  walletAddress?: string;
 }
-
 
 declare global {
   interface Window {
@@ -25,6 +25,9 @@ declare global {
 
 
 export const WalletButton: React.FC<WalletButtonProps> = ({ keeperBalance, zooBalance, walletAddress, connected }: WalletButtonProps) => {
+  const { provider, setProvider } = useEthersContext();
+  console.log(provider, setProvider);
+
   const [connectOpen, setConnectOpen] = useState(false);
   const closeConnect = () => setConnectOpen(false);
 
@@ -90,7 +93,7 @@ export const WalletButton: React.FC<WalletButtonProps> = ({ keeperBalance, zooBa
           <div className="bg-layer--2 py-2 px-4 rounded-lg">
             <div className="flex items-center justify-center h-full">
               <FaWallet className='mr-2' />
-              {shortAddress(walletAddress)}
+              { walletAddress === undefined ? '' : shortAddress(walletAddress)}
             </div>
           </div>
         </div>

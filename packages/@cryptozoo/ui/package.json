@@ -20,7 +20,12 @@
     "build-storybook": "build-storybook",
     "test": "echo \"No tests specified\""
   },
+  "//dependencies": [
+    "Dependencies Comments:",
+    "All packages which import react need to be added as `dependencies`, NOT as `devDependencies`"
+  ],
   "dependencies": {
+    "@cryptozoo/ethers-context": "*",
     "react": "^17.0.2",
     "reactjs-popup": "^2.0.5"
   },
@@ -28,7 +33,6 @@
     "@apollo/client": "^3.6.9",
     "@babel/core": "^7.18.9",
     "@cryptozoo/graphql": "*",
-    "@cryptozoo/ethers-context": "*",
     "@graphql-tools/mock": "^8.7.1",
     "@graphql-tools/schema": "^8.5.1",
     "@storybook/addon-actions": "^6.5.9",
