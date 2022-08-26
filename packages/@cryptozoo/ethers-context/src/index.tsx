@@ -3,8 +3,8 @@ import { ethers } from 'ethers'
 
 
 export interface IEthersContext {
-  provider?: ethers.providers.JsonRpcProvider;
-  setProvider: React.Dispatch<ethers.providers.JsonRpcProvider>;
+  provider?: ethers.providers.Web3Provider;
+  setProvider: React.Dispatch<React.SetStateAction<ethers.providers.Web3Provider|undefined>>;
 }
 
 export interface EthersContextProviderProps {
@@ -20,7 +20,7 @@ const EthersContext = React.createContext<IEthersContext>({
 export const useEthersContext = () => React.useContext(EthersContext);
 
 export const EthersContextProvider: React.FC<EthersContextProviderProps>  = ({ children }) => {
-  const [provider, setProvider] = React.useState<ethers.providers.JsonRpcProvider>();
+  const [provider, setProvider] = React.useState<ethers.providers.Web3Provider>();
   const contextValue: IEthersContext = {
     provider,
     setProvider,
