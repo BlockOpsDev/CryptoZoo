@@ -44,7 +44,7 @@ export const NavLink: React.FC<NavLinkProps> = ({
   return (
     <Link href={to}>
       <div className={cx(
-        "flex cursor-pointer items-center gap-4",
+        "flex cursor-pointer items-center gap-4 font-chakra",
         { 'justify-center': !showLabel },
       )}>
         <div
