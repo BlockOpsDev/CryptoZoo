@@ -25,13 +25,7 @@ export const Button: React.FC<ButtonProps> = ({
   onClick,
 }: ButtonProps) => {
   return (
-    <button
-      onClick={onClick}
-      className={cx(
-        'button',
-        variantClasses[variant]
-      )}
-    >
+    <button onClick={onClick} className={cx('button', variantClasses[variant])}>
       <Skeleton shapeClasses="w-14 h-3" loading={loading}>
         {children || <span>Button</span>}
       </Skeleton>

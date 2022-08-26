@@ -15,4 +15,4 @@ const Template: ComponentStory<typeof Dropdown> = (args) => (
 
 export const Primary = Template.bind({});
 
-Primary.args = { };
+Primary.args = {};

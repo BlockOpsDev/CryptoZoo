@@ -36,7 +36,12 @@ export default function MyApp({ Component, pageProps }: AppProps) {
             },
             { title: 'Rewards', to: '#', locked: true, iconKey: 'trophy' },
             { title: 'Games', to: '#', locked: true, iconKey: 'game' },
-            { title: 'Links/Resources', to: '#', locked: false, iconKey: 'link' },
+            {
+              title: 'Links/Resources',
+              to: '#',
+              locked: false,
+              iconKey: 'link',
+            },
             { title: 'Discord', to: '#', locked: false, iconKey: 'discord' },
           ]}
         >

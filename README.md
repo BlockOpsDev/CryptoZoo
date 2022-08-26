@@ -43,7 +43,7 @@ yarn clean
 
 ```bash
 # Create New Components
-yarn component <name>
+yarn component
 ```
 
 ```bash

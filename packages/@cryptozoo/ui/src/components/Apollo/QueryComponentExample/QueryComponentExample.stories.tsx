@@ -9,7 +9,9 @@ export default {
   decorators: [apolloContext],
 } as ComponentMeta<typeof QueryComponentExample>;
 
-const Template: ComponentStory<typeof QueryComponentExample> = (args) => <QueryComponentExample {...args} />;
+const Template: ComponentStory<typeof QueryComponentExample> = (args) => (
+  <QueryComponentExample {...args} />
+);
 
 export const Primary = Template.bind({});
 

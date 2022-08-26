@@ -17,9 +17,9 @@ export const Primary = Template.bind({});
 
 Primary.args = {
   tokens: Array.from({ length: 5 }, () => ({
-    name: "Ether",
-    symbol: "ETH",
-    address: "none",
-    imageSrc: "https://via.placeholder.com/50x50"
-  }))
+    name: 'Ether',
+    symbol: 'ETH',
+    address: 'none',
+    imageSrc: 'https://via.placeholder.com/50x50',
+  })),
 };

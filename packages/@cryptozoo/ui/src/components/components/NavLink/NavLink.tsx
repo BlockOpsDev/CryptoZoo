@@ -11,7 +11,7 @@ import {
 } from 'react-icons/ai';
 import { IoStorefront, IoGameController } from 'react-icons/io5';
 import { FaLink, FaDiscord, FaLock } from 'react-icons/fa';
-import type { IconType } from 'react-icons'
+import type { IconType } from 'react-icons';
 
 export interface NavLinkProps {
   title: string;
@@ -22,7 +22,7 @@ export interface NavLinkProps {
 }
 
 export const iconMap: {
-  [key: string]: (IconType);
+  [key: string]: IconType;
 } = {
   home: AiFillHome,
   swap: AiOutlineSwap,
@@ -43,10 +43,11 @@ export const NavLink: React.FC<NavLinkProps> = ({
 }: NavLinkProps) => {
   return (
     <Link href={to}>
-      <div className={cx(
-        "flex cursor-pointer items-center gap-4 font-chakra",
-        { 'justify-center': !showLabel },
-      )}>
+      <div
+        className={cx('font-chakra flex cursor-pointer items-center gap-4', {
+          'justify-center': !showLabel,
+        })}
+      >
         <div
           className={cx(
             'bg-layer--3 relative flex grow-0 items-center justify-center gap-x-2 rounded-md p-2',
@@ -62,10 +63,9 @@ export const NavLink: React.FC<NavLinkProps> = ({
           />
         </div>
         <span
-          className={cx(
-            locked ? 'text-secondary-text' : 'text-primary-text',
-            { 'hidden': !showLabel },
-          )}
+          className={cx(locked ? 'text-secondary-text' : 'text-primary-text', {
+            hidden: !showLabel,
+          })}
         >
           {title}
         </span>
@@ -75,5 +75,5 @@ export const NavLink: React.FC<NavLinkProps> = ({
 };
 
 NavLink.defaultProps = {
-  showLabel: true
-}
+  showLabel: true,
+};

@@ -8,7 +8,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <h1 className='text-4xl font-chakra text-center'>
+      <h1 className="font-chakra text-center text-4xl">
         <strong>Welcome to the ZOO</strong>
       </h1>
     </>

@@ -9,9 +9,7 @@ export default {
   decorators: [apolloContext],
 } as ComponentMeta<typeof Swap>;
 
-const Template: ComponentStory<typeof Swap> = (args) => (
-  <Swap {...args} />
-);
+const Template: ComponentStory<typeof Swap> = (args) => <Swap {...args} />;
 
 export const Primary = Template.bind({});
 

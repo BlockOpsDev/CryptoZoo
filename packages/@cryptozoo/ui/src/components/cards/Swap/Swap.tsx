@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import { AiOutlineSwap } from 'react-icons/ai';
-import { FaCogs, FaTimes } from "react-icons/fa";
-import Popup from "reactjs-popup";
+import { FaCogs, FaTimes } from 'react-icons/fa';
+import Popup from 'reactjs-popup';
 
-import type { Token } from "../../components/TokenSelector";
-import { Card } from "../../components/Card";
-import { TokenSelector } from "../../components/TokenSelector";
-import { SwapSettings } from "../../components/SwapSettings";
+import type { Token } from '../../components/TokenSelector';
+import { Card } from '../../components/Card';
+import { TokenSelector } from '../../components/TokenSelector';
+import { SwapSettings } from '../../components/SwapSettings';
 
 export interface SwapProps {
   props?: object;
@@ -20,9 +20,9 @@ export const Swap: React.FC<SwapProps> = (_: SwapProps) => {
   const closeTxnSettings = () => setTxnSettingsOpen(false);
 
   const tokenSelected = (token: Token) => {
-    console.log("token selected:", token);
+    console.log('token selected:', token);
     closeTokenSelection();
-  }
+  };
 
   const tokenSelectPopup = (
     <Popup
@@ -31,21 +31,26 @@ export const Swap: React.FC<SwapProps> = (_: SwapProps) => {
       closeOnDocumentClick={false}
       onClose={closeTokenSelection}
       overlayStyle={{
-        backgroundColor: "rgba(0,0,0,0.8)"
+        backgroundColor: 'rgba(0,0,0,0.8)',
       }}
     >
-      <div className="max-w-[95vw] h-[95vh] w-[400px] relative">
-        <button className="absolute top-2 right-2 z-10 text-secondary-text" onClick={closeTokenSelection}>
+      <div className="relative h-[95vh] w-[400px] max-w-[95vw]">
+        <button
+          className="text-secondary-text absolute top-2 right-2 z-10"
+          onClick={closeTokenSelection}
+        >
           <FaTimes size={20} />
         </button>
 
         <TokenSelector
-          tokens={[{
-            name: "Ether",
-            symbol: "ETH",
-            address: "none",
-            imageSrc: "https://via.placeholder.com/50x50"
-          }]}
+          tokens={[
+            {
+              name: 'Ether',
+              symbol: 'ETH',
+              address: 'none',
+              imageSrc: 'https://via.placeholder.com/50x50',
+            },
+          ]}
           onTokenSelected={tokenSelected}
         />
       </div>
@@ -60,15 +65,18 @@ export const Swap: React.FC<SwapProps> = (_: SwapProps) => {
       onClose={closeTxnSettings}
       position="top center"
       overlayStyle={{
-        backgroundColor: "rgba(0,0,0,0.8)"
+        backgroundColor: 'rgba(0,0,0,0.8)',
       }}
     >
-      <div className="max-w-[95vw] w-[400px] relative">
-        <button className="absolute top-2 right-2 z-10 text-secondary-text" onClick={closeTxnSettings}>
+      <div className="relative w-[400px] max-w-[95vw]">
+        <button
+          className="text-secondary-text absolute top-2 right-2 z-10"
+          onClick={closeTxnSettings}
+        >
           <FaTimes size={20} />
         </button>
 
-        <Card layer={4} className="p-4 w-full">
+        <Card layer={4} className="w-full p-4">
           <SwapSettings props={{}} />
         </Card>
       </div>
@@ -80,58 +88,85 @@ export const Swap: React.FC<SwapProps> = (_: SwapProps) => {
       {tokenSelectPopup}
       {txnSettingsPopup}
 
-      <Card layer={2} className="w-full font-chakra text-primary-text p-4 relative">
-        <div className="flex flex-col gap-4 justify-center items-center">
-
-         <button className="absolute top-2 right-2 text-secondary-text" onClick={() => setTxnSettingsOpen(true)}>
-           <FaCogs size={24} />
-         </button>
+      <Card
+        layer={2}
+        className="font-chakra text-primary-text relative w-full p-4"
+      >
+        <div className="flex flex-col items-center justify-center gap-4">
+          <button
+            className="text-secondary-text absolute top-2 right-2"
+            onClick={() => setTxnSettingsOpen(true)}
+          >
+            <FaCogs size={24} />
+          </button>
 
           <h1 className="text-4xl">
-            <strong className="flex gap-2 items-center">
+            <strong className="flex items-center gap-2">
               Token
               <AiOutlineSwap size={30} />
               Swap
             </strong>
           </h1>
 
-          <div className="flex flex-col gap-1 w-full items-center">
+          <div className="flex w-full flex-col items-center gap-1">
             <Card layer={3} className="w-full p-4 pb-6">
               <div className="flex flex-col gap-2">
-                <div className="flex gap-2 items-center justify-center flex-wrap">
-                  <button className="rounded-full bg-secondary px-4 py-1 w-full" onClick={() => setTokenSelectOpen(true)}>Select Token</button>
-                  <span className="hover:underline cursor-pointer text-secondary-text">Max</span>
-                  <input type="text" className="flex-grow tablet rounded-md bg-secondary border-2 border-[transparent] focus:border-secondary-text text-right px-4 py-1 outline-none appearance-none" placeholder="0.00" />
+                <div className="flex flex-wrap items-center justify-center gap-2">
+                  <button
+                    className="bg-secondary w-full rounded-full px-4 py-1"
+                    onClick={() => setTokenSelectOpen(true)}
+                  >
+                    Select Token
+                  </button>
+                  <span className="text-secondary-text cursor-pointer hover:underline">
+                    Max
+                  </span>
+                  <input
+                    type="text"
+                    className="tablet bg-secondary focus:border-secondary-text flex-grow appearance-none rounded-md border-2 border-[transparent] px-4 py-1 text-right outline-none"
+                    placeholder="0.00"
+                  />
                 </div>
 
-                <span className="text-right text-secondary-text">
+                <span className="text-secondary-text text-right">
                   ~ $123,456.00
                 </span>
               </div>
             </Card>
-            
+
             <div className="relative">
-              <div className="w-10 h-10 bg-layer--4 flex items-center justify-center rounded-full drop-shadow-sm z-10 absolute -translate-x-1/2 -translate-y-1/2">
+              <div className="bg-layer--4 absolute z-10 flex h-10 w-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full drop-shadow-sm">
                 <AiOutlineSwap size={24} />
               </div>
             </div>
 
             <Card layer={3} className="w-full p-4 pt-6">
               <div className="flex flex-col gap-2">
-                <div className="flex gap-2 items-center justify-center flex-wrap">
-                  <button className="rounded-full bg-secondary px-4 py-1 w-full" onClick={() => setTokenSelectOpen(true)}>Select Token</button>
-                  <span className="hover:underline cursor-pointer text-secondary-text">Max</span>
-                  <input type="text" className="flex-grow rounded-md bg-secondary border-2 border-[transparent] focus:border-secondary-text text-right px-4 py-1 outline-none appearance-none" placeholder="0.00" />
+                <div className="flex flex-wrap items-center justify-center gap-2">
+                  <button
+                    className="bg-secondary w-full rounded-full px-4 py-1"
+                    onClick={() => setTokenSelectOpen(true)}
+                  >
+                    Select Token
+                  </button>
+                  <span className="text-secondary-text cursor-pointer hover:underline">
+                    Max
+                  </span>
+                  <input
+                    type="text"
+                    className="bg-secondary focus:border-secondary-text flex-grow appearance-none rounded-md border-2 border-[transparent] px-4 py-1 text-right outline-none"
+                    placeholder="0.00"
+                  />
                 </div>
 
-                <span className="text-right text-secondary-text">
+                <span className="text-secondary-text text-right">
                   ~ $123,456.00
                 </span>
               </div>
             </Card>
           </div>
 
-          <div className="flex flex-col w-full">
+          <div className="flex w-full flex-col">
             <div className="flex justify-between">
               <span>Token 1 Price</span>
               <span className="text-secondary-text">X T1 ($1.00)</span>
@@ -150,10 +185,9 @@ export const Swap: React.FC<SwapProps> = (_: SwapProps) => {
             </div>
           </div>
 
-          <button className="bg-primary rounded-full px-4 py-1 text-2xl min-w-[50%]">
+          <button className="bg-primary min-w-[50%] rounded-full px-4 py-1 text-2xl">
             Swap
           </button>
-
         </div>
       </Card>
     </>

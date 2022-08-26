@@ -6,11 +6,9 @@ import { ethers } from 'ethers';
 // }
 
 export const humanizeEther = (amount: ethers.BigNumber): string => {
-    const val = ethers.utils.commify(
-        ethers.utils.formatEther(amount)
-    );
-    return val.slice(0, val.indexOf('.'));
-}
+  const val = ethers.utils.commify(ethers.utils.formatEther(amount));
+  return val.slice(0, val.indexOf('.'));
+};
 
 // export const tryParseEther = (ether: string): string => {
 //     try {
@@ -21,5 +19,5 @@ export const humanizeEther = (amount: ethers.BigNumber): string => {
 // }
 
 export const shortAddress = (address: string): string => {
-    return address.slice(0, 5) + '..' + address.slice(-3, address.length);
-}
+  return address.slice(0, 5) + '..' + address.slice(-3, address.length);
+};

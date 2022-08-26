@@ -6,7 +6,9 @@ export interface FragmentComponentExampleProps {
   user: FragmentComponentExample_User | null;
 }
 
-export const FragmentComponentExample: FragC<FragmentComponentExampleProps> = ({ user }: FragmentComponentExampleProps) => {
+export const FragmentComponentExample: FragC<FragmentComponentExampleProps> = ({
+  user,
+}: FragmentComponentExampleProps) => {
   return (
     <div>
       <p className="text-white">{user && user.wallet + ' ' + user.name}</p>

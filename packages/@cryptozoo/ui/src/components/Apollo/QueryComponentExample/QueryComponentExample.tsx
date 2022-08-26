@@ -18,7 +18,9 @@ const GET_USER_QUERY = gql`
   ${FragmentComponentExample.fragments.user}
 `;
 
-export const QueryComponentExample: React.FC<QueryComponentExampleProps> = ({ userId }: QueryComponentExampleProps) => {
+export const QueryComponentExample: React.FC<QueryComponentExampleProps> = ({
+  userId,
+}: QueryComponentExampleProps) => {
   const { loading, data } = useQuery<GetUser, GetUserVariables>(
     GET_USER_QUERY,
     {

@@ -22,7 +22,7 @@ Disconnected.args = {
 export const Connected = Template.bind({});
 Connected.args = {
   connected: true,
-  keeperBalance: "123,456,789.45",
-  zooBalance: "123,456,789.45",
-  walletAddress: "0x2d4c407bbe49438ed859fe965b140dcf1aab71a9",
+  keeperBalance: '123,456,789.45',
+  zooBalance: '123,456,789.45',
+  walletAddress: '0x2d4c407bbe49438ed859fe965b140dcf1aab71a9',
 };

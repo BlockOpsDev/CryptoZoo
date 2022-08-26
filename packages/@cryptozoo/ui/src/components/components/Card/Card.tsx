@@ -8,7 +8,11 @@ export interface CardProps {
   className?: string;
 }
 
-export const Card: React.FC<CardProps> = ({ children, layer, className: _className }: CardProps) => {
+export const Card: React.FC<CardProps> = ({
+  children,
+  layer,
+  className: _className,
+}: CardProps) => {
   const layerClasses: {
     [layer: number]: string;
   } = {
@@ -16,19 +20,21 @@ export const Card: React.FC<CardProps> = ({ children, layer, className: _classNa
     2: 'bg-layer--2 border-layer--3',
     3: 'bg-layer--3 border-layer--4',
     4: 'bg-layer--4 border-layer--5',
-  }
+  };
 
   return (
-    <div className={cx(
-      "rounded-lg border-2 border-solid drop-shadow",
-      _className,
-      layerClasses[layer],
-    )}>
+    <div
+      className={cx(
+        'rounded-lg border-2 border-solid drop-shadow',
+        _className,
+        layerClasses[layer]
+      )}
+    >
       {children || <span>Card Content</span>}
     </div>
   );
 };
 
 Card.defaultProps = {
-  layer: 2
-}
+  layer: 2,
+};
