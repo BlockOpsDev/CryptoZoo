@@ -18,7 +18,7 @@ import "../math-utils/BancorFormula.sol";
 import "./interfaces/IBancorBondingCurve.sol";
 
 abstract contract BancorBondingCurve is IBancorBondingCurve, BancorFormula {
-  function getContinuousSwap(bondSwapKind kind, uint256 amount) public view returns (uint256) {
+  function getContinuousSwap(bondSwapKind kind, uint256 amount) internal view returns (uint256) {
     if (kind == bondSwapKind.MINT_GIVIN_IN) {
       return calculatePurchaseReturn(continuousSupply(), virtualReserveBalance(), reserveRatio(), amount);
     } else if (kind == bondSwapKind.MINT_GIVIN_OUT) {

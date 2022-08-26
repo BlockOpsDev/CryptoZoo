@@ -7,10 +7,14 @@ export enum wallets {
   wethDeployer,
   czDeployer,
   czAdmin,
+  balDeployer,
+  balAdmin,
   trader,
 }
 
-export const weiValue = ethers.utils.formatEther('1');
+export const WEI_VALUE = ethers.utils.formatEther('1');
+
+export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 export function ether(value: string): BigNumber {
   return ethers.utils.parseEther(value);

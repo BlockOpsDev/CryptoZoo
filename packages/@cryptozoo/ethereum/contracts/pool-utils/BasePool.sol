@@ -54,8 +54,6 @@ abstract contract BasePool is IBasePool, BasePoolAuthorization, TemporarilyPausa
   uint256 private constant _MIN_SWAP_FEE_PERCENTAGE = 1e12; // 0.0001%
   uint256 private constant _MAX_SWAP_FEE_PERCENTAGE = 1e17; // 10% - this fits in 64 bits
 
-  uint256 private constant _MINIMUM_BPT = 1e6;
-
   // Storage slot that can be used to store unrelated pieces of information. In particular, by default is used
   // to store only the swap fee percentage of a pool. But it can be extended to store some more pieces of information.
   // The swap fee percentage is stored in the most-significant 64 bits, therefore the remaining 192 bits can be

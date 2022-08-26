@@ -12,17 +12,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-pragma solidity 0.8.14;
+pragma solidity ^0.8.0;
+pragma experimental ABIEncoderV2;
 
-interface IContinuousToken {
-  struct TokenParams {
-    string name;
-    string symbol;
-    uint256 minReserve;
-    uint256 supply;
-    uint32 reserveRatio;
-  }
+import "../ContinuousPool.sol";
 
-  event Minted(address sender, uint256 amount, uint256 deposit);
-  event Burned(address sender, uint256 amount, uint256 refund);
+contract MockContinuousPool is ContinuousPool {
+  constructor(TokenParams memory tokenParams, PoolParams memory poolParmas)
+    ContinuousPool(poolParmas)
+    ContinuousToken(tokenParams)
+  {}
 }

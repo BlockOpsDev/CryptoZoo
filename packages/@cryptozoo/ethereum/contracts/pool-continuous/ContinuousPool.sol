@@ -33,37 +33,21 @@ abstract contract ContinuousPool is IContinuousPool, BaseMinimalSwapInfoPool, Co
   uint256 private immutable _continuousIndex;
   uint256 private immutable _reserveIndex;
 
-  constructor(
-    //Continuous Token Params
-    IERC20 reserveToken,
-    string memory name,
-    string memory symbol,
-    uint256 minReserve,
-    uint256 supply,
-    uint32 reserveRatio,
-    //Pool Params
-    IVault vault,
-    address[] memory assetManagers,
-    uint256 swapFeePercentage,
-    uint256 pauseWindowDuration,
-    uint256 bufferPeriodDuration,
-    address owner
-  )
-    ContinuousToken(name, symbol, minReserve, supply, reserveRatio)
+  constructor(PoolParams memory poolParams)
     BasePool(
-      vault,
+      poolParams.vault,
       IVault.PoolSpecialization.TWO_TOKEN,
-      _sortTokens(reserveToken, this),
-      assetManagers,
-      swapFeePercentage,
-      pauseWindowDuration,
-      bufferPeriodDuration,
-      owner
+      _sortTokens(poolParams.reserveToken, this),
+      poolParams.assetManagers,
+      poolParams.swapFeePercentage,
+      poolParams.pauseWindowDuration,
+      poolParams.bufferPeriodDuration,
+      poolParams.owner
     )
   {
-    _reserveToken = reserveToken;
+    _reserveToken = poolParams.reserveToken;
 
-    (uint256 reserveIndex, uint256 continuousIndex) = _getSortedTokenIndexes(reserveToken, this);
+    (uint256 reserveIndex, uint256 continuousIndex) = _getSortedTokenIndexes(poolParams.reserveToken, this);
     _reserveIndex = reserveIndex;
     _continuousIndex = continuousIndex;
   }
@@ -97,6 +81,12 @@ abstract contract ContinuousPool is IContinuousPool, BaseMinimalSwapInfoPool, Co
 
   function _getMaxTokens() internal pure override returns (uint256) {
     return 2;
+  }
+
+  function reserveBalance() public view virtual override returns (uint256) {
+    uint256[] memory balances;
+    (, balances, ) = getVault().getPoolTokens(getPoolId());
+    return balances[_reserveIndex];
   }
 
   //Implement Base Pool Handlers
@@ -233,25 +223,5 @@ abstract contract ContinuousPool is IContinuousPool, BaseMinimalSwapInfoPool, Co
     } else {
       _continuousBurned(account, balanceDeltas[_continuousIndex], balanceDeltas[_reserveIndex]);
     }
-  }
-
-  function transfer(address to, uint256 amount) public virtual override returns (bool) {
-    if (msg.sender == address(getVault())) {
-      _mint(to, amount);
-      return true;
-    }
-    return super.transfer(to, amount);
-  }
-
-  function transferFrom(
-    address from,
-    address to,
-    uint256 amount
-  ) public virtual override returns (bool) {
-    if (msg.sender == address(getVault()) && msg.sender == to) {
-      _burn(from, amount);
-      return true;
-    }
-    return super.transferFrom(from, to, amount);
   }
 }

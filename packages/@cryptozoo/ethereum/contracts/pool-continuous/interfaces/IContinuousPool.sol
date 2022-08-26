@@ -15,6 +15,8 @@
 pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
 import "@balancer-labs/ethereum/contracts/interfaces/vault/IVault.sol";
 import "@balancer-labs/ethereum/contracts/interfaces/vault/IPoolSwapStructs.sol";
 
@@ -24,6 +26,16 @@ import "@balancer-labs/ethereum/contracts/interfaces/vault/IPoolSwapStructs.sol"
  * either IGeneralPool or IMinimalSwapInfoPool
  */
 interface IContinuousPool {
+  struct PoolParams {
+    IERC20 reserveToken;
+    IVault vault;
+    address[] assetManagers;
+    uint256 swapFeePercentage;
+    uint256 pauseWindowDuration;
+    uint256 bufferPeriodDuration;
+    address owner;
+  }
+
   /**
    * @dev Returns the Pool's reserve token.
    */

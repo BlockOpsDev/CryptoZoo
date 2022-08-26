@@ -44,8 +44,10 @@ export const getBalancerContractArtifact = async (
   return { abi: await abi, bytecode: await bytecode };
 };
 
-export async function deployVault(admin: string): Promise<Vault> {
-  const [deployer] = await ethers.getSigners();
+export async function deployVault(admin: string, from?: SignerWithAddress): Promise<Vault> {
+  const [defaultDeployer] = await ethers.getSigners();
+  const deployer = from || defaultDeployer;
+
   const weth = await deployWETH(deployer);
 
   const authorizerArtifact = await getBalancerContractArtifact('20210418-authorizer', 'Authorizer');

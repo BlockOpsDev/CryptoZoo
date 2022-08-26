@@ -21,20 +21,15 @@ import "../ContinuousToken.sol";
 contract MockContinuousToken is ContinuousToken {
   IERC20 private _reserveToken;
 
-  constructor(
-    IERC20 reserveToken,
-    string memory name,
-    string memory symbol,
-    uint256 minReserve,
-    uint256 supply,
-    uint256 ratio
-  ) ContinuousToken(name, symbol, minReserve, supply, ratio) {
+  constructor(IERC20 reserveToken, TokenParams memory tokenParams) ContinuousToken(tokenParams) {
     _reserveToken = reserveToken;
   }
 
   function reserveBalance() public view virtual override returns (uint256) {
     return _reserveToken.balanceOf(address(this));
   }
+
+  //Testing Functions for Mint & Burn Functionality
 
   function continuousMintIn(uint256 deposit) external {
     uint256 amount = getContinuousSwap(bondSwapKind.MINT_GIVIN_IN, deposit);
@@ -55,5 +50,34 @@ contract MockContinuousToken is ContinuousToken {
     _burn(msg.sender, deposit);
     _reserveToken.transferFrom(msg.sender, address(this), amount);
     _continuousBurned(msg.sender, deposit, amount);
+  }
+
+  //Testing Functions for Curve Math
+
+  function math_continuousMintIn(
+    uint256 reserveRatio,
+    uint256 supply,
+    uint256 reserve,
+    uint256 deposit
+  ) external view returns (uint256 amount) {
+    amount = calculatePurchaseReturn(supply, reserve, reserveRatio, deposit);
+  }
+
+  function math_continuousMintOut(
+    uint256 reserveRatio,
+    uint256 supply,
+    uint256 reserve,
+    uint256 request
+  ) external view returns (uint256 deposit) {
+    deposit = calculatePurchasePrice(supply, reserve, reserveRatio, request);
+  }
+
+  function math_continuousBurnIn(
+    uint256 reserveRatio,
+    uint256 supply,
+    uint256 reserve,
+    uint256 deposit
+  ) external view returns (uint256 amount) {
+    amount = calculateSaleReturn(supply, reserve, reserveRatio, deposit);
   }
 }

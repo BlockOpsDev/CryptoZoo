@@ -23,16 +23,13 @@ abstract contract ContinuousToken is IContinuousToken, ERC20Permit, BancorBondin
   uint256 private _virtualReserveBalance;
   uint256 private immutable _reserveRatio;
 
-  constructor(
-    string memory name,
-    string memory symbol,
-    uint256 minReserve,
-    uint256 supply,
-    uint256 ratio
-  ) ERC20(name, symbol) ERC20Permit(name) {
-    _reserveRatio = ratio;
-    _virtualReserveBalance = minReserve;
-    _mint(address(this), supply);
+  constructor(TokenParams memory tokenParams)
+    ERC20(tokenParams.name, tokenParams.symbol)
+    ERC20Permit(tokenParams.name)
+  {
+    _reserveRatio = tokenParams.reserveRatio;
+    _virtualReserveBalance = tokenParams.minReserve;
+    _mint(address(this), tokenParams.supply);
   }
 
   function reserveRatio() public view virtual override returns (uint256) {
