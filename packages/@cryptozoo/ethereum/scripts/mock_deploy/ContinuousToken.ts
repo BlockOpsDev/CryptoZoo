@@ -3,11 +3,9 @@ import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/dist/src/signer-wit
 import { Decimal } from 'decimal.js';
 import { MaxUint256 } from '@ethersproject/constants';
 
-import { getSigner, wallets } from '../Utils';
 import { MockContinuousToken } from '../../typechain-types';
 import { IContinuousToken } from '../../typechain-types/contracts/token-continuous/test/MockContinuousToken';
 import { MockToken } from '@balancer-labs/ethereum/typechain-types';
-import { deployToken } from '@balancer-labs/ethereum';
 
 export interface TokenVars {
   name: string;
@@ -38,11 +36,12 @@ export async function params_ContinuousToken(tokenVars: TokenVars): Promise<ICon
 
 export async function init_ContinuousToken(
   deployer: SignerWithAddress,
+  reserveToken: MockToken,
   reserveRatio: string,
   minReserve: string,
   reserve: string,
   price: string
-): Promise<{ continuousToken: MockContinuousToken; reserveToken: MockToken }> {
+): Promise<MockContinuousToken> {
   const tokenParams = await params_ContinuousToken(<TokenVars>{
     name: 'Test',
     symbol: 'T1',
@@ -52,19 +51,12 @@ export async function init_ContinuousToken(
     price,
   });
 
-  const reserveToken = await deploy_ReserveToken(deployer.address);
+  // const reserveToken = await deploy_ReserveToken(deployer.address);
   const continuousToken = await deploy_ContinuousToken(deployer, reserveToken.address, tokenParams);
 
   await reserveToken.connect(deployer).approve(continuousToken.address, MaxUint256);
 
-  return { continuousToken, reserveToken };
-}
-
-export async function deploy_ReserveToken(recipientAddress: string): Promise<MockToken> {
-  const reserveTokenDeployer = await getSigner(wallets.wethDeployer);
-  const reserveToken = (await deployToken('WETH', reserveTokenDeployer)) as MockToken;
-  await reserveToken.connect(reserveTokenDeployer).mint(recipientAddress, MaxUint256);
-  return reserveToken;
+  return continuousToken;
 }
 
 export async function deploy_ContinuousToken(

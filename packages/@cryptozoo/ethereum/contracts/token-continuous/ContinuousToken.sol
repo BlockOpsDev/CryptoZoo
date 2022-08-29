@@ -20,6 +20,8 @@ import "./interfaces/IContinuousToken.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 
 abstract contract ContinuousToken is IContinuousToken, ERC20Permit, BancorBondingCurve {
+  uint256 private _continuousSupply;
+
   uint256 private _virtualReserveBalance;
   uint256 private immutable _reserveRatio;
 
@@ -29,29 +31,22 @@ abstract contract ContinuousToken is IContinuousToken, ERC20Permit, BancorBondin
   {
     _reserveRatio = tokenParams.reserveRatio;
     _virtualReserveBalance = tokenParams.minReserve;
-    _mint(address(this), tokenParams.supply);
+    // _mint(address(this), tokenParams.supply);
+    _continuousSupply = tokenParams.supply;
   }
 
   function reserveRatio() public view virtual override returns (uint256) {
     return _reserveRatio;
   }
 
-  function continuousSupply() public view virtual override returns (uint256) {
-    return totalSupply(); // Continuous Token total supply
-  }
-
   function minimumReserveRequired() public view virtual returns (uint256) {}
+
+  function continuousSupply() public view virtual override returns (uint256) {
+    return _continuousSupply; // Continuous Token total supply
+  }
 
   function virtualReserveBalance() public view virtual override returns (uint256) {
     return _virtualReserveBalance;
-  }
-
-  function _increaseVirtualReserve(uint256 amount) internal {
-    _virtualReserveBalance += amount;
-  }
-
-  function _decreaseVirtualReserve(uint256 amount) internal {
-    _virtualReserveBalance -= amount;
   }
 
   function _continuousMinted(
@@ -59,7 +54,8 @@ abstract contract ContinuousToken is IContinuousToken, ERC20Permit, BancorBondin
     uint256 amount,
     uint256 deposit
   ) internal {
-    _increaseVirtualReserve(deposit);
+    _continuousSupply += amount;
+    _virtualReserveBalance += deposit;
     emit Minted(account, amount, deposit);
   }
 
@@ -68,7 +64,8 @@ abstract contract ContinuousToken is IContinuousToken, ERC20Permit, BancorBondin
     uint256 amount,
     uint256 refund
   ) internal {
-    _decreaseVirtualReserve(refund);
+    _continuousSupply -= amount;
+    _virtualReserveBalance -= refund;
     emit Burned(account, amount, refund);
   }
 }

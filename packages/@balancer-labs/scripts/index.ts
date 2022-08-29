@@ -3,36 +3,19 @@ import { ethers } from 'hardhat';
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/dist/src/signer-with-address';
 import { BigNumber } from '@ethersproject/bignumber';
 import { MaxUint256 } from '@ethersproject/constants';
-import { Contract, ContractReceipt, ContractTransaction } from '@ethersproject/contracts';
 import { JsonFragment } from '@ethersproject/abi';
 import { getBalancerContractAbi, getBalancerContractBytecode } from '@balancer-labs/v2-deployments';
 import { Vault } from '@balancer-labs/typechain';
 import * as MockTokenArtifact from '../artifacts/contracts/mock/MockToken.sol/MockToken.json';
 import * as MockWETHArtifact from '../artifacts/contracts/mock/MockWETH.sol/MockWETH.json';
-import { MockToken } from '../typechain-types';
+import { MockToken, MockWETH } from '../typechain-types';
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 export const ZERO_BYTES32 = '0x0000000000000000000000000000000000000000000000000000000000000000';
 
-export type TokenList = Dictionary<Contract>;
+export type TokenList = Dictionary<MockToken>;
 
 export const tokenSymbols = Array.from({ length: 2 }, (_, i) => `TKN${i}`);
-
-export async function getSigners(): Promise<{
-  deployer: SignerWithAddress;
-  admin: SignerWithAddress;
-  creator: SignerWithAddress;
-  liquidityProvider: SignerWithAddress;
-  trader: SignerWithAddress;
-}> {
-  const [deployer, admin, creator, liquidityProvider, trader] = await ethers.getSigners();
-
-  return { deployer, admin, creator, liquidityProvider, trader };
-}
-
-export async function txConfirmation(tx: ContractTransaction | Promise<ContractTransaction>): Promise<ContractReceipt> {
-  return (await tx).wait();
-}
 
 export const getBalancerContractArtifact = async (
   task: string,
@@ -44,11 +27,9 @@ export const getBalancerContractArtifact = async (
   return { abi: await abi, bytecode: await bytecode };
 };
 
-export async function deployVault(admin: string, from?: SignerWithAddress): Promise<Vault> {
+export async function deployVault(weth: MockWETH, admin: string, from?: SignerWithAddress): Promise<Vault> {
   const [defaultDeployer] = await ethers.getSigners();
   const deployer = from || defaultDeployer;
-
-  const weth = await deployWETH(deployer);
 
   const authorizerArtifact = await getBalancerContractArtifact('20210418-authorizer', 'Authorizer');
   const authorizerFactory = new ethers.ContractFactory(authorizerArtifact.abi, authorizerArtifact.bytecode, deployer);
@@ -61,36 +42,31 @@ export async function deployVault(admin: string, from?: SignerWithAddress): Prom
   return vault as Vault;
 }
 
-export async function setupEnvironment(): Promise<{
+export async function setupEnvironment(
+  deployer: SignerWithAddress,
+  admin: SignerWithAddress,
+  users: SignerWithAddress[]
+): Promise<{
   vault: Vault;
   tokens: TokenList;
-  deployer: SignerWithAddress;
-  liquidityProvider: SignerWithAddress;
-  trader: SignerWithAddress;
+  weth: MockWETH;
 }> {
-  const { deployer, admin, creator, liquidityProvider, trader } = await getSigners();
-  const vault: Vault = await deployVault(admin.address);
-
+  const weth = await deployWETH(deployer);
+  const vault = await deployVault(weth, admin.address);
   const tokens = await deploySortedTokens(tokenSymbols, Array(tokenSymbols.length).fill(18));
 
   for (const symbol in tokens) {
-    // creator tokens are used to initialize pools, but tokens are only minted when required
-    await tokens[symbol].connect(creator).approve(vault.address, MaxUint256);
-
-    // liquidity provider tokens are used to provide liquidity and not have non-zero balances
-    await mintTokens(tokens, symbol, liquidityProvider, 200e18);
-    await tokens[symbol].connect(liquidityProvider).approve(vault.address, MaxUint256);
-
-    // trader tokens are used to trade and not have non-zero balances
-    await mintTokens(tokens, symbol, trader, 200e18);
-    await tokens[symbol].connect(trader).approve(vault.address, MaxUint256);
+    for (const user of users) {
+      await mintTokens(tokens, symbol, user, 200e18);
+      await tokens[symbol].connect(user).approve(vault.address, MaxUint256);
+    }
   }
 
-  return { vault, tokens, deployer, liquidityProvider, trader };
+  return { vault, tokens, weth };
 }
 
 export function pickTokens(tokens: TokenList, size: number, offset?: number): MockToken[] {
-  return tokenSymbols.slice(offset ?? 0, size + (offset ?? 0)).map((symbol) => tokens[symbol]) as MockToken[];
+  return tokenSymbols.slice(offset ?? 0, size + (offset ?? 0)).map((symbol) => tokens[symbol]);
 }
 
 export async function deploySortedTokens(
@@ -100,6 +76,7 @@ export async function deploySortedTokens(
 ): Promise<TokenList> {
   const [defaultDeployer] = await ethers.getSigners();
   const deployer = from || defaultDeployer;
+
   return fromPairs(
     (await Promise.all(symbols.map((_, i) => deployToken(`T${i}`, deployer))))
       .sort((tokenA, tokenB) => (tokenA.address.toLowerCase() > tokenB.address.toLowerCase() ? 1 : -1))
@@ -107,19 +84,21 @@ export async function deploySortedTokens(
   );
 }
 
-export async function deployWETH(from?: SignerWithAddress): Promise<Contract> {
+export async function deployWETH(from?: SignerWithAddress): Promise<MockWETH> {
   const [defaultDeployer] = await ethers.getSigners();
   const deployer = from || defaultDeployer;
+
   const factory = new ethers.ContractFactory(MockWETHArtifact.abi, MockWETHArtifact.bytecode, deployer);
-  const instance = await factory.deploy(deployer.address);
+  const instance = (await factory.deploy(deployer.address)) as MockWETH;
   return instance;
 }
 
-export async function deployToken(symbol: string, from?: SignerWithAddress): Promise<Contract> {
+export async function deployToken(symbol: string, from?: SignerWithAddress): Promise<MockToken> {
   const [defaultDeployer] = await ethers.getSigners();
   const deployer = from || defaultDeployer;
+
   const factory = new ethers.ContractFactory(MockTokenArtifact.abi, MockTokenArtifact.bytecode, deployer);
-  const instance = await factory.deploy(deployer.address, symbol, symbol);
+  const instance = (await factory.deploy(deployer.address, symbol, symbol)) as MockToken;
   return instance;
 }
 
@@ -130,12 +109,4 @@ export async function mintTokens(
   amount: number | BigNumber | string
 ): Promise<void> {
   await tokens[symbol].mint(typeof recipient == 'string' ? recipient : recipient.address, amount.toString());
-}
-
-export function printGas(gas: number | BigNumber): string {
-  if (typeof gas !== 'number') {
-    gas = gas.toNumber();
-  }
-
-  return `${(gas / 1000).toFixed(1)}k`;
 }

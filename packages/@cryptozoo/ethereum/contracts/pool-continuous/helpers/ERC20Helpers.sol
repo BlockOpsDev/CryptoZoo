@@ -15,8 +15,16 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@balancer-labs/ethereum/contracts/interfaces/vault/IAsset.sol";
 
 // solhint-disable
+
+function _asIAsset(IERC20[] memory tokens) pure returns (IAsset[] memory assets) {
+  // solhint-disable-next-line no-inline-assembly
+  assembly {
+    assets := tokens
+  }
+}
 
 function _sortTokens(IERC20 tokenA, IERC20 tokenB) pure returns (IERC20[] memory tokens) {
   (uint256 indexTokenA, uint256 indexTokenB) = _getSortedTokenIndexes(tokenA, tokenB);

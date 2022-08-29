@@ -1,33 +1,45 @@
-import { assert, expect } from 'chai';
+import { assert } from 'chai';
 import { ethers } from 'hardhat';
 
+import { MaxUint256 } from '@ethersproject/constants';
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/dist/src/signer-with-address';
+
 import { init_ContinuousToken } from '../../scripts/mock_deploy/ContinuousToken';
-import { getSigner, wallets, WEI_VALUE } from '../../scripts/Utils';
+import { WEI_VALUE } from '../../scripts/Utils';
 import { MockContinuousToken } from '../../typechain-types';
 import { MockToken } from '@balancer-labs/ethereum/typechain-types';
+import { deployToken } from '@balancer-labs/ethereum';
 
 import { Decimal } from 'decimal.js';
 
 const ONE = new Decimal(1);
 const MAX_WEIGHT = new Decimal(1000000);
 
-const math_continuousMintIn = (reserveRatio: Decimal, supply: Decimal, balance: Decimal, amount: Decimal) =>
+export const math_continuousMintIn = (reserveRatio: Decimal, supply: Decimal, balance: Decimal, amount: Decimal) =>
   supply.mul(ONE.add(amount.div(balance)).pow(reserveRatio.div(MAX_WEIGHT)).sub(ONE));
 
-const math_continuousBurnIn = (reserveRatio: Decimal, supply: Decimal, balance: Decimal, amount: Decimal) =>
+export const math_continuousBurnIn = (reserveRatio: Decimal, supply: Decimal, balance: Decimal, amount: Decimal) =>
   balance.mul(ONE.sub(ONE.sub(amount.div(supply)).pow(MAX_WEIGHT.div(reserveRatio))));
+
+async function deploy_ReserveToken(recipientAddress: string): Promise<MockToken> {
+  const reserveTokenDeployer = (await ethers.getSigners())[0];
+  const reserveToken = (await deployToken('WETH', reserveTokenDeployer)) as MockToken;
+  await reserveToken.connect(reserveTokenDeployer).mint(recipientAddress, MaxUint256);
+  return reserveToken;
+}
 
 describe('Continuous Token', function () {
   //Account Address
   let deployer: SignerWithAddress;
 
   let continuousToken: MockContinuousToken;
-  let reserveToken: MockToken;
 
   beforeEach('deploy tokens', async () => {
-    deployer = await getSigner(wallets.czDeployer);
-    ({ continuousToken, reserveToken } = await init_ContinuousToken(deployer, '0.1', WEI_VALUE, '160000', '0.05'));
+    // deployer = await getSigner(wallets.czDeployer);
+    deployer = (await ethers.getSigners())[0];
+    const reserveToken = await deploy_ReserveToken(deployer.address);
+
+    continuousToken = await init_ContinuousToken(deployer, reserveToken, '0.1', WEI_VALUE, '160000', '0.05');
   });
 
   describe('Swaps', function () {

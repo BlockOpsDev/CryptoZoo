@@ -28,6 +28,8 @@ import "../token-continuous/ContinuousToken.sol";
 abstract contract ContinuousPool is IContinuousPool, BaseMinimalSwapInfoPool, ContinuousToken {
   using ContinuousPoolUserData for bytes;
 
+  uint256 private constant _INITIAL_CONTINUOUS_SUPPLY = 2**(112) - 1;
+
   IERC20 private immutable _reserveToken;
 
   uint256 private immutable _continuousIndex;
@@ -87,6 +89,23 @@ abstract contract ContinuousPool is IContinuousPool, BaseMinimalSwapInfoPool, Co
     uint256[] memory balances;
     (, balances, ) = getVault().getPoolTokens(getPoolId());
     return balances[_reserveIndex];
+  }
+
+  function initialize() external {
+    bytes32 poolId = getPoolId();
+    (IERC20[] memory tokens, , ) = getVault().getPoolTokens(poolId);
+
+    uint256[] memory maxAmountsIn = new uint256[](_getTotalTokens());
+    maxAmountsIn[_continuousIndex] = _INITIAL_CONTINUOUS_SUPPLY;
+
+    IVault.JoinPoolRequest memory request = IVault.JoinPoolRequest({
+      assets: _asIAsset(tokens),
+      maxAmountsIn: maxAmountsIn,
+      userData: "",
+      fromInternalBalance: false
+    });
+
+    getVault().joinPool(poolId, address(this), address(this), request);
   }
 
   //Implement Base Pool Handlers
@@ -151,14 +170,25 @@ abstract contract ContinuousPool is IContinuousPool, BaseMinimalSwapInfoPool, Co
 
   function _onJoinPool(
     bytes32,
-    address,
-    address,
+    address sender,
+    address recipient,
     uint256[] memory,
     uint256,
     uint256,
     bytes memory
-  ) internal pure override returns (uint256[] memory) {
-    _revert(Errors.UNHANDLED_JOIN_KIND);
+  ) internal override returns (uint256[] memory) {
+    _require(totalSupply() == 0, Errors.UNHANDLED_JOIN_KIND);
+
+    _require(sender == address(this), Errors.INVALID_INITIALIZATION);
+    _require(recipient == address(this), Errors.INVALID_INITIALIZATION);
+
+    _mint(sender, _INITIAL_CONTINUOUS_SUPPLY);
+    _approve(address(this), address(getVault()), _INITIAL_CONTINUOUS_SUPPLY);
+
+    uint256[] memory amountsIn = new uint256[](_getTotalTokens());
+    amountsIn[_continuousIndex] = _INITIAL_CONTINUOUS_SUPPLY;
+
+    return (amountsIn);
   }
 
   function _onExitPool(
