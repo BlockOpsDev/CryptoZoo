@@ -7,8 +7,6 @@ import { IContinuousToken } from '../../typechain-types/contracts/token-continuo
 import { IContinuousPool } from '../../typechain-types/contracts/pool-continuous/test/MockContinuousPool';
 
 import { Vault } from '@balancer-labs/typechain';
-import { MockToken } from '@balancer-labs/ethereum/typechain-types';
-
 import { params_ContinuousToken, TokenVars } from './ContinuousToken';
 
 export interface PoolVars {
@@ -22,7 +20,6 @@ export interface PoolVars {
 export async function init_ContinuousPool(
   deployer: SignerWithAddress,
   vault: Vault,
-  reserveToken: MockToken,
   tokenVars: TokenVars,
   poolVars: PoolVars
 ): Promise<{
@@ -31,11 +28,11 @@ export async function init_ContinuousPool(
   tokenParams: IContinuousToken.TokenParamsStruct;
 }> {
   const tokenParams = await params_ContinuousToken(tokenVars);
-  const poolParams = { reserveToken: reserveToken.address, vault: vault.address, ...poolVars };
+  const poolParams = { vault: vault.address, ...poolVars };
   const continuousPool = await deploy_ContinuousPool(deployer, tokenParams, poolParams);
 
   await continuousPool.initialize();
-  await reserveToken.connect(deployer).approve(vault.address, MaxUint256);
+  await tokenVars.reserveToken.connect(deployer).approve(vault.address, MaxUint256);
 
   return { continuousPool, poolParams, tokenParams };
 }

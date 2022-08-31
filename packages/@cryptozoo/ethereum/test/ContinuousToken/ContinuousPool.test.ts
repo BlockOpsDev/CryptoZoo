@@ -9,9 +9,9 @@ import { PromiseOrValue } from '@balancer-labs/ethereum/typechain-types/common';
 import { MockToken, MockWETH } from '@balancer-labs/ethereum/typechain-types';
 import { Vault } from '@balancer-labs/typechain';
 
-import { Wallets, wallets, WEI_VALUE, ZERO_ADDRESS } from '../../scripts/Utils';
+import { getSigner, WalletList, Wallets, wallets, WEI_VALUE, ZERO_ADDRESS } from '../../scripts/Utils';
 import { pickTokens, setupEnvironment, TokenList } from '@balancer-labs/ethereum';
-import { math_continuousMintIn } from './ContinuousToken.test';
+import { math_continuousBurnIn, math_continuousMintIn } from './ContinuousToken.test';
 
 import { MockContinuousPool } from '../../typechain-types';
 import { init_ContinuousPool } from '../../scripts/mock_deploy/ContinuousPool';
@@ -20,6 +20,7 @@ import {
   IContinuousToken,
 } from '../../typechain-types/contracts/pool-continuous/test/MockContinuousPool';
 
+//Testing Helper Functions
 const subtractFee = (
   swapAmount: BigNumber,
   swapFeePercentage: PromiseOrValue<BigNumberish>
@@ -34,7 +35,7 @@ const bancorMath = (method: (...args: [...Decimal[]]) => Decimal, ...args: Promi
     args.map((x) => new Decimal(x.toString()))
   );
 
-  return Number(amount).toLocaleString('fullwide', { useGrouping: false });
+  return Number(amount.round()).toLocaleString('fullwide', { useGrouping: false });
 };
 
 describe.only('Continuous Pool', function () {
@@ -50,12 +51,13 @@ describe.only('Continuous Pool', function () {
   let tokenParams: IContinuousToken.TokenParamsStruct;
   let poolParams: IContinuousPool.PoolParamsStruct;
 
-  beforeEach('deploy tokens', async () => {
+  before('deploy tokens', async () => {
     accounts = await wallets();
 
     ({ vault, tokens, weth } = await setupEnvironment(accounts.balDeployer, accounts.balAdmin, [
       accounts.czDeployer,
-      accounts.trader,
+      accounts.trader1,
+      accounts.trader2,
     ]));
 
     reserveToken = pickTokens(tokens, 1)[0];
@@ -63,8 +65,15 @@ describe.only('Continuous Pool', function () {
     ({ continuousPool, poolParams, tokenParams } = await init_ContinuousPool(
       accounts.czDeployer,
       vault,
-      reserveToken,
-      { name: 'Test', symbol: 'T1', reserveRatio: '0.1', minReserve: WEI_VALUE, reserve: '160000', price: '0.05' },
+      {
+        name: 'Test',
+        symbol: 'T1',
+        reserveRatio: '0.1',
+        reserveToken,
+        minReserve: WEI_VALUE,
+        reserve: '160000',
+        price: '0.05',
+      },
 
       {
         assetManagers: [ZERO_ADDRESS, ZERO_ADDRESS],
@@ -74,56 +83,121 @@ describe.only('Continuous Pool', function () {
         owner: accounts.czAdmin.address,
       }
     ));
+
+    continuousPool.connect(accounts.trader1).approve(vault.address, ethers.utils.parseEther('100000000'));
   });
 
-  const swap = async (account: SignerWithAddress, amount: BigNumberish) => {
-    return vault.connect(account).swap(
-      {
-        poolId: await continuousPool.getPoolId(),
-        kind: 0,
-        assetIn: reserveToken.address,
-        assetOut: continuousPool.address,
-        amount: amount,
-        userData: '0x',
-      },
-      {
-        sender: account.address,
-        fromInternalBalance: false,
-        recipient: account.address,
-        toInternalBalance: false,
-      },
-      '0',
-      '999999999999999999'
+  const swap = async (
+    account: SignerWithAddress,
+    amount: BigNumber,
+    tokenIn: string,
+    tokenOut: string
+  ): Promise<string> => {
+    const error = ethers.utils.parseEther('.00000001');
+
+    const TokenFactory = await ethers.getContractFactory('ERC20');
+    const TokenIn = TokenFactory.attach(tokenIn);
+    const TokenOut = TokenFactory.attach(tokenOut);
+
+    const currentBalance = await TokenOut.balanceOf(account.address);
+
+    const args = [
+      await continuousPool.reserveRatio(),
+      await continuousPool.continuousSupply(),
+      await continuousPool.virtualReserveBalance(),
+      tokenIn == reserveToken.address ? await subtractFee(amount, poolParams.swapFeePercentage) : amount,
+    ];
+
+    const returnAmount = bancorMath(
+      tokenIn == reserveToken.address ? math_continuousMintIn : math_continuousBurnIn,
+      ...args
     );
+
+    await expect(
+      vault.connect(account).swap(
+        {
+          poolId: await continuousPool.getPoolId(),
+          kind: 0,
+          assetIn: tokenIn,
+          assetOut: tokenOut,
+          amount: amount,
+          userData: '0x',
+        },
+        {
+          sender: account.address,
+          fromInternalBalance: false,
+          recipient: account.address,
+          toInternalBalance: false,
+        },
+        '0',
+        '999999999999999999'
+      )
+    ).to.changeTokenBalances(TokenIn, [account, vault.address], [amount.mul(-1), amount]);
+
+    const recieved = (await TokenOut.balanceOf(account.address)).sub(currentBalance);
+    expect(
+      recieved
+        .sub(
+          tokenIn == reserveToken.address
+            ? returnAmount
+            : await subtractFee(ethers.BigNumber.from(returnAmount), poolParams.swapFeePercentage)
+        )
+        .abs()
+    ).to.be.below(error);
+
+    const minimumReserve = bancorMath(
+      math_continuousBurnIn,
+      ...[
+        await continuousPool.reserveRatio(),
+        await continuousPool.continuousSupply(),
+        await continuousPool.virtualReserveBalance(),
+        (await continuousPool.continuousSupply()).sub(await continuousPool.balanceOf(continuousPool.address)),
+      ]
+    );
+
+    console.log(minimumReserve);
+    console.log(`Reserve Balance: ${await reserveToken.balanceOf(account.address)}`);
+    console.log(`Continuous Balance: ${await continuousPool.balanceOf(account.address)}`);
+    console.log(`Continuous Supply: ${await continuousPool.continuousSupply()}`);
+    console.log(`Minimum Reserve: ${await continuousPool.minimumReserveRequired()}`);
+    console.log(`Virtual Reserve: ${await continuousPool.virtualReserveBalance()}`);
+    console.log(`Reserve: ${await continuousPool.reserveBalance()}`);
+    return recieved.toString();
   };
 
   describe('Pool Interaction', function () {
     it('Intial Pool State', async () => {
+      console.log(tokenParams.supply);
+      expect(await continuousPool.balanceOf(vault.address)).to.equal(ethers.BigNumber.from(2).pow(112).sub(1));
+      // expect(await continuousPool.minimumReserveRequired()).to.equal(0);
       expect(await continuousPool.reserveRatio()).to.equal(tokenParams.reserveRatio);
       expect(await continuousPool.continuousSupply()).to.equal(tokenParams.supply);
       expect(await continuousPool.virtualReserveBalance()).to.equal(tokenParams.minReserve);
       expect(await continuousPool.reserveBalance()).to.equal(0);
     });
 
-    it('Swap', async () => {
-      const error = ethers.utils.parseEther('.000000001');
-      const swapAmount = ethers.utils.parseEther('56');
+    const swapAmount = ethers.utils.parseEther('100');
+    let returnAmount: string;
 
-      const args = [
-        tokenParams.reserveRatio,
-        tokenParams.supply,
-        tokenParams.minReserve,
-        subtractFee(swapAmount, poolParams.swapFeePercentage),
-      ];
-
-      const returnAmount = bancorMath(math_continuousMintIn, ...args);
-
-      await expect(swap(accounts.trader, swapAmount)).to.changeTokenBalances(
-        reserveToken,
-        [accounts.trader, vault.address],
-        [swapAmount.mul(-1), swapAmount]
+    it('Swap1', async () => {
+      returnAmount = await swap(accounts.trader1, swapAmount, reserveToken.address, continuousPool.address);
+      // console.log(`Return Amount: ${returnAmount}`);
+      // console.log(await reserveToken.balanceOf(accounts.trader1.address));
+    });
+    it('Swap2', async () => {
+      returnAmount = await swap(accounts.trader1, swapAmount, reserveToken.address, continuousPool.address);
+      // console.log(`Return Amount: ${returnAmount}`);
+      // console.log(await reserveToken.balanceOf(accounts.trader1.address));
+    });
+    it('Swap3', async () => {
+      returnAmount = await swap(
+        accounts.trader1,
+        ethers.utils.parseEther('1400000'),
+        continuousPool.address,
+        reserveToken.address
       );
-      expect((await continuousPool.balanceOf(accounts.trader.address)).sub(returnAmount).abs()).to.be.below(error);
+      // console.log(`Return Amount: ${returnAmount}`);
+      // console.log(await continuousPool.balanceOf(accounts.trader1.address));
     });
   });
 });

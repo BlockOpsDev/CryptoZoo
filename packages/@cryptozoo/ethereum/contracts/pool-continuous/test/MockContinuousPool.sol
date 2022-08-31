@@ -19,7 +19,7 @@ import "../ContinuousPool.sol";
 
 contract MockContinuousPool is ContinuousPool {
   constructor(TokenParams memory tokenParams, PoolParams memory poolParmas)
-    ContinuousPool(poolParmas)
+    ContinuousPool(poolParmas, tokenParams.reserveToken)
     ContinuousToken(tokenParams)
   {}
 }

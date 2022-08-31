@@ -23,7 +23,7 @@ interface IBancorBondingCurve {
   }
 
   /**
-   * @dev Abstract method that returns reserveRatio
+   * @dev Method that returns reserveRatio
    *
    * reserve ratio, represented in ppm, 1-1000000
    * 1/3 corresponds to y= multiple * x^2
@@ -33,17 +33,17 @@ interface IBancorBondingCurve {
   function reserveRatio() external view returns (uint256);
 
   /**
-   * @dev Abstract method that returns continuous token supply
+   * @dev Method that returns continuous token supply
    */
   function continuousSupply() external view returns (uint256);
 
   /**
-   * @dev Abstract method that returns reserve token balance
+   * @dev Method that returns reserve token balance
    */
   function reserveBalance() external view returns (uint256);
 
   /**
-   * @dev Abstract method that returns virtual reserve token balance used for bancor formula
+   * @dev Method that returns virtual reserve token balance used for bancor formula
    */
   function virtualReserveBalance() external view returns (uint256);
 }

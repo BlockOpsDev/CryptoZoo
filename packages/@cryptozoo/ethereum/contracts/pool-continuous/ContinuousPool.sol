@@ -30,16 +30,16 @@ abstract contract ContinuousPool is IContinuousPool, BaseMinimalSwapInfoPool, Co
 
   uint256 private constant _INITIAL_CONTINUOUS_SUPPLY = 2**(112) - 1;
 
-  IERC20 private immutable _reserveToken;
+  // IERC20 private immutable _reserveToken;
 
   uint256 private immutable _continuousIndex;
   uint256 private immutable _reserveIndex;
 
-  constructor(PoolParams memory poolParams)
+  constructor(PoolParams memory poolParams, IERC20 reserveToken)
     BasePool(
       poolParams.vault,
       IVault.PoolSpecialization.TWO_TOKEN,
-      _sortTokens(poolParams.reserveToken, this),
+      _sortTokens(reserveToken, this),
       poolParams.assetManagers,
       poolParams.swapFeePercentage,
       poolParams.pauseWindowDuration,
@@ -47,9 +47,9 @@ abstract contract ContinuousPool is IContinuousPool, BaseMinimalSwapInfoPool, Co
       poolParams.owner
     )
   {
-    _reserveToken = poolParams.reserveToken;
+    // _reserveToken = poolParams.reserveToken;
 
-    (uint256 reserveIndex, uint256 continuousIndex) = _getSortedTokenIndexes(poolParams.reserveToken, this);
+    (uint256 reserveIndex, uint256 continuousIndex) = _getSortedTokenIndexes(reserveToken, this);
     _reserveIndex = reserveIndex;
     _continuousIndex = continuousIndex;
   }
@@ -57,9 +57,9 @@ abstract contract ContinuousPool is IContinuousPool, BaseMinimalSwapInfoPool, Co
   /**
    * @notice Return the reserve token address as an IERC20.
    */
-  function getReserveToken() public view override returns (IERC20) {
-    return _reserveToken;
-  }
+  // function getReserveToken() public view override returns (IERC20) {
+  //   return _reserveToken;
+  // }
 
   /**
    * @notice Return the index of the reserve token.
@@ -117,21 +117,23 @@ abstract contract ContinuousPool is IContinuousPool, BaseMinimalSwapInfoPool, Co
     uint256
   ) internal virtual override returns (uint256) {
     // Swaps are disabled while the contract is paused.
-    bool isMint = swapRequest.tokenIn == _reserveToken;
+    bool isMint = swapRequest.tokenIn == getReserveToken();
     uint256[] memory balanceDeltas = new uint256[](2);
 
     uint256 amount;
 
     if (isMint) {
-      amount = getContinuousSwap(bondSwapKind.MINT_GIVIN_IN, swapRequest.amount);
+      amount = getContinuousSwap(bondSwapKind.MINT_GIVIN_IN, _subtractSwapFeeAmount(swapRequest.amount));
 
-      balanceDeltas[_reserveIndex] = swapRequest.amount;
+      balanceDeltas[_reserveIndex] = _subtractSwapFeeAmount(swapRequest.amount);
       balanceDeltas[_continuousIndex] = amount;
     } else {
       amount = getContinuousSwap(bondSwapKind.BURN_GIVIN_IN, swapRequest.amount);
 
       balanceDeltas[_reserveIndex] = amount;
       balanceDeltas[_continuousIndex] = swapRequest.amount;
+
+      amount = _subtractSwapFeeAmount(amount);
     }
 
     _afterSwap(isMint, swapRequest.to, balanceDeltas);
@@ -146,7 +148,7 @@ abstract contract ContinuousPool is IContinuousPool, BaseMinimalSwapInfoPool, Co
   ) internal virtual override returns (uint256) {
     // Swaps are disabled while the contract is paused.
 
-    bool isMint = swapRequest.tokenIn == _reserveToken;
+    bool isMint = swapRequest.tokenIn == getReserveToken();
     uint256[] memory balanceDeltas = new uint256[](2);
 
     uint256 amount;
@@ -177,7 +179,7 @@ abstract contract ContinuousPool is IContinuousPool, BaseMinimalSwapInfoPool, Co
     uint256,
     bytes memory
   ) internal override returns (uint256[] memory) {
-    _require(totalSupply() == 0, Errors.UNHANDLED_JOIN_KIND);
+    // _require(totalSupply() == 0, Errors.UNHANDLED_JOIN_KIND);
 
     _require(sender == address(this), Errors.INVALID_INITIALIZATION);
     _require(recipient == address(this), Errors.INVALID_INITIALIZATION);

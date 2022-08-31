@@ -30,7 +30,7 @@ abstract contract BancorBondingCurve is IBancorBondingCurve, BancorFormula {
     }
   }
 
-  //Functions Requiring Implementation
+  //Functions required for calculation
 
   /**
    * @dev Abstract method that returns reserveRatio
@@ -46,11 +46,6 @@ abstract contract BancorBondingCurve is IBancorBondingCurve, BancorFormula {
    * @dev Abstract method that returns continuous token supply
    */
   function continuousSupply() public view virtual returns (uint256);
-
-  /**
-   * @dev Abstract method that returns reserve token balance
-   */
-  function reserveBalance() public view virtual returns (uint256);
 
   /**
    * @dev Abstract method that returns virtual reserve token balance used for bancor formula

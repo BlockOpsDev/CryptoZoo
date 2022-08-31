@@ -36,10 +36,10 @@ abstract contract BaseMinimalSwapInfoPool is IMinimalSwapInfoPool, BasePool {
     _beforeSwapJoinExit();
 
     if (request.kind == IVault.SwapKind.GIVEN_IN) {
-      request.amount = _subtractSwapFeeAmount(request.amount);
+      // request.amount = _subtractSwapFeeAmount(request.amount);
       return _onSwapGivenIn(request, balanceTokenIn, balanceTokenOut);
     } else {
-      return _addSwapFeeAmount(_onSwapGivenOut(request, balanceTokenIn, balanceTokenOut));
+      return _onSwapGivenOut(request, balanceTokenIn, balanceTokenOut);
     }
   }
 

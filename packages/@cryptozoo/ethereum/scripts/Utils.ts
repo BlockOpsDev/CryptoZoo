@@ -9,7 +9,8 @@ export enum WalletList {
   czAdmin,
   balDeployer,
   balAdmin,
-  trader,
+  trader1,
+  trader2,
 }
 
 export interface Wallets {

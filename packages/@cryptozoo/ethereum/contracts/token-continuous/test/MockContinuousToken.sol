@@ -19,14 +19,10 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../ContinuousToken.sol";
 
 contract MockContinuousToken is ContinuousToken {
-  IERC20 private _reserveToken;
-
-  constructor(IERC20 reserveToken, TokenParams memory tokenParams) ContinuousToken(tokenParams) {
-    _reserveToken = reserveToken;
-  }
+  constructor(TokenParams memory tokenParams) ContinuousToken(tokenParams) {}
 
   function reserveBalance() public view virtual override returns (uint256) {
-    return _reserveToken.balanceOf(address(this));
+    return getReserveToken().balanceOf(address(this));
   }
 
   //Testing Functions for Mint & Burn Functionality
@@ -34,21 +30,21 @@ contract MockContinuousToken is ContinuousToken {
   function continuousMintIn(uint256 deposit) external {
     uint256 amount = getContinuousSwap(bondSwapKind.MINT_GIVIN_IN, deposit);
     _mint(msg.sender, amount);
-    _reserveToken.transferFrom(msg.sender, address(this), deposit);
+    getReserveToken().transferFrom(msg.sender, address(this), deposit);
     _continuousMinted(msg.sender, amount, deposit);
   }
 
   function continuousMintOut(uint256 request) external {
     uint256 deposit = getContinuousSwap(bondSwapKind.MINT_GIVIN_OUT, request);
     _mint(msg.sender, request);
-    _reserveToken.transferFrom(msg.sender, address(this), deposit);
+    getReserveToken().transferFrom(msg.sender, address(this), deposit);
     _continuousMinted(msg.sender, request, deposit);
   }
 
   function continuousBurnIn(uint256 deposit) external {
     uint256 amount = getContinuousSwap(bondSwapKind.BURN_GIVIN_IN, deposit);
     _burn(msg.sender, deposit);
-    _reserveToken.transferFrom(msg.sender, address(this), amount);
+    getReserveToken().transferFrom(msg.sender, address(this), amount);
     _continuousBurned(msg.sender, deposit, amount);
   }
 

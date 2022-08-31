@@ -14,6 +14,8 @@
 
 pragma solidity 0.8.14;
 
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
 interface IContinuousToken {
   struct TokenParams {
     string name;
@@ -21,8 +23,13 @@ interface IContinuousToken {
     uint256 minReserve;
     uint256 supply;
     uint32 reserveRatio;
+    IERC20 reserveToken;
   }
 
   event Minted(address sender, uint256 amount, uint256 deposit);
   event Burned(address sender, uint256 amount, uint256 refund);
+
+  function getReserveToken() external view returns (IERC20);
+
+  function minimumReserveRequired() external view returns (uint256);
 }

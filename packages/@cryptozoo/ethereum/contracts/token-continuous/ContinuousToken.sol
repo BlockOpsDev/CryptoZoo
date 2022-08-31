@@ -14,35 +14,50 @@
 
 pragma solidity 0.8.14;
 
+import "hardhat/console.sol";
+
 import "./BancorBondingCurve.sol";
 import "./interfaces/IContinuousToken.sol";
 
 import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 
 abstract contract ContinuousToken is IContinuousToken, ERC20Permit, BancorBondingCurve {
+  IERC20 private immutable _reserveToken;
+
+  uint256 private immutable _reserveRatio;
+
   uint256 private _continuousSupply;
 
   uint256 private _virtualReserveBalance;
-  uint256 private immutable _reserveRatio;
 
   constructor(TokenParams memory tokenParams)
     ERC20(tokenParams.name, tokenParams.symbol)
     ERC20Permit(tokenParams.name)
   {
+    init();
+    _reserveToken = tokenParams.reserveToken;
     _reserveRatio = tokenParams.reserveRatio;
     _virtualReserveBalance = tokenParams.minReserve;
-    // _mint(address(this), tokenParams.supply);
+
+    _mint(address(this), tokenParams.supply);
     _continuousSupply = tokenParams.supply;
+  }
+
+  function getReserveToken() public view virtual override returns (IERC20) {
+    return _reserveToken;
   }
 
   function reserveRatio() public view virtual override returns (uint256) {
     return _reserveRatio;
   }
 
-  function minimumReserveRequired() public view virtual returns (uint256) {}
+  function minimumReserveRequired() public view virtual override returns (uint256) {
+    uint256 _circulatingSupply = _continuousSupply - balanceOf(address(this));
+    return getContinuousSwap(bondSwapKind.BURN_GIVIN_IN, _circulatingSupply);
+  }
 
   function continuousSupply() public view virtual override returns (uint256) {
-    return _continuousSupply; // Continuous Token total supply
+    return _continuousSupply;
   }
 
   function virtualReserveBalance() public view virtual override returns (uint256) {

@@ -14,6 +14,7 @@ export interface TokenVars {
   minReserve: string;
   reserve: string;
   price: string;
+  reserveToken: MockToken;
 }
 
 export async function params_ContinuousToken(tokenVars: TokenVars): Promise<IContinuousToken.TokenParamsStruct> {
@@ -29,6 +30,7 @@ export async function params_ContinuousToken(tokenVars: TokenVars): Promise<ICon
     minReserve: ethers.utils.parseUnits(tokenVars.minReserve, 18),
     supply: ethers.utils.parseUnits(Supply.toString(), 18),
     reserveRatio: ethers.utils.parseUnits(tokenVars.reserveRatio, 6),
+    reserveToken: tokenVars.reserveToken.address,
   };
 
   return params;
@@ -46,13 +48,13 @@ export async function init_ContinuousToken(
     name: 'Test',
     symbol: 'T1',
     reserveRatio,
+    reserveToken,
     minReserve,
     reserve,
     price,
   });
 
-  // const reserveToken = await deploy_ReserveToken(deployer.address);
-  const continuousToken = await deploy_ContinuousToken(deployer, reserveToken.address, tokenParams);
+  const continuousToken = await deploy_ContinuousToken(deployer, tokenParams);
 
   await reserveToken.connect(deployer).approve(continuousToken.address, MaxUint256);
 
@@ -61,11 +63,10 @@ export async function init_ContinuousToken(
 
 export async function deploy_ContinuousToken(
   deployer: SignerWithAddress,
-  reserveAddress: string,
   tokenParams: IContinuousToken.TokenParamsStruct
 ): Promise<MockContinuousToken> {
   const ContinuousTokenFactory = await ethers.getContractFactory('MockContinuousToken');
-  const continuousToken = await ContinuousTokenFactory.connect(deployer).deploy(reserveAddress, tokenParams);
+  const continuousToken = await ContinuousTokenFactory.connect(deployer).deploy(tokenParams);
 
   return continuousToken;
 }
