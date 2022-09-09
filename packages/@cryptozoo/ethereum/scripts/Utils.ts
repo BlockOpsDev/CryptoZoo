@@ -1,9 +1,12 @@
 import { ethers } from 'hardhat';
-import { ContractReceipt, ContractTransaction } from '@ethersproject/contracts';
+import { Contract, ContractReceipt, ContractTransaction } from '@ethersproject/contracts';
+import { MaxUint256 } from '@ethersproject/constants';
 import { BigNumber } from '@ethersproject/bignumber';
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/dist/src/signer-with-address';
+import { MockToken } from '../typechain-types';
 
 export enum WalletList {
+  defaultDeployer,
   wethDeployer,
   czDeployer,
   czAdmin,
@@ -43,4 +46,30 @@ export async function wallets(): Promise<Wallets> {
 
 export async function txConfirmation(tx: ContractTransaction | Promise<ContractTransaction>): Promise<ContractReceipt> {
   return (await tx).wait();
+}
+
+export async function deploy_MockToken(
+  amount: string,
+  users: SignerWithAddress[],
+  deployer?: SignerWithAddress
+): Promise<MockToken> {
+  const TokenFactory = await ethers.getContractFactory('MockToken');
+  const token = await TokenFactory.connect(deployer || (await getSigner(WalletList.defaultDeployer))).deploy(
+    'Mock',
+    'M'
+  );
+
+  for (const user of users) {
+    await token.mint(user.address, ether(amount));
+  }
+
+  return token;
+}
+
+export async function approveSpenders(token: Contract, users: SignerWithAddress[], spenders: string[]) {
+  for (const user of users) {
+    for (const spender of spenders) {
+      await token.connect(user).approve(spender, MaxUint256);
+    }
+  }
 }

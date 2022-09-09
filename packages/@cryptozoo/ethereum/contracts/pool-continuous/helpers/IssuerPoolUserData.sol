@@ -2,13 +2,9 @@
 
 pragma solidity ^0.8.0;
 
-library ContinuousPoolUserData {
+library IssuerPoolUserData {
   enum JoinKind {
-    INIT,
-    EXACT_TOKENS_IN_FOR_BPT_OUT,
-    TOKEN_IN_FOR_EXACT_BPT_OUT,
-    ALL_TOKENS_IN_FOR_EXACT_BPT_OUT,
-    ADD_TOKEN // for Managed Pool
+    INIT_PHANTOM_SUPPLY
   }
 
   enum ExitKind {
@@ -26,30 +22,10 @@ library ContinuousPoolUserData {
     return abi.decode(self, (ExitKind));
   }
 
-  // Joins
+  // Join
 
-  function initialAmountsIn(bytes memory self) internal pure returns (uint256[] memory amountsIn) {
-    (, amountsIn) = abi.decode(self, (JoinKind, uint256[]));
-  }
-
-  function exactTokensInForBptOut(bytes memory self)
-    internal
-    pure
-    returns (uint256[] memory amountsIn, uint256 minBPTAmountOut)
-  {
-    (, amountsIn, minBPTAmountOut) = abi.decode(self, (JoinKind, uint256[], uint256));
-  }
-
-  function tokenInForExactBptOut(bytes memory self) internal pure returns (uint256 bptAmountOut, uint256 tokenIndex) {
-    (, bptAmountOut, tokenIndex) = abi.decode(self, (JoinKind, uint256, uint256));
-  }
-
-  function allTokensInForExactBptOut(bytes memory self) internal pure returns (uint256 bptAmountOut) {
-    (, bptAmountOut) = abi.decode(self, (JoinKind, uint256));
-  }
-
-  function addToken(bytes memory self) internal pure returns (uint256 amountIn) {
-    (, amountIn) = abi.decode(self, (JoinKind, uint256));
+  function initialAmounts(bytes memory self) internal pure returns (uint256 phantomSupply, uint256 startSupply) {
+    (, phantomSupply, startSupply) = abi.decode(self, (JoinKind, uint256, uint256));
   }
 
   // Exits

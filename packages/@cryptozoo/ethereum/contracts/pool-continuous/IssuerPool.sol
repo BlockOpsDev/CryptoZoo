@@ -17,31 +17,42 @@ pragma experimental ABIEncoderV2;
 
 import "@balancer-labs/ethereum/contracts/solidity-utils/helpers/InputHelpers.sol";
 
-import "./interfaces/IContinuousPool.sol";
 import "./BalancerSwapIssuer.sol";
 
-import "./helpers/ContinuousPoolUserData.sol";
+import "./helpers/IssuerPoolUserData.sol";
 import "./helpers/ERC20Helpers.sol";
 
 import "../ERC20ManagedSupply/ERC20ManagedSupply.sol";
 
-abstract contract IssuerPool is IContinuousPool, BalancerSwapIssuer {
-  using ContinuousPoolUserData for bytes;
+abstract contract IssuerPool is BalancerSwapIssuer {
+  using IssuerPoolUserData for bytes;
 
+  uint8 private constant _MINIMUM_RESERVE = 1;
   uint256 private constant _INITIAL_ISSUE_SUPPLY = 2**(112) - 1;
 
   uint256 private immutable _issueIndex;
   uint256 private immutable _reserveIndex;
 
+  struct PoolParams {
+    IVault vault;
+    address[] assetManagers;
+    uint256 swapFeePercentage;
+    uint256 pauseWindowDuration;
+    uint256 bufferPeriodDuration;
+    address owner;
+  }
+
   constructor(
     PoolParams memory poolParams,
+    uint32 reserveRatio,
     address reserveToken,
     address issueToken
   )
+    ConstantReserveRatioIssuer(reserveRatio, _MINIMUM_RESERVE, IERC20(reserveToken), ERC20ManagedSupply(issueToken))
     BasePool(
       poolParams.vault,
       IVault.PoolSpecialization.TWO_TOKEN,
-      _sortTokens(ERC20(reserveToken), ERC20(issueToken)),
+      _sortTokens(IERC20(reserveToken), IERC20(issueToken)),
       poolParams.assetManagers,
       poolParams.swapFeePercentage,
       poolParams.pauseWindowDuration,
@@ -49,7 +60,7 @@ abstract contract IssuerPool is IContinuousPool, BalancerSwapIssuer {
       poolParams.owner
     )
   {
-    (uint256 reserveIndex, uint256 issueIndex) = _getSortedTokenIndexes(ERC20(reserveToken), ERC20(issueToken));
+    (uint256 reserveIndex, uint256 issueIndex) = _getSortedTokenIndexes(IERC20(reserveToken), IERC20(issueToken));
     _reserveIndex = reserveIndex;
     _issueIndex = issueIndex;
   }
@@ -84,13 +95,17 @@ abstract contract IssuerPool is IContinuousPool, BalancerSwapIssuer {
     return balances[_reserveIndex];
   }
 
+  function minimumReserveRequired() public view virtual override returns (uint256) {
+    return 0;
+  }
+
   function managedSupply() public view virtual override returns (uint256) {
     uint256[] memory balances;
     (, balances, ) = getVault().getPoolTokens(getPoolId());
     return _INITIAL_ISSUE_SUPPLY - balances[_issueIndex];
   }
 
-  function initialize() external {
+  function initialize(uint256 supply) external {
     bytes32 poolId = getPoolId();
     (IERC20[] memory tokens, , ) = getVault().getPoolTokens(poolId);
 
@@ -100,7 +115,7 @@ abstract contract IssuerPool is IContinuousPool, BalancerSwapIssuer {
     IVault.JoinPoolRequest memory request = IVault.JoinPoolRequest({
       assets: _asIAsset(tokens),
       maxAmountsIn: maxAmountsIn,
-      userData: "",
+      userData: abi.encode(IssuerPoolUserData.JoinKind.INIT_PHANTOM_SUPPLY, _INITIAL_ISSUE_SUPPLY, supply),
       fromInternalBalance: false
     });
 
@@ -116,18 +131,23 @@ abstract contract IssuerPool is IContinuousPool, BalancerSwapIssuer {
     uint256[] memory,
     uint256,
     uint256,
-    bytes memory
+    bytes memory userData
   ) internal override returns (uint256[] memory) {
-    // _require(totalSupply() == 0, Errors.UNHANDLED_JOIN_KIND);
+    // _require(managedSupply() == 0, Errors.UNHANDLED_JOIN_KIND);
+    IssuerPoolUserData.JoinKind kind = userData.joinKind();
 
-    _require(sender == address(this), Errors.INVALID_INITIALIZATION);
-    _require(recipient == address(this), Errors.INVALID_INITIALIZATION);
+    _require(
+      kind == IssuerPoolUserData.JoinKind.INIT_PHANTOM_SUPPLY && sender == address(this) && recipient == address(this),
+      Errors.INVALID_INITIALIZATION
+    );
+
+    (, uint256 startSupply) = userData.initialAmounts();
 
     issueToken.mint(sender, _INITIAL_ISSUE_SUPPLY);
-    issueToken.approve(address(getVault()), _INITIAL_ISSUE_SUPPLY);
+    issueToken.approve(address(getVault()), _INITIAL_ISSUE_SUPPLY - startSupply);
 
     uint256[] memory amountsIn = new uint256[](_getTotalTokens());
-    amountsIn[_issueIndex] = _INITIAL_ISSUE_SUPPLY;
+    amountsIn[_issueIndex] = _INITIAL_ISSUE_SUPPLY - startSupply;
 
     return (amountsIn);
   }

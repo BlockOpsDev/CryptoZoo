@@ -15,21 +15,13 @@
 pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
-import "@balancer-labs/ethereum/contracts/interfaces/vault/IVault.sol";
-import "@balancer-labs/ethereum/contracts/interfaces/vault/IPoolSwapStructs.sol";
+import "../IssuerPool.sol";
 
-/**
- * @dev Interface for adding and removing liquidity that all Pool contracts should implement. Note that this is not
- * the complete Pool contract interface, as it is missing the swap hooks. Pool contracts should also inherit from
- * either IGeneralPool or IMinimalSwapInfoPool
- */
-interface IContinuousPool {
-  struct PoolParams {
-    IVault vault;
-    address[] assetManagers;
-    uint256 swapFeePercentage;
-    uint256 pauseWindowDuration;
-    uint256 bufferPeriodDuration;
-    address owner;
-  }
+contract MockIssuerPool is IssuerPool {
+  constructor(
+    PoolParams memory poolParams,
+    uint32 reserveRatio,
+    address reserveToken,
+    address issueToken
+  ) IssuerPool(poolParams, reserveRatio, reserveToken, issueToken) {}
 }
