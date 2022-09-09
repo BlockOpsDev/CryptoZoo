@@ -18,28 +18,30 @@ pragma experimental ABIEncoderV2;
 import "@balancer-labs/ethereum/contracts/solidity-utils/helpers/InputHelpers.sol";
 
 import "./interfaces/IContinuousPool.sol";
-import "../pool-utils/BaseMinimalSwapInfoPool.sol";
+import "./BalancerSwapIssuer.sol";
 
 import "./helpers/ContinuousPoolUserData.sol";
 import "./helpers/ERC20Helpers.sol";
 
-import "../token-continuous/ContinuousToken.sol";
+import "../ERC20ManagedSupply/ERC20ManagedSupply.sol";
 
-abstract contract ContinuousPool is IContinuousPool, BaseMinimalSwapInfoPool, ContinuousToken {
+abstract contract IssuerPool is IContinuousPool, BalancerSwapIssuer {
   using ContinuousPoolUserData for bytes;
 
-  uint256 private constant _INITIAL_CONTINUOUS_SUPPLY = 2**(112) - 1;
+  uint256 private constant _INITIAL_ISSUE_SUPPLY = 2**(112) - 1;
 
-  // IERC20 private immutable _reserveToken;
-
-  uint256 private immutable _continuousIndex;
+  uint256 private immutable _issueIndex;
   uint256 private immutable _reserveIndex;
 
-  constructor(PoolParams memory poolParams, IERC20 reserveToken)
+  constructor(
+    PoolParams memory poolParams,
+    address reserveToken,
+    address issueToken
+  )
     BasePool(
       poolParams.vault,
       IVault.PoolSpecialization.TWO_TOKEN,
-      _sortTokens(reserveToken, this),
+      _sortTokens(ERC20(reserveToken), ERC20(issueToken)),
       poolParams.assetManagers,
       poolParams.swapFeePercentage,
       poolParams.pauseWindowDuration,
@@ -47,34 +49,25 @@ abstract contract ContinuousPool is IContinuousPool, BaseMinimalSwapInfoPool, Co
       poolParams.owner
     )
   {
-    // _reserveToken = poolParams.reserveToken;
-
-    (uint256 reserveIndex, uint256 continuousIndex) = _getSortedTokenIndexes(reserveToken, this);
+    (uint256 reserveIndex, uint256 issueIndex) = _getSortedTokenIndexes(ERC20(reserveToken), ERC20(issueToken));
     _reserveIndex = reserveIndex;
-    _continuousIndex = continuousIndex;
+    _issueIndex = issueIndex;
   }
-
-  /**
-   * @notice Return the reserve token address as an IERC20.
-   */
-  // function getReserveToken() public view override returns (IERC20) {
-  //   return _reserveToken;
-  // }
 
   /**
    * @notice Return the index of the reserve token.
    * @dev Note that this is an index into the registered token list (with 2 tokens).
    */
-  function getReserveIndex() external view override returns (uint256) {
+  function getReserveIndex() external view returns (uint256) {
     return _reserveIndex;
   }
 
   /**
-   * @notice Return the index of the continuous token.
+   * @notice Return the index of the issue token.
    * @dev Note that this is an index into the registered token list (with 2 tokens).
    */
-  function getContinuousIndex() public view override returns (uint256) {
-    return _continuousIndex;
+  function getissueIndex() public view returns (uint256) {
+    return _issueIndex;
   }
 
   function _getTotalTokens() internal pure override returns (uint256) {
@@ -91,12 +84,18 @@ abstract contract ContinuousPool is IContinuousPool, BaseMinimalSwapInfoPool, Co
     return balances[_reserveIndex];
   }
 
+  function managedSupply() public view virtual override returns (uint256) {
+    uint256[] memory balances;
+    (, balances, ) = getVault().getPoolTokens(getPoolId());
+    return _INITIAL_ISSUE_SUPPLY - balances[_issueIndex];
+  }
+
   function initialize() external {
     bytes32 poolId = getPoolId();
     (IERC20[] memory tokens, , ) = getVault().getPoolTokens(poolId);
 
     uint256[] memory maxAmountsIn = new uint256[](_getTotalTokens());
-    maxAmountsIn[_continuousIndex] = _INITIAL_CONTINUOUS_SUPPLY;
+    maxAmountsIn[_issueIndex] = _INITIAL_ISSUE_SUPPLY;
 
     IVault.JoinPoolRequest memory request = IVault.JoinPoolRequest({
       assets: _asIAsset(tokens),
@@ -109,66 +108,6 @@ abstract contract ContinuousPool is IContinuousPool, BaseMinimalSwapInfoPool, Co
   }
 
   //Implement Base Pool Handlers
-
-  // Swap Handlers
-  function _onSwapGivenIn(
-    SwapRequest memory swapRequest,
-    uint256,
-    uint256
-  ) internal virtual override returns (uint256) {
-    // Swaps are disabled while the contract is paused.
-    bool isMint = swapRequest.tokenIn == getReserveToken();
-    uint256[] memory balanceDeltas = new uint256[](2);
-
-    uint256 amount;
-
-    if (isMint) {
-      amount = getContinuousSwap(bondSwapKind.MINT_GIVIN_IN, _subtractSwapFeeAmount(swapRequest.amount));
-
-      balanceDeltas[_reserveIndex] = _subtractSwapFeeAmount(swapRequest.amount);
-      balanceDeltas[_continuousIndex] = amount;
-    } else {
-      amount = getContinuousSwap(bondSwapKind.BURN_GIVIN_IN, swapRequest.amount);
-
-      balanceDeltas[_reserveIndex] = amount;
-      balanceDeltas[_continuousIndex] = swapRequest.amount;
-
-      amount = _subtractSwapFeeAmount(amount);
-    }
-
-    _afterSwap(isMint, swapRequest.to, balanceDeltas);
-
-    return amount;
-  }
-
-  function _onSwapGivenOut(
-    SwapRequest memory swapRequest,
-    uint256,
-    uint256
-  ) internal virtual override returns (uint256) {
-    // Swaps are disabled while the contract is paused.
-
-    bool isMint = swapRequest.tokenIn == getReserveToken();
-    uint256[] memory balanceDeltas = new uint256[](2);
-
-    uint256 amount;
-
-    if (isMint) {
-      amount = getContinuousSwap(bondSwapKind.MINT_GIVIN_OUT, swapRequest.amount);
-
-      balanceDeltas[_reserveIndex] = swapRequest.amount;
-      balanceDeltas[_continuousIndex] = amount;
-    } else {
-      amount = getContinuousSwap(bondSwapKind.BURN_GIVIN_OUT, swapRequest.amount);
-
-      balanceDeltas[_reserveIndex] = amount;
-      balanceDeltas[_continuousIndex] = swapRequest.amount;
-    }
-
-    _afterSwap(isMint, swapRequest.to, balanceDeltas);
-
-    return amount;
-  }
 
   function _onJoinPool(
     bytes32,
@@ -184,11 +123,11 @@ abstract contract ContinuousPool is IContinuousPool, BaseMinimalSwapInfoPool, Co
     _require(sender == address(this), Errors.INVALID_INITIALIZATION);
     _require(recipient == address(this), Errors.INVALID_INITIALIZATION);
 
-    _mint(sender, _INITIAL_CONTINUOUS_SUPPLY);
-    _approve(address(this), address(getVault()), _INITIAL_CONTINUOUS_SUPPLY);
+    issueToken.mint(sender, _INITIAL_ISSUE_SUPPLY);
+    issueToken.approve(address(getVault()), _INITIAL_ISSUE_SUPPLY);
 
     uint256[] memory amountsIn = new uint256[](_getTotalTokens());
-    amountsIn[_continuousIndex] = _INITIAL_CONTINUOUS_SUPPLY;
+    amountsIn[_issueIndex] = _INITIAL_ISSUE_SUPPLY;
 
     return (amountsIn);
   }
@@ -237,23 +176,5 @@ abstract contract ContinuousPool is IContinuousPool, BaseMinimalSwapInfoPool, Co
     uint256[] memory balanceDeltas
   ) internal virtual {
     // solhint-disable-previous-line no-empty-blocks
-  }
-
-  /**
-   * @dev Called after any swap (including initialization).
-   *
-   * If isMint is true, balanceDeltas are the amounts increase of reserve token and continuous token. (amount decrease otherwise)
-   *
-   */
-  function _afterSwap(
-    bool isMint,
-    address account,
-    uint256[] memory balanceDeltas
-  ) internal virtual {
-    if (isMint) {
-      _continuousMinted(account, balanceDeltas[_continuousIndex], balanceDeltas[_reserveIndex]);
-    } else {
-      _continuousBurned(account, balanceDeltas[_continuousIndex], balanceDeltas[_reserveIndex]);
-    }
   }
 }

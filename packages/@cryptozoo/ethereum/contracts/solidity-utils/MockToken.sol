@@ -12,24 +12,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-pragma solidity 0.8.14;
+pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-interface IContinuousToken {
-  struct TokenParams {
-    string name;
-    string symbol;
-    uint256 minReserve;
-    uint256 supply;
-    uint32 reserveRatio;
-    IERC20 reserveToken;
+contract MockToken is Ownable, ERC20 {
+  constructor(string memory name, string memory symbol) ERC20(name, symbol) {}
+
+  function mint(address recipient, uint256 amount) external onlyOwner {
+    _mint(recipient, amount);
   }
-
-  event Minted(address sender, uint256 amount, uint256 deposit);
-  event Burned(address sender, uint256 amount, uint256 refund);
-
-  function getReserveToken() external view returns (IERC20);
-
-  function minimumReserveRequired() external view returns (uint256);
 }

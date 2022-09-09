@@ -17,7 +17,6 @@ pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import "@balancer-labs/ethereum/contracts/solidity-utils/math/FixedPoint.sol";
 import "@balancer-labs/ethereum/contracts/solidity-utils/helpers/InputHelpers.sol";
 import "@balancer-labs/ethereum/contracts/solidity-utils/helpers/TemporarilyPausable.sol";
 import "@balancer-labs/ethereum/contracts/solidity-utils/helpers/WordCodec.sol";
@@ -46,7 +45,6 @@ import "./interfaces/IBasePool.sol";
  */
 abstract contract BasePool is IBasePool, BasePoolAuthorization, TemporarilyPausable {
   using WordCodec for bytes32;
-  using FixedPoint for uint256;
 
   uint256 private constant _MIN_TOKENS = 2;
 
@@ -343,23 +341,6 @@ abstract contract BasePool is IBasePool, BasePoolAuthorization, TemporarilyPausa
    */
   function _payProtocolFees(uint256 bptAmount) internal {
     // _mintPoolTokens(address(getProtocolFeesCollector()), bptAmount);
-  }
-
-  /**
-   * @dev Adds swap fee amount to `amount`, returning a higher value.
-   */
-  function _addSwapFeeAmount(uint256 amount) internal view returns (uint256) {
-    // This returns amount + fee amount, so we round up (favoring a higher fee amount).
-    return amount.divUp(FixedPoint.ONE.sub(getSwapFeePercentage()));
-  }
-
-  /**
-   * @dev Subtracts swap fee amount from `amount`, returning a lower value.
-   */
-  function _subtractSwapFeeAmount(uint256 amount) internal view returns (uint256) {
-    // This returns amount - fee amount, so we round up (favoring a higher fee amount).
-    uint256 feeAmount = amount.mulUp(getSwapFeePercentage());
-    return amount.sub(feeAmount);
   }
 
   function _getAuthorizer() internal view override returns (IAuthorizer) {
