@@ -11,8 +11,14 @@ const MAX_WEIGHT = new Decimal(1000000);
 export const math_IssueIn = (reserveRatio: Decimal, supply: Decimal, balance: Decimal, amount: Decimal) =>
   supply.mul(ONE.add(amount.div(balance)).pow(reserveRatio.div(MAX_WEIGHT)).sub(ONE));
 
+export const math_IssueOut = (reserveRatio: Decimal, supply: Decimal, balance: Decimal, amount: Decimal) =>
+  balance.mul(ONE.add(amount.div(supply)).pow(MAX_WEIGHT.div(reserveRatio)).sub(ONE));
+
 export const math_RedeemIn = (reserveRatio: Decimal, supply: Decimal, balance: Decimal, amount: Decimal) =>
   balance.mul(ONE.sub(ONE.sub(amount.div(supply)).pow(MAX_WEIGHT.div(reserveRatio))));
+
+export const math_RedeemOut = (reserveRatio: Decimal, supply: Decimal, balance: Decimal, amount: Decimal) =>
+  supply.mul(ONE.sub(amount.div(balance)).pow(reserveRatio.div(MAX_WEIGHT)).sub(ONE).mul(-1));
 
 describe('Constant Reserve Ratio Issuer', function () {
   //Account Address
@@ -50,6 +56,9 @@ describe('Constant Reserve Ratio Issuer', function () {
             (await (<any>issuer.connect(accounts.czDeployer))[method.name].apply(null, args)).toString()
           );
 
+          console.log(expected);
+          console.log(actual);
+
           if (!actual.eq(expected)) {
             const error = actual.div(expected).sub(1).abs();
             assert(error.lte(maxError), `error = ${error.toFixed()}`);
@@ -59,11 +68,15 @@ describe('Constant Reserve Ratio Issuer', function () {
       for (const supply of [1, 2, 3, 4].map((n) => `${n}`.repeat(21 + n)))
         for (const balance of [1, 2, 3, 4].map((n) => `${n}`.repeat(21 + n)))
           for (const ratio of [10, 20, 90, 100].map((p) => `${p * 10000}`))
-            for (const amount of [1, 2, 3, 4].map((n) => `${n}`.repeat(18 + n))) {
+            for (const amount of [1, 2, 3, 4, 5].map((n) => `${n}`.repeat(18 + n))) {
               const args = [ratio, supply, balance, amount];
-              it(`MintIn ${args.join(', ')}`, testSwapMath(math_IssueIn, '0.0000000000001', ...args));
+              it(`IssueIn ${args.join(', ')}`, testSwapMath(math_IssueIn, '0.0000000000001', ...args));
+              it(`IssueOut ${args.join(', ')}`, testSwapMath(math_IssueOut, '0.0000000000001', ...args));
               if (new Decimal(amount).lte(supply)) {
-                it(`BurnIn ${args.join(', ')}`, testSwapMath(math_RedeemIn, '0.0000000000001', ...args));
+                it(`RedeemIn ${args.join(', ')}`, testSwapMath(math_RedeemIn, '0.0000000000001', ...args));
+              }
+              if (new Decimal(amount).lte(balance)) {
+                it(`RedeemOut ${args.join(', ')}`, testSwapMath(math_RedeemOut, '0.0000000000001', ...args));
               }
             }
     });

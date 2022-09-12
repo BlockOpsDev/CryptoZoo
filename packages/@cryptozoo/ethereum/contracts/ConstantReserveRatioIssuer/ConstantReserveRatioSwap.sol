@@ -51,7 +51,7 @@ abstract contract ConstantReserveRatioSwap is ConstantReserveRatioMath {
   ) internal view returns (SwapReceipt memory) {
     SwapReceipt memory swapReceipt;
     swapReceipt.swapType = swapType;
-    swapReceipt.swapType = swapType;
+    swapReceipt.swapKind = swapKind;
     swapReceipt.input = amount;
 
     if (swapType == SwapType.ISSUE) {
@@ -104,7 +104,7 @@ abstract contract ConstantReserveRatioSwap is ConstantReserveRatioMath {
    */
   function _addSwapFeeAmount(uint256 amount, uint256 feePercentage) internal pure returns (uint256) {
     // This returns amount + fee amount, so we round up (favoring a higher fee amount).
-    return amount.divUp(FixedPoint.ONE.sub(feePercentage));
+    return amount.divUp(feePercentage.complement());
   }
 
   /**

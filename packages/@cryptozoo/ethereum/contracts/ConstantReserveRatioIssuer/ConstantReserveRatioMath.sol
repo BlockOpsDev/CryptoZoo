@@ -51,7 +51,7 @@ contract ConstantReserveRatioMath is AnalyticMath {
 
   /**
    * @dev given a continuous token supply, reserve token balance, reserve ratio, and a desired return amount (in the continuous token),
-   * calculates the deposit amount need (in the reserve token)
+   * calculates the deposit amount needed (in the reserve token)
    *
    * Formula:
    * Deposit = reserveBalance * ((1 + returnAmount / supply) ^ (MAX_WEIGHT / reserveRatio) - 1)
@@ -114,16 +114,16 @@ contract ConstantReserveRatioMath is AnalyticMath {
   }
 
   /**
-   * @dev given a continuous token supply, reserve token balance, reserve ratio and a sell amount (in the continuous token),
-   * calculates the return for a given conversion (in the reserve token)
+   * @dev given a continuous token supply, reserve token balance, reserve ratio, and a desired return amount (in the reserve token),
+   * calculates the sell amount needed (in the continuous token)
    *
    * Formula:
-   * Return = reserveBalance * (1 - (1 - sellAmount / supply) ^ (MAX_WEIGHT / reserveRatio))
+   * Return = supply * (-(1 - returnAmount / reserveBalance) ^ (reserveRatio / MAX_WEIGHT) - 1)
    *
    * @param supply           continuous token total supply
    * @param reserveBalance   total reserve token balance
    * @param reserveRatio     constant reserve ratio, represented in ppm, 1-1000000
-   * @param sellAmount       sell amount, in continuous token
+   * @param returnAmount     return amount, in reserve token
    *
    * @return amount          reserve token return amount
    */
@@ -131,19 +131,17 @@ contract ConstantReserveRatioMath is AnalyticMath {
     uint256 supply,
     uint256 reserveBalance,
     uint256 reserveRatio,
-    uint256 sellAmount
+    uint256 returnAmount
   ) internal view validateInputs(supply, reserveBalance, reserveRatio) returns (uint256) {
     unchecked {
-      require(sellAmount <= supply, "invalid amount");
+      require(returnAmount <= reserveBalance, "invalid amount");
 
-      if (sellAmount == 0) return 0;
+      if (returnAmount == 0) return 0;
 
-      if (sellAmount == supply) return reserveBalance;
+      if (reserveRatio == MAX_WEIGHT) return IntegralMath.mulDivF(returnAmount, supply, reserveBalance);
 
-      if (reserveRatio == MAX_WEIGHT) return IntegralMath.mulDivF(sellAmount, reserveBalance, supply);
-
-      (uint256 n, uint256 d) = pow(supply, supply - sellAmount, MAX_WEIGHT, reserveRatio);
-      return IntegralMath.mulDivF(reserveBalance, n - d, n);
+      (uint256 n, uint256 d) = pow(reserveBalance, reserveBalance - returnAmount, reserveRatio, MAX_WEIGHT);
+      return IntegralMath.mulDivF(supply, n - d, n);
     }
   }
 }
