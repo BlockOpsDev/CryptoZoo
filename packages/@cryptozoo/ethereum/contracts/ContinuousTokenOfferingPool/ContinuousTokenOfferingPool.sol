@@ -24,6 +24,13 @@ import "../ERC20Issuable/ERC20Issuable.sol";
 
 import "./IssuerPool.sol";
 
+/**
+ * @title Continuous Token Offering Pool
+ * @notice A Balancer Pool that can Issue and redeem tokens in exchange for a reserve token
+ *
+ * @dev Issue and Redeem tokens based Constant Reserve Ratio Math to continuously
+ * offer tokens through the Balancer ecosystem
+ */
 abstract contract ContinuousTokenOfferingPool is IssuerPool {
   using PoolUserData for bytes;
 
@@ -122,6 +129,13 @@ abstract contract ContinuousTokenOfferingPool is IssuerPool {
     return balances[_reserveIndex];
   }
 
+  /**
+   * @notice Initilize the pool with tokens
+   *
+   * @param supply initial supply at the minimum reserve balance
+   *
+   * @dev The initial supply acts as a scaling factor for how the token is issued
+   */
   function initialize(uint256 supply) external {
     bytes32 poolId = getPoolId();
     (IERC20[] memory tokens, , ) = getVault().getPoolTokens(poolId);
@@ -141,6 +155,12 @@ abstract contract ContinuousTokenOfferingPool is IssuerPool {
 
   //Implement Base Pool Handlers
 
+  /**
+   * @notice Called by onJoinPool Hook.
+   *
+   * @dev Mint phantom issue tokens and send to the Balancer vault
+   * Can only run one time, when the pool is being initialized
+   */
   function _onJoinPool(
     bytes32,
     address sender,
@@ -150,7 +170,8 @@ abstract contract ContinuousTokenOfferingPool is IssuerPool {
     uint256,
     bytes memory userData
   ) internal override returns (uint256[] memory) {
-    // _require(Issuable() == 0, Errors.UNHANDLED_JOIN_KIND);
+    _require(totalSupplyIssued() == 0, Errors.UNAUTHORIZED_JOIN);
+
     PoolUserData.JoinKind kind = userData.joinKind();
 
     _require(
@@ -178,12 +199,33 @@ abstract contract ContinuousTokenOfferingPool is IssuerPool {
     uint256 protocolSwapFeePercentage,
     bytes memory userData
   ) internal virtual override returns (uint256[] memory) {
-    _require(sender == getOwner(), Errors.UNHANDLED_EXIT_KIND);
+    _require(sender == getOwner(), Errors.UNAUTHORIZED_EXIT);
 
     _beforeJoinExit(balances, protocolSwapFeePercentage);
 
+    PoolUserData.ExitKind kind = userData.exitKind();
+
     uint256[] memory amountsOut = new uint256[](balances.length);
-    amountsOut[_reserveIndex] = 1e18;
+
+    if (kind == PoolUserData.ExitKind.WITHDRAW_MAX) {
+      //Withdraw all of the available balance
+      uint256 withdrawableBalance = balances[_reserveIndex] - minimumReserveRequired();
+
+      amountsOut[_reserveIndex] = withdrawableBalance;
+    } else if (kind == PoolUserData.ExitKind.WITHDRAW_EXACT) {
+      //Withdraw an exact amount of the available balance
+      uint256 withdrawableBalance = balances[_reserveIndex] - minimumReserveRequired();
+      uint256 withdrawAmount = userData.exactReserveWithdraw();
+
+      _require(withdrawAmount <= withdrawableBalance, Errors.INSUFFICIENT_BALANCE);
+
+      amountsOut[_reserveIndex] = withdrawAmount;
+    } else if (kind == PoolUserData.ExitKind.REMOVE) {
+      //Withdraw entire reserves, Used for migrating reserves
+      amountsOut[_reserveIndex] = balances[_reserveIndex];
+    } else {
+      _revert(Errors.UNHANDLED_EXIT_KIND);
+    }
 
     _afterJoinExit(false, balances, amountsOut);
 
