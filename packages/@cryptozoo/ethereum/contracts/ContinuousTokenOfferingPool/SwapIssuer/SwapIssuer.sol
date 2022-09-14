@@ -27,8 +27,8 @@ abstract contract SwapIssuer is CalcSwap, IERC20Issuer {
   uint32 private immutable _reserveRatio;
   uint256 private _virtualReserveBalance;
 
-  event Issue(address reciever, uint256 amount, uint256 deposit);
-  event Redeem(address reciever, uint256 amount, uint256 refund);
+  event Issue(address indexed reciever, uint256 amount, uint256 deposit);
+  event Redeem(address indexed reciever, uint256 amount, uint256 refund);
 
   /**
    * @notice Initialize Swap Issuer
