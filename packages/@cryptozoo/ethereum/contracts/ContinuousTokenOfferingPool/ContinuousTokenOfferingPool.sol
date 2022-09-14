@@ -165,12 +165,12 @@ abstract contract ContinuousTokenOfferingPool is IssuerPool {
     bytes32,
     address sender,
     address recipient,
-    uint256[] memory,
+    uint256[] memory balances,
     uint256,
     uint256,
     bytes memory userData
   ) internal override returns (uint256[] memory) {
-    _require(totalSupplyIssued() == 0, Errors.UNAUTHORIZED_JOIN);
+    _require(balances[0] == 0 && balances[1] == 0, Errors.UNAUTHORIZED_JOIN);
 
     PoolUserData.JoinKind kind = userData.joinKind();
 
