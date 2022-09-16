@@ -70,7 +70,7 @@ abstract contract BasePool is IBasePool, BasePoolAuthorization, TemporarilyPausa
    * @param assetManagers           optional asset managers for pool tokens
    * @param swapFeePercentage       percentage fee on swap. 1e17 = 10%, 1e12 = 0.0001%
    * @param pauseWindowDuration     amount of time the pool is pauseable after deployment
-   * @param bufferPeriodDuration    amount of time the pool will remain paused after the pause window. (*The pool will become permanently unpaused after the buffer period*)
+   * @param bufferPeriodDuration    amount of time the pool will remain paused after the pause window.
    * @param owner                   pool owner, resposable for updating the swap fee percentage
    *
    */
@@ -165,7 +165,8 @@ abstract contract BasePool is IBasePool, BasePoolAuthorization, TemporarilyPausa
     emit SwapFeePercentageChanged(swapFeePercentage);
   }
 
-  // function setAssetManagerPoolConfig(IERC20 token, bytes memory poolConfig) public virtual authenticate whenNotPaused {
+  // function setAssetManagerPoolConfig(IERC20 token, bytes memory poolConfig)
+  // public virtual authenticate whenNotPaused {
   //   _setAssetManagerPoolConfig(token, poolConfig);
   // }
 

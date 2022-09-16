@@ -84,7 +84,7 @@ abstract contract CalcSwap is ConstantReserveRatioMath {
     if (swapType == SwapType.ISSUE) {
       if (swapKind == SwapKind.GIVEN_IN) {
         swapReceipt.reserveDelta = _subtractSwapFeeAmount(amount, feePercentage);
-        swapReceipt.result = calculateBuyExactIn(
+        swapReceipt.result = _calculateBuyExactIn(
           virtualSupply(),
           virtualReserveBalance(),
           reserveRatio(),
@@ -93,7 +93,7 @@ abstract contract CalcSwap is ConstantReserveRatioMath {
         swapReceipt.supplyDelta = swapReceipt.result;
       } else {
         swapReceipt.supplyDelta = amount;
-        swapReceipt.reserveDelta = calculateBuyExactOut(
+        swapReceipt.reserveDelta = _calculateBuyExactOut(
           virtualSupply(),
           virtualReserveBalance(),
           reserveRatio(),
@@ -104,7 +104,7 @@ abstract contract CalcSwap is ConstantReserveRatioMath {
     } else {
       if (swapKind == SwapKind.GIVEN_IN) {
         swapReceipt.supplyDelta = amount;
-        swapReceipt.reserveDelta = calculateSellExactIn(
+        swapReceipt.reserveDelta = _calculateSellExactIn(
           virtualSupply(),
           virtualReserveBalance(),
           reserveRatio(),
@@ -113,7 +113,7 @@ abstract contract CalcSwap is ConstantReserveRatioMath {
         swapReceipt.result = _subtractSwapFeeAmount(swapReceipt.reserveDelta, feePercentage);
       } else {
         swapReceipt.reserveDelta = _addSwapFeeAmount(amount, feePercentage);
-        swapReceipt.result = calculateSellExactOut(
+        swapReceipt.result = _calculateSellExactOut(
           virtualSupply(),
           virtualReserveBalance(),
           reserveRatio(),

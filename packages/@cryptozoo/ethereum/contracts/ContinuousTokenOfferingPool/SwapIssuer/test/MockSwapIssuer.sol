@@ -87,7 +87,7 @@ contract MockSwapIssuer is SwapIssuer {
     uint256 reserve,
     uint256 deposit
   ) external view returns (uint256 amount) {
-    amount = calculateBuyExactIn(supply, reserve, reserveRatio, deposit);
+    amount = _calculateBuyExactIn(supply, reserve, reserveRatio, deposit);
   }
 
   function math_IssueOut(
@@ -96,7 +96,7 @@ contract MockSwapIssuer is SwapIssuer {
     uint256 reserve,
     uint256 request
   ) external view returns (uint256 deposit) {
-    deposit = calculateBuyExactOut(supply, reserve, reserveRatio, request);
+    deposit = _calculateBuyExactOut(supply, reserve, reserveRatio, request);
   }
 
   function math_RedeemIn(
@@ -105,7 +105,7 @@ contract MockSwapIssuer is SwapIssuer {
     uint256 reserve,
     uint256 deposit
   ) external view returns (uint256 amount) {
-    amount = calculateSellExactIn(supply, reserve, reserveRatio, deposit);
+    amount = _calculateSellExactIn(supply, reserve, reserveRatio, deposit);
   }
 
   function math_RedeemOut(
@@ -114,6 +114,6 @@ contract MockSwapIssuer is SwapIssuer {
     uint256 reserve,
     uint256 request
   ) external view returns (uint256 deposit) {
-    deposit = calculateSellExactOut(supply, reserve, reserveRatio, request);
+    deposit = _calculateSellExactOut(supply, reserve, reserveRatio, request);
   }
 }

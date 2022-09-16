@@ -21,8 +21,8 @@ import "../../../solidity-utils/math/AnalyticMath.sol";
  * @notice Formulas for a Continous Token Offering
  */
 contract ConstantReserveRatioMath is AnalyticMath {
-  uint256 private constant MIN_WEIGHT = 1;
-  uint256 private constant MAX_WEIGHT = 1000000;
+  uint256 private constant _MIN_WEIGHT = 1;
+  uint256 private constant _MAX_WEIGHT = 1000000;
 
   modifier validateInputs(
     uint256 supply,
@@ -30,18 +30,19 @@ contract ConstantReserveRatioMath is AnalyticMath {
     uint256 reserveRatio
   ) {
     require(
-      supply > 0 && reserveBalance > 0 && MIN_WEIGHT <= reserveRatio && reserveRatio <= MAX_WEIGHT,
+      supply > 0 && reserveBalance > 0 && _MIN_WEIGHT <= reserveRatio && reserveRatio <= _MAX_WEIGHT,
       "Invalid inputs."
     );
     _;
   }
 
   /**
-   * @dev given a continuous token supply, reserve token balance, reserve ratio, and a deposit amount (in the reserve token),
+   * @dev given a continuous token supply, reserve token balance,
+   * reserve ratio, and a deposit amount (in the reserve token),
    * calculates the return (in the continuous token)
    *
    * Formula:
-   * Return = supply * ((1 + depositAmount / reserveBalance) ^ (reserveRatio / MAX_WEIGHT) - 1)
+   * Return = supply * ((1 + depositAmount / reserveBalance) ^ (reserveRatio / _MAX_WEIGHT) - 1)
    *
    * @param supply           continuous token total supply
    * @param reserveBalance   total reserve token balance
@@ -50,7 +51,7 @@ contract ConstantReserveRatioMath is AnalyticMath {
    *
    * @return amount          return amount, in continuous token
    */
-  function calculateBuyExactIn(
+  function _calculateBuyExactIn(
     uint256 supply,
     uint256 reserveBalance,
     uint256 reserveRatio,
@@ -59,19 +60,20 @@ contract ConstantReserveRatioMath is AnalyticMath {
     unchecked {
       if (depositAmount == 0) return 0;
 
-      if (reserveRatio == MAX_WEIGHT) return IntegralMath.mulDivF(depositAmount, supply, reserveBalance);
+      if (reserveRatio == _MAX_WEIGHT) return IntegralMath.mulDivF(depositAmount, supply, reserveBalance);
 
-      (uint256 n, uint256 d) = pow(safeAdd(reserveBalance, depositAmount), reserveBalance, reserveRatio, MAX_WEIGHT);
+      (uint256 n, uint256 d) = pow(safeAdd(reserveBalance, depositAmount), reserveBalance, reserveRatio, _MAX_WEIGHT);
       return IntegralMath.mulDivF(supply, n, d) - supply;
     }
   }
 
   /**
-   * @dev given a continuous token supply, reserve token balance, reserve ratio, and a desired return amount (in the continuous token),
+   * @dev given a continuous token supply, reserve token balance,
+   * reserve ratio, and a desired return amount (in the continuous token),
    * calculates the deposit amount needed (in the reserve token)
    *
    * Formula:
-   * Deposit = reserveBalance * ((1 + returnAmount / supply) ^ (MAX_WEIGHT / reserveRatio) - 1)
+   * Deposit = reserveBalance * ((1 + returnAmount / supply) ^ (_MAX_WEIGHT / reserveRatio) - 1)
    *
    * @param supply           continuous token total supply
    * @param reserveBalance   total reserve token balance
@@ -80,7 +82,7 @@ contract ConstantReserveRatioMath is AnalyticMath {
    *
    * @return amount          deposit amount, in reserve token
    */
-  function calculateBuyExactOut(
+  function _calculateBuyExactOut(
     uint256 supply,
     uint256 reserveBalance,
     uint256 reserveRatio,
@@ -89,19 +91,20 @@ contract ConstantReserveRatioMath is AnalyticMath {
     unchecked {
       if (returnAmount == 0) return 0;
 
-      if (reserveRatio == MAX_WEIGHT) return IntegralMath.mulDivF(returnAmount, reserveBalance, supply);
+      if (reserveRatio == _MAX_WEIGHT) return IntegralMath.mulDivF(returnAmount, reserveBalance, supply);
 
-      (uint256 n, uint256 d) = pow(safeAdd(supply, returnAmount), supply, MAX_WEIGHT, reserveRatio);
+      (uint256 n, uint256 d) = pow(safeAdd(supply, returnAmount), supply, _MAX_WEIGHT, reserveRatio);
       return IntegralMath.mulDivC(reserveBalance, n, d) - reserveBalance;
     }
   }
 
   /**
-   * @dev given a continuous token supply, reserve token balance, reserve ratio and a sell amount (in the continuous token),
+   * @dev given a continuous token supply, reserve token balance,
+   * reserve ratio and a sell amount (in the continuous token),
    * calculates the return (in the reserve token)
    *
    * Formula:
-   * Return = reserveBalance * (1 - (1 - sellAmount / supply) ^ (MAX_WEIGHT / reserveRatio))
+   * Return = reserveBalance * (1 - (1 - sellAmount / supply) ^ (_MAX_WEIGHT / reserveRatio))
    *
    * @param supply           continuous token total supply
    * @param reserveBalance   total reserve token balance
@@ -110,7 +113,7 @@ contract ConstantReserveRatioMath is AnalyticMath {
    *
    * @return amount          return amount, in reserve token
    */
-  function calculateSellExactIn(
+  function _calculateSellExactIn(
     uint256 supply,
     uint256 reserveBalance,
     uint256 reserveRatio,
@@ -123,19 +126,20 @@ contract ConstantReserveRatioMath is AnalyticMath {
 
       if (sellAmount == supply) return reserveBalance;
 
-      if (reserveRatio == MAX_WEIGHT) return IntegralMath.mulDivF(sellAmount, reserveBalance, supply);
+      if (reserveRatio == _MAX_WEIGHT) return IntegralMath.mulDivF(sellAmount, reserveBalance, supply);
 
-      (uint256 n, uint256 d) = pow(supply, supply - sellAmount, MAX_WEIGHT, reserveRatio);
+      (uint256 n, uint256 d) = pow(supply, supply - sellAmount, _MAX_WEIGHT, reserveRatio);
       return IntegralMath.mulDivF(reserveBalance, n - d, n);
     }
   }
 
   /**
-   * @dev given a continuous token supply, reserve token balance, reserve ratio, and a desired return amount (in the reserve token),
+   * @dev given a continuous token supply, reserve token balance,
+   * reserve ratio, and a desired return amount (in the reserve token),
    * calculates the sell amount needed (in the continuous token)
    *
    * Formula:
-   * Return = supply * -((1 - returnAmount / reserveBalance) ^ (reserveRatio / MAX_WEIGHT) - 1)
+   * Return = supply * -((1 - returnAmount / reserveBalance) ^ (reserveRatio / _MAX_WEIGHT) - 1)
    *
    * @param supply           continuous token total supply
    * @param reserveBalance   total reserve token balance
@@ -144,7 +148,7 @@ contract ConstantReserveRatioMath is AnalyticMath {
    *
    * @return amount          sell amount, in reserve token
    */
-  function calculateSellExactOut(
+  function _calculateSellExactOut(
     uint256 supply,
     uint256 reserveBalance,
     uint256 reserveRatio,
@@ -155,9 +159,9 @@ contract ConstantReserveRatioMath is AnalyticMath {
 
       if (returnAmount == 0) return 0;
 
-      if (reserveRatio == MAX_WEIGHT) return IntegralMath.mulDivF(returnAmount, supply, reserveBalance);
+      if (reserveRatio == _MAX_WEIGHT) return IntegralMath.mulDivF(returnAmount, supply, reserveBalance);
 
-      (uint256 n, uint256 d) = pow(reserveBalance, reserveBalance - returnAmount, reserveRatio, MAX_WEIGHT);
+      (uint256 n, uint256 d) = pow(reserveBalance, reserveBalance - returnAmount, reserveRatio, _MAX_WEIGHT);
       return IntegralMath.mulDivF(supply, n - d, n);
     }
   }

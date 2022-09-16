@@ -57,7 +57,7 @@ export async function setupEnvironment(
 
   for (const symbol in tokens) {
     for (const user of users) {
-      await mintTokens(tokens, symbol, user, ethers.utils.parseEther('1000000'));
+      await mintTokens(tokens, symbol, user, ethers.utils.parseEther('100000000000000'));
       await tokens[symbol].connect(user).approve(vault.address, MaxUint256);
     }
   }

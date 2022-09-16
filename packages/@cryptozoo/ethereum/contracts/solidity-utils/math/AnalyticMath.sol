@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
 pragma solidity 0.8.14;
 
+// solhint-disable
+
 import "./IntegralMath.sol";
 
 contract AnalyticMath {

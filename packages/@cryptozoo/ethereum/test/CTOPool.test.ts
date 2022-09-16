@@ -71,7 +71,8 @@ describe.only('Continous Token Offering Pool', function () {
       vault.address,
       {
         assetManagers: [ZERO_ADDRESS, ZERO_ADDRESS],
-        swapFeePercentage: '100000000000000000',
+        // swapFeePercentage: '10000000000000000',
+        swapFeePercentage: '1000000000000',
         pauseWindowDuration: '0',
         bufferPeriodDuration: '0',
         owner: accounts.czAdmin.address,
@@ -234,7 +235,7 @@ describe.only('Continous Token Offering Pool', function () {
     //   await swap(
     //     accounts.trader1,
     //     '0.0000000000001',
-    //     '177776.666667',
+    //     '90066165.731280398327707178',
     //     reserveToken.address,
     //     issueToken.address,
     //     SwapKind.GIVEN_IN
@@ -244,31 +245,31 @@ describe.only('Continous Token Offering Pool', function () {
       await swap(
         accounts.trader1,
         '0.0000000000001',
-        '0.0350123506',
+        '100000',
         reserveToken.address,
         issueToken.address,
-        SwapKind.GIVEN_IN
-      );
-    });
-    // it('Swap1', async () => {
-    //   await swap(
-    //     accounts.trader1,
-    //     '0.0000000000001',
-    //     '30000',
-    //     reserveToken.address,
-    //     issueToken.address,
-    //     SwapKind.GIVEN_OUT
-    //   );
-    // });
-    it('Swap2', async () => {
-      await swap(
-        accounts.trader1,
-        '0.0000000000001',
-        '0.028360003986',
-        issueToken.address,
-        reserveToken.address,
         SwapKind.GIVEN_OUT
       );
     });
+    it('Swap1', async () => {
+      await swap(
+        accounts.trader1,
+        '0.0000000000001',
+        '100000',
+        issueToken.address,
+        reserveToken.address,
+        SwapKind.GIVEN_IN
+      );
+    });
+    // it('Swap2', async () => {
+    //   await swap(
+    //     accounts.trader1,
+    //     '0.0000000000001',
+    //     '0.028360003986',
+    //     issueToken.address,
+    //     reserveToken.address,
+    //     SwapKind.GIVEN_OUT
+    //   );
+    // });
   });
 });

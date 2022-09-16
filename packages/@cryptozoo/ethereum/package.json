@@ -11,7 +11,7 @@
     "build": "yarn compile",
     "compile": "npx hardhat compile && rm -rf artifacts/build-info",
     "test": "npx hardhat test",
-    "lint": "solhint -f table contracts/**/*.sol"
+    "lint": "solhint -f table './contracts/**/*.sol'"
   },
   "devDependencies": {
     "@balancer-labs/typechain": "^1.0.0",
