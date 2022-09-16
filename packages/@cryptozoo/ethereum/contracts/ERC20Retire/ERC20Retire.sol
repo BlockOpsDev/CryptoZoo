@@ -21,7 +21,8 @@ import "@openzeppelin/contracts/utils/Context.sol";
  * @title ERC20 Retire
  * @notice Retire tokens to remove them from the circulating supply
  *
- * @dev Once a token has been retired it will never return to circulation
+ * @dev Once a token has been retired it should never return to circulation
+ * When using this extention make sure tokens can never be removed from address(this)
  *
  * This extension on the ERC20 adds a function that returns the token's circulating supply
  * and a function to reduce the circulating supply by retiring tokens
@@ -42,11 +43,24 @@ abstract contract ERC20Retire is Context, ERC20 {
    *
    * @param amount  number of tokens to retire
    *
-   * @dev emit Retire event
-   * Retired Tokens are stored at the token address
+   * @dev Retired Tokens are stored at the token address
    */
   function retire(uint256 amount) public virtual {
     _transfer(_msgSender(), address(this), amount);
-    emit Retire(_msgSender(), amount);
+  }
+
+  /**
+   * @dev emit Retire event when tokens are retired (sent to address(this))
+   */
+  function _transfer(
+    address from,
+    address to,
+    uint256 amount
+  ) internal virtual override {
+    super._transfer(from, to, amount);
+
+    if (to == address(this)) {
+      emit Retire(_msgSender(), amount);
+    }
   }
 }

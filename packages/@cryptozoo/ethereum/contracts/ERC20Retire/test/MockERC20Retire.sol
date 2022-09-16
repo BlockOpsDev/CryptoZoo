@@ -18,4 +18,8 @@ import "../ERC20Retire.sol";
 
 contract MockERC20Retire is ERC20Retire {
   constructor(string memory _name, string memory _symbol) ERC20(_name, _symbol) {}
+
+  function mint(uint256 amount) public {
+    _mint(_msgSender(), amount);
+  }
 }

@@ -92,7 +92,7 @@ contract ConstantReserveRatioMath is AnalyticMath {
       if (reserveRatio == MAX_WEIGHT) return IntegralMath.mulDivF(returnAmount, reserveBalance, supply);
 
       (uint256 n, uint256 d) = pow(safeAdd(supply, returnAmount), supply, MAX_WEIGHT, reserveRatio);
-      return IntegralMath.mulDivF(reserveBalance, n, d) - reserveBalance;
+      return IntegralMath.mulDivC(reserveBalance, n, d) - reserveBalance;
     }
   }
 
@@ -135,7 +135,7 @@ contract ConstantReserveRatioMath is AnalyticMath {
    * calculates the sell amount needed (in the continuous token)
    *
    * Formula:
-   * Return = supply * (-(1 - returnAmount / reserveBalance) ^ (reserveRatio / MAX_WEIGHT) - 1)
+   * Return = supply * -((1 - returnAmount / reserveBalance) ^ (reserveRatio / MAX_WEIGHT) - 1)
    *
    * @param supply           continuous token total supply
    * @param reserveBalance   total reserve token balance

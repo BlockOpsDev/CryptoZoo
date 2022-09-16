@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import { Decimal } from 'decimal.js';
-import { ether, Wallets, wallets, WEI_VALUE } from '../scripts/Utils';
+import { Wallets, wallets, WEI_VALUE } from '../scripts/Utils';
 
 import { MockSwapIssuer } from '../typechain-types';
 import { setupEnviroment_MockSwapIssuer } from '../scripts/mock_deploy/SwapIssuer';
@@ -12,7 +12,7 @@ export const math_IssueIn = (reserveRatio: Decimal, supply: Decimal, balance: De
   supply.mul(ONE.add(amount.div(balance)).pow(reserveRatio.div(MAX_WEIGHT)).sub(ONE));
 
 export const math_IssueOut = (reserveRatio: Decimal, supply: Decimal, balance: Decimal, amount: Decimal) =>
-  balance.mul(ONE.add(amount.div(supply)).pow(MAX_WEIGHT.div(reserveRatio)).sub(ONE));
+  balance.mul(supply.add(amount).div(supply).pow(MAX_WEIGHT.div(reserveRatio)).sub(ONE));
 
 export const math_RedeemIn = (reserveRatio: Decimal, supply: Decimal, balance: Decimal, amount: Decimal) =>
   balance.mul(ONE.sub(ONE.sub(amount.div(supply)).pow(MAX_WEIGHT.div(reserveRatio))));
@@ -65,33 +65,33 @@ describe('Swap Issuer', function () {
           }
         };
 
-      const args = [
-        '100000',
-        ether('9654682.13847').toString(),
-        ether('1').toString(),
-        ether('9610866.79145').toString(),
-      ];
-      // const args = ['100000', '1111111111111111111111', '1111111111111111111111', '444444444444444444444'];
+      // const args = [
+      //   '100000',
+      //   ether('9654682.13847').toString(),
+      //   ether('1').toString(),
+      //   ether('9610866.79145').toString(),
+      // ];
+      // const args = ['100000', ether('1000000').toString(), ether('5000').toString(), ether('5000000').toString()];
 
       // it(`IssueIn ${args.join(', ')}`, testSwapMath(math_IssueIn, '0.0000000000001', ...args));
-      it(`IssueOut ${args.join(', ')}`, testSwapMath(math_IssueOut, '0.0000000000001', ...args));
+      // it(`IssueOut ${args.join(', ')}`, testSwapMath(math_IssueOut, '0.0001', ...args));
       // it(`RedeemIn ${args.join(', ')}`, testSwapMath(math_RedeemIn, '0.0000000000001', ...args));
       // it(`RedeemOut ${args.join(', ')}`, testSwapMath(math_RedeemOut, '0.0000000000001', ...args));
 
-      // for (const supply of [1, 2, 3, 4].map((n) => `${n}`.repeat(21 + n)))
-      //   for (const balance of [1, 2, 3, 4].map((n) => `${n}`.repeat(21 + n)))
-      //     for (const ratio of [10, 20, 90, 100].map((p) => `${p * 10000}`))
-      //       for (const amount of [1, 2, 3, 4, 5].map((n) => `${n}`.repeat(18 + n))) {
-      //         const args = [ratio, supply, balance, amount];
-      //         it(`IssueIn ${args.join(', ')}`, testSwapMath(math_IssueIn, '0.0000000000001', ...args));
-      //         it(`IssueOut ${args.join(', ')}`, testSwapMath(math_IssueOut, '0.0000000000001', ...args));
-      //         if (new Decimal(amount).lte(supply)) {
-      //           it(`RedeemIn ${args.join(', ')}`, testSwapMath(math_RedeemIn, '0.0000000000001', ...args));
-      //         }
-      //         if (new Decimal(amount).lte(balance)) {
-      //           it(`RedeemOut ${args.join(', ')}`, testSwapMath(math_RedeemOut, '0.0000000000001', ...args));
-      //         }
-      //       }
+      for (const supply of [1, 2, 3, 4].map((n) => `${n}`.repeat(21 + n)))
+        for (const balance of [1, 2, 3, 4].map((n) => `${n}`.repeat(21 + n)))
+          for (const ratio of [10, 20, 90, 100].map((p) => `${p * 10000}`))
+            for (const amount of [1, 2, 3, 4].map((n) => `${n}`.repeat(18 + n))) {
+              const args = [ratio, supply, balance, amount];
+              it(`IssueIn ${args.join(', ')}`, testSwapMath(math_IssueIn, '0.0000000000001', ...args));
+              it(`IssueOut ${args.join(', ')}`, testSwapMath(math_IssueOut, '0.0001', ...args));
+              if (new Decimal(amount).lte(supply)) {
+                it(`RedeemIn ${args.join(', ')}`, testSwapMath(math_RedeemIn, '0.0000000000001', ...args));
+              }
+              if (new Decimal(amount).lte(balance)) {
+                it(`RedeemOut ${args.join(', ')}`, testSwapMath(math_RedeemOut, '0.0000000000001', ...args));
+              }
+            }
     });
   });
 });
