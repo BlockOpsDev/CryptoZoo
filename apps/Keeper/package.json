@@ -1,15 +1,16 @@
 {
-  "name": "ethereum",
+  "name": "keeper",
   "version": "1.0.0",
   "scripts": {
     "build": "npx hardhat compile",
     "test": "npx hardhat test",
-    "lint": "solhint -f table contracts/**/*.sol"
+    "lint": "solhint -f table './contracts/**/*.sol'"
   },
   "dependencies": {
     "@cryptozoo/ethereum": "*"
   },
   "devDependencies": {
+    "@balancer-labs/ethereum": "*",
     "@ethersproject/abi": "^5.6.4",
     "@ethersproject/providers": "^5.6.8",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.2",

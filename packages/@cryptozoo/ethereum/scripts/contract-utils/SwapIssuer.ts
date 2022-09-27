@@ -78,5 +78,5 @@ export async function deploy_MockSwapIssuer(
   const SwapIssuerFactory = await ethers.getContractFactory('MockSwapIssuer');
   const swapIssuer = await SwapIssuerFactory.connect(deployer).deploy(swapIssuerParams, supply);
 
-  return swapIssuer;
+  return <MockSwapIssuer>swapIssuer;
 }

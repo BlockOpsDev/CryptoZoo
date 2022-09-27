@@ -1,7 +1,10 @@
 import { ethers } from 'hardhat';
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/dist/src/signer-with-address';
-import { approveSpenders } from '../Utils';
+import { BigNumberish, BigNumber } from '@ethersproject/bignumber';
+import { approveSpenders, ether } from '../Utils';
+import { Decimal } from 'decimal.js';
 
+import { PromiseOrValue } from '@balancer-labs/ethereum/typechain-types/common';
 import { SwapIssuer } from '../../typechain-types/contracts/ContinuousTokenOfferingPool/SwapIssuer/test/MockSwapIssuer';
 import { ContinuousTokenOfferingPool } from '../../typechain-types/contracts/ContinuousTokenOfferingPool/test/MockContinuousTokenOfferingPool';
 import { ERC20Issuable, MockContinuousTokenOfferingPool } from '../../typechain-types';
@@ -9,6 +12,30 @@ import { MockToken } from '@balancer-labs/ethereum/typechain-types';
 
 import { calcInitialValues_SwapIssuer, TokenInitialVals } from './SwapIssuer';
 import { deploy_MockERC20Issuable } from './ERC20Issuable';
+
+export enum SwapKind {
+  GIVEN_IN,
+  GIVEN_OUT,
+}
+
+//Testing Helper Functions
+export const addFee = (swapAmount: BigNumber | Decimal, swapFeePercentage: PromiseOrValue<BigNumberish>): string => {
+  return swapAmount
+    .mul(ether('1').toString())
+    .sub('1')
+    .div(ether('1').sub(swapFeePercentage.toString()).toString())
+    .add('1')
+    .toString();
+};
+
+export const subtractFee = (
+  swapAmount: BigNumber | Decimal,
+  swapFeePercentage: PromiseOrValue<BigNumberish>
+): string => {
+  return swapAmount
+    .sub(swapAmount.mul(swapFeePercentage.toString()).sub(1).div(ether('1').toString()).add(1).toString())
+    .toString();
+};
 
 export interface PoolVars {
   assetManagers: string[];
@@ -71,5 +98,5 @@ export async function deploy_MockContinuousTokenOfferingPool(
   );
   const CTOPool = await ContinuousTokenOfferingPoolFactory.deploy(poolParams, swapIssuerParams);
 
-  return CTOPool;
+  return <MockContinuousTokenOfferingPool>CTOPool;
 }

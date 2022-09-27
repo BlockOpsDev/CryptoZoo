@@ -63,7 +63,7 @@ export async function deploy_MockToken(
     await token.mint(user.address, ether(amount));
   }
 
-  return token;
+  return <MockToken>token;
 }
 
 export async function approveSpenders(token: Contract, users: SignerWithAddress[], spenders: string[]) {

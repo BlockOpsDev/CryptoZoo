@@ -3,7 +3,7 @@ import { Decimal } from 'decimal.js';
 import { Wallets, wallets, WEI_VALUE } from '../scripts/Utils';
 
 import { MockSwapIssuer } from '../typechain-types';
-import { setupEnviroment_MockSwapIssuer } from '../scripts/mock_deploy/SwapIssuer';
+import { setupEnviroment_MockSwapIssuer } from '../scripts/contract-utils/SwapIssuer';
 
 const ONE = new Decimal(1);
 const MAX_WEIGHT = new Decimal(1000000);

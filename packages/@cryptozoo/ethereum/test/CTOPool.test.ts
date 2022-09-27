@@ -4,9 +4,8 @@ import { ether, Wallets, wallets, WEI_VALUE, ZERO_ADDRESS } from '../scripts/Uti
 import { Decimal } from 'decimal.js';
 
 import { MaxUint256 } from '@ethersproject/constants';
-import { BigNumberish, BigNumber } from '@ethersproject/bignumber';
+import { BigNumber } from '@ethersproject/bignumber';
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/dist/src/signer-with-address';
-import { PromiseOrValue } from '@balancer-labs/ethereum/typechain-types/common';
 
 import { MockToken, MockWETH } from '@balancer-labs/ethereum/typechain-types';
 import { Vault } from '@balancer-labs/typechain';
@@ -14,32 +13,16 @@ import { ERC20Issuable, MockContinuousTokenOfferingPool } from '../typechain-typ
 import { ContinuousTokenOfferingPool } from '../typechain-types/contracts/ContinuousTokenOfferingPool/test/MockContinuousTokenOfferingPool';
 
 import { pickTokens, setupEnvironment, TokenList } from '@balancer-labs/ethereum';
-import { setupEnviroment_MockContinuousTokenOfferingPool } from '../scripts/mock_deploy/CTOPool';
-import { TokenInitialVals } from '../scripts/mock_deploy/SwapIssuer';
+import {
+  addFee,
+  setupEnviroment_MockContinuousTokenOfferingPool,
+  subtractFee,
+  SwapKind,
+} from '../scripts/contract-utils/CTOPool';
+import { TokenInitialVals } from '../scripts/contract-utils/SwapIssuer';
 import { math_IssueIn, math_IssueOut, math_RedeemIn, math_RedeemOut } from './SwapIssuer.math.test';
 
-export enum SwapKind {
-  GIVEN_IN,
-  GIVEN_OUT,
-}
-
-//Testing Helper Functions
-const addFee = (swapAmount: BigNumber | Decimal, swapFeePercentage: PromiseOrValue<BigNumberish>): string => {
-  return swapAmount
-    .mul(ether('1').toString())
-    .sub('1')
-    .div(ether('1').sub(swapFeePercentage.toString()).toString())
-    .add('1')
-    .toString();
-};
-
-const subtractFee = (swapAmount: BigNumber | Decimal, swapFeePercentage: PromiseOrValue<BigNumberish>): string => {
-  return swapAmount
-    .sub(swapAmount.mul(swapFeePercentage.toString()).sub(1).div(ether('1').toString()).add(1).toString())
-    .toString();
-};
-
-describe.only('Continous Token Offering Pool', function () {
+describe('Continous Token Offering Pool', function () {
   //Account Address
   let accounts: Wallets;
   let traders: SignerWithAddress[];

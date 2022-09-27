@@ -11,5 +11,5 @@ export async function deploy_MockERC20Retire(
   const ERC20RetireFactory = await ethers.getContractFactory('MockERC20Retire');
   const ERC20Retire = await ERC20RetireFactory.connect(deployer).deploy(name, symbol);
 
-  return ERC20Retire;
+  return <MockERC20Retire>ERC20Retire;
 }

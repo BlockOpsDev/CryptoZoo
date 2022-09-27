@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { deploy_MockERC20Retire } from '../scripts/mock_deploy/ERC20Retire';
+import { deploy_MockERC20Retire } from '../scripts/contract-utils/ERC20Retire';
 import { ether, wallets, Wallets } from '../scripts/Utils';
 
 import { MockERC20Retire } from '../typechain-types';

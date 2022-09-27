@@ -11,5 +11,5 @@ export async function deploy_MockERC20Issuable(
   const ERC20IssuableFactory = await ethers.getContractFactory('MockERC20Issuable');
   const ERC20Issuable = await ERC20IssuableFactory.connect(deployer).deploy(name, symbol);
 
-  return ERC20Issuable;
+  return <MockERC20Issuable>ERC20Issuable;
 }
