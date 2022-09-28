@@ -13,5 +13,5 @@ export * from './cards/Swap';
 
 export * from './layouts/Layout';
 
-export * from './apollo/QueryComponentExample';
-export * from './apollo/FragmentComponentExample';
+export * from './Apollo/QueryComponentExample';
+export * from './Apollo/FragmentComponentExample';

@@ -15,10 +15,7 @@ export interface LayoutProps {
 /**
  * @returns Layout Element
  */
-export const Layout: React.FC<LayoutProps> = ({
-  navLinkProps,
-  children,
-}: LayoutProps) => {
+export const Layout: React.FC<LayoutProps> = ({ navLinkProps, children }: LayoutProps) => {
   const [navOpen, setNavOpen] = useState(false);
   const toggleNav = () => setNavOpen((prevNavOpen) => !prevNavOpen);
   const onNav = () => {
@@ -40,12 +37,7 @@ export const Layout: React.FC<LayoutProps> = ({
         )}
       >
         {/* Navigation */}
-        <div
-          className={cx(
-            'h-screen w-[85vw] flex-none p-4 pr-0',
-            'tablet:p-0 tablet:w-fit'
-          )}
-        >
+        <div className={cx('h-screen w-[85vw] flex-none p-4 pr-0', 'tablet:p-0 tablet:w-fit')}>
           <div
             className={cx(
               'text-primary-text bg-layer--2 border-layer--3 relative flex h-full w-full flex-col rounded-lg border-2 border-solid',
@@ -55,10 +47,7 @@ export const Layout: React.FC<LayoutProps> = ({
             {/* Navigation Container */}
             <div className="border-layer--3 relative border-b-2 p-3 text-center">
               {/* Close Menu Button */}
-              <button
-                className="tablet:hidden absolute top-4 right-4"
-                onClick={toggleNav}
-              >
+              <button className="tablet:hidden absolute top-4 right-4" onClick={toggleNav}>
                 <FaChevronRight size={ICON_SIZE} />
               </button>
 
@@ -107,12 +96,7 @@ export const Layout: React.FC<LayoutProps> = ({
             </div>
             <div className="flex-grow"></div>
             <div className="flex-none">
-              <WalletButton
-                connected={false}
-                walletAddress=""
-                keeperBalance="0"
-                zooBalance="0"
-              />
+              <WalletButton />
             </div>
           </div>
 
