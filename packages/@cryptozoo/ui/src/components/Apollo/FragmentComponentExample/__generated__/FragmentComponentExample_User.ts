@@ -8,7 +8,7 @@
 // ====================================================
 
 export interface FragmentComponentExample_User {
-  __typename: "User";
+  __typename: 'User';
   wallet: string | null;
   name: string | null;
 }

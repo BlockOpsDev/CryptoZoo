@@ -11,13 +11,16 @@ module.exports = {
       desktop: '1248px',
     },
     colors: {
-      'layer--1': '#0e1324',
-      'layer--2': '#161e31',
-      'layer--3': '#212b3f',
-      'layer--4': '#2e394d',
+      'layer--1': '#080b14',
+      'layer--2': '#0d1220',
+      'layer--3': '#141b2b',
+      'layer--4': '#1c2436',
+      'layer--5': '#242e41',
 
       'primary-text': '#ffffff',
       'secondary-text': '#94a3b8',
+
+      'secondary': '#2e394d',
 
       'primary--light': '#55a6ed',
       'primary': '#0062d4',
@@ -34,8 +37,11 @@ module.exports = {
       'warn--light': '#c09d43',
       'warn': '#9b5e00',
       'warn--dark': '#512900',
+    },
+    fontFamily: {
+      'chakra': ['Chakra Petch', 'sans-serif']
     }
   },
   darkMode: 'class',
-  plugins: [],
+  plugins: ["postcss-import"],
 };

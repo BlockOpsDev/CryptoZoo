@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { gql, useQuery } from '@apollo/client';
 import { FragmentComponentExample } from '../FragmentComponentExample';
-import { GetUser } from './__generated__/GetUser';
-import { GetUserTypeVariables } from '../../Test/__generated__/GetUserType';
+import { GetUser, GetUserVariables } from './__generated__/GetUser';
 
 export interface QueryComponentExampleProps {
   userId: string;
@@ -19,8 +18,10 @@ const GET_USER_QUERY = gql`
   ${FragmentComponentExample.fragments.user}
 `;
 
-export const QueryComponentExample: React.FC<QueryComponentExampleProps> = ({ userId }: QueryComponentExampleProps) => {
-  const { loading, data } = useQuery<GetUser, GetUserTypeVariables>(
+export const QueryComponentExample: React.FC<QueryComponentExampleProps> = ({
+  userId,
+}: QueryComponentExampleProps) => {
+  const { loading, data } = useQuery<GetUser, GetUserVariables>(
     GET_USER_QUERY,
     {
       variables: { id: userId },

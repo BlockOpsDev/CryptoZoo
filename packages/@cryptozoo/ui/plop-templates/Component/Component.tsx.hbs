@@ -1,8 +1,13 @@
 import React from 'react';
 
 export interface {{pascalCase name}}Props {
+  children?: React.ReactNode;
 }
 
-export const {{pascalCase name}}: React.FC<{{pascalCase name}}Props> = ({}: {{pascalCase name}}Props) => {
-  return <div className="text-white"></div>;
+export const {{pascalCase name}}: React.FC<{{pascalCase name}}Props> = ({ children }: {{pascalCase name}}Props) => {
+  return (
+    <>
+      { children }
+    </>
+  );
 };

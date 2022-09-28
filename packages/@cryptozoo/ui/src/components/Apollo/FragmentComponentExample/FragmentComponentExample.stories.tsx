@@ -9,7 +9,9 @@ export default {
   decorators: [apolloContext],
 } as ComponentMeta<typeof FragmentComponentExample>;
 
-const Template: ComponentStory<typeof FragmentComponentExample> = (args) => <FragmentComponentExample {...args} />;
+const Template: ComponentStory<typeof FragmentComponentExample> = (args) => (
+  <FragmentComponentExample {...args} />
+);
 
 export const Primary = Template.bind({});
 
